@@ -7,6 +7,13 @@ export default defineConfig({
     plugins: [tailwindcss()],
     base: '/static/',
     publicDir: resolve('./public'),
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `$base-url: '${'/static/'}';`,
+            },
+        },
+    },
     build: {
         manifest: 'manifest.json',
         outDir: resolve('./static'),
