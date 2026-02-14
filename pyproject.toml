@@ -6,4 +6,5 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "wagtail>=7.3",
+    "wagtailcodeblock>=1.30.0.0",
 ]

@@ -39,10 +39,14 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "wagtail" },
+    { name = "wagtailcodeblock" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "wagtail", specifier = ">=7.3" }]
+requires-dist = [
+    { name = "wagtail", specifier = ">=7.3" },
+    { name = "wagtailcodeblock", specifier = ">=1.30.0.0" },
+]
 
 [[package]]
 name = "certifi"
@@ -468,6 +472,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/59/cf/c707a97e68d3edba40d1706457cc32f3c7679aa72dc43a4470cf58bca6f8/wagtail-7.3.tar.gz", hash = "sha256:81c3449652b17341fc794d65bdd208ae9e15f21743e8a6ca6bc2ce2e7b7312ce", size = 6859380, upload-time = "2026-02-03T12:16:43.707Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/79/5d/63694054535c99b04a476512810f5d254e6de440fc7d14696e93b9f43c7f/wagtail-7.3-py3-none-any.whl", hash = "sha256:519c84c47bccc2e42182a3879c6efe9f34d7233239b2899a99139ae3e17c5266", size = 9475481, upload-time = "2026-02-03T12:16:41.244Z" },
+]
+
+[[package]]
+name = "wagtailcodeblock"
+version = "1.30.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "wagtail" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/93/8d/d142804afb6725926ece02ae7aa83e0e86c8cf0a3555c1772259bc2ee521/wagtailcodeblock-1.30.0.0.tar.gz", hash = "sha256:043dee61baa9aee0e28a93c0bed597105250930dd5c006db691282145bc280c2", size = 99401, upload-time = "2025-11-19T16:01:13.426Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/82/c1b06c206d40031f47277029d62120d6c84982413b625bb966510a9b85c3/wagtailcodeblock-1.30.0.0-py3-none-any.whl", hash = "sha256:f0d511ac0cbd8b80eec892e29128e934caa544f7daa16b9d6c1c6b5a8bd4f86e", size = 14361, upload-time = "2025-11-19T16:01:12.166Z" },
 ]
 
 [[package]]
