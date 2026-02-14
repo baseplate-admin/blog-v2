@@ -1,15 +1,10 @@
 @import "tailwindcss";
-@plugin "daisyui";
 @plugin "@tailwindcss/typography";
+
+@plugin "daisyui"{
+  themes: black --default;
+  logs: true;
+};
 
 @import "@fontsource/open-sans";
 
-/* Base styles */
-@layer base {
-  body {
-    @apply antialiased text-slate-800 bg-white;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight font-bold text-slate-900;
-  }
-}
