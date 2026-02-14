@@ -87,6 +87,7 @@ class BlogPage(Page):
     @property
     def author_avatar_url(self):
         import hashlib
-        email = self.owner.email if self.owner and self.owner.email else "nobody@example.com"
-        hash_email = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+
+        email = self.owner.email if self.owner and self.owner.email else ""
+        hash_email = hashlib.sha256(email.lower().encode("utf-8")).hexdigest()
         return f"https://seccdn.libravatar.org/avatar/{hash_email}?s=200&d=retro"

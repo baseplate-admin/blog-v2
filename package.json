@@ -1,11 +1,13 @@
 {
     "dependencies": {
+        "@fontsource/open-sans": "^5.2.7",
         "@tailwindcss/vite": "^4.1.18",
         "tailwindcss": "^4.1.18",
         "vite": "^7.3.1"
     },
     "scripts": {
-        "dev": "vite dev"
+        "dev": "vite dev",
+        "build": "vite build"
     },
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.19",

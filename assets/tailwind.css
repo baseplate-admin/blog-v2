@@ -2,25 +2,7 @@
 @plugin "daisyui";
 @plugin "@tailwindcss/typography";
 
-@theme {
-  --font-sans: "Inter", "system-ui", "sans-serif";
-  --font-serif: "Merriweather", "serif";
-}
-
-/* Custom scrollbar for that "fancy" feel */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+@import "@fontsource/open-sans";
 
 /* Base styles */
 @layer base {

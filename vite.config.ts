@@ -8,7 +8,7 @@ export default defineConfig({
     base: '/static/',
     build: {
         manifest: 'manifest.json',
-        outDir: resolve('./assets'),
+        outDir: resolve('./static'),
         rollupOptions: {
             input: {
                 tailwindcss: resolve('./assets/tailwind.css'),
