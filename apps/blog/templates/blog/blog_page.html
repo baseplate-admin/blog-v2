@@ -2,127 +2,105 @@
 {% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-<div class="min-h-screen bg-base-100 font-sans text-base-content">
-    
+<div class="min-h-screen font-sans text-base-content">
+
     {# Progress Bar #}
-    <div id="progress-container" class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent pointer-events-none">
+    <div id="progress-container" class="fixed top-0 left-0 w-full h-0.5 z-50 bg-transparent pointer-events-none">
         <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-100"></div>
     </div>
 
     {# Main Layout #}
-    <div class="max-w-[90rem] mx-auto px-4 lg:px-8 py-10 lg:py-16">
-        <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-20">
 
-            {# Left Sidebar (Author & Meta) - Hidden on Mobile, Sticky on Desktop #}
-            <aside class="hidden lg:block lg:w-64 flex-shrink-0">
-                <div class="sticky top-24 space-y-12">
-                     <a href="{% pageurl page.get_parent %}" class="group flex items-center gap-2 text-sm font-bold text-base-content/50 hover:text-primary transition-colors">
-                        <span class="transform group-hover:-translate-x-1 transition-transform">←</span>
-                        Back
-                    </a>
+        {# Breadcrumb #}
+        <div class="breadcrumbs text-sm mb-10">
+            <ul>
+                <li><a href="{% pageurl page.get_parent %}" class="text-base-content/50 hover:text-primary transition-colors">Blog</a></li>
+            </ul>
+        </div>
 
-                    <div class="space-y-6">
-                        <div>
-                            <div class="text-xs font-bold text-base-content/40 uppercase tracking-widest mb-3">Written By</div>
-                            <div class="flex items-center gap-4">
-                                <div class="avatar">
-                                    <div class="w-12 h-12 rounded-full ring-2 ring-base-200">
-                                        <img src="{{ page.author_avatar_url }}" alt="Author" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-base-content text-sm">{{ page.owner.get_full_name|default:page.owner.username }}</div>
-                                    <div class="text-xs text-base-content/60">Editor</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="text-xs font-bold text-base-content/40 uppercase tracking-widest mb-3">Published</div>
-                            <div class="text-sm font-medium text-base-content/80">{{ page.date }}</div>
-                        </div>
-
-                        {% if page.tags.all %}
-                        <div>
-                            <div class="text-xs font-bold text-base-content/40 uppercase tracking-widest mb-3">Tags</div>
-                            <div class="flex flex-wrap gap-2">
-                                {% for tag in page.tags.all %}
-                                <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-outline hover:badge-primary transition-colors cursor-pointer text-xs py-3">
-                                    {{ tag }}
-                                </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </aside>
+        <div class="flex flex-col xl:flex-row gap-12 xl:gap-16">
 
             {# Main Content #}
-            <main class="flex-1 min-w-0 max-w-3xl mx-auto">
-                
-                {# Header #}
-                <header class="mb-12">
-                     <div class="lg:hidden mb-8">
-                         <a href="{% pageurl page.get_parent %}" class="text-sm font-bold text-base-content/50 hover:text-primary">← Back to Blog</a>
-                     </div>
+            <main class="flex-1 min-w-0 max-w-3xl">
 
-                    <h1 class="text-4xl md:text-6xl font-extrabold font-serif tracking-tight text-base-content mb-6 leading-[1.1]">
+                {# Header #}
+                <header class="mb-10">
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-base-content leading-tight mb-5">
                         {{ page.title }}
                     </h1>
-                    <p class="text-xl md:text-2xl text-base-content/60 font-light leading-relaxed">
-                        {{ page.intro }}
-                    </p>
 
-                    {# Mobile Meta #}
-                    <div class="lg:hidden mt-8 flex items-center gap-4 pt-8 border-t border-base-200">
+                    {# Author & Date #}
+                    <div class="flex items-center gap-3 text-sm text-base-content/60">
+                        <span>by</span>
                         <div class="avatar">
-                            <div class="w-10 rounded-full">
-                                <img src="{{ page.author_avatar_url }}" alt="Author" />
+                            <div class="w-6 h-6 rounded-full">
+                                <img src="{{ page.author_avatar_url }}" alt="{{ page.owner.get_full_name|default:page.owner.username }}" />
                             </div>
                         </div>
-                        <div class="text-sm">
-                            <div class="font-bold">{{ page.owner.get_full_name|default:page.owner.username }}</div>
-                            <div class="text-base-content/60">{{ page.date }}</div>
-                        </div>
+                        <span class="font-semibold text-base-content/80">{{ page.owner.get_full_name|default:page.owner.username }}</span>
+                        <span>on</span>
+                        <time class="text-base-content/80">{{ page.date }}</time>
                     </div>
+
+                    {# Tags #}
+                    {% if page.tags.all %}
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        {% for tag in page.tags.all %}
+                        <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-soft badge-sm hover:badge-primary transition-colors cursor-pointer">
+                            {{ tag }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </header>
 
                 {# Feature Image #}
                 {% if page.feed_image %}
-                <figure class="mb-16 -mx-4 sm:mx-0 rounded-box overflow-hidden shadow-2xl shadow-base-300">
+                <figure class="mb-12 rounded-box overflow-hidden">
                     {% image page.feed_image original class="w-full h-auto object-cover" %}
                 </figure>
                 {% endif %}
 
+                {# Intro #}
+                {% if page.intro %}
+                <p class="text-lg text-base-content/70 leading-relaxed mb-10">
+                    {{ page.intro }}
+                </p>
+                {% endif %}
+
                 {# Article Body #}
-                <article id="article-content" class="prose prose-lg md:prose-xl prose-slate max-w-none 
-                    prose-headings:font-serif prose-headings:font-bold prose-headings:tracking-tight 
-                    prose-p:leading-8 prose-p:text-base-content/80 
-                    prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                    prose-strong:font-bold prose-strong:text-base-content 
-                    prose-code:text-primary prose-code:font-bold prose-code:bg-base-200 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-                    prose-img:rounded-xl prose-img:shadow-lg">
-                    
+                <article id="article-content" class="prose prose-lg max-w-none
+                    prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content
+                    prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:pt-6 prose-h2:border-t prose-h2:border-base-content/10
+                    prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+                    prose-p:leading-7 prose-p:text-base-content/80 prose-p:my-4
+                    prose-a:text-primary prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                    prose-strong:font-bold prose-strong:text-base-content
+                    prose-code:text-primary prose-code:font-semibold prose-code:bg-base-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
+                    prose-pre:bg-base-200 prose-pre:rounded-box prose-pre:border prose-pre:border-base-content/5
+                    prose-ul:my-4 prose-ol:my-4 prose-li:text-base-content/80 prose-li:my-1
+                    prose-img:rounded-xl
+                    prose-blockquote:border-primary prose-blockquote:text-base-content/70">
+
                     {% for block in page.body %}
                         {% include_block block %}
                     {% endfor %}
-
-                    {# Article Footer / Share #}
-                    <div class="mt-20 pt-10 border-t border-base-200">
-                        <p class="text-center text-sm font-bold tracking-widest text-base-content/40 uppercase">Thanks for reading</p>
-                    </div>
                 </article>
 
+                {# Article Footer #}
+                <div class="mt-16 pt-8 border-t border-base-content/10 text-center">
+                    <p class="text-sm text-base-content/40 tracking-wide">Thanks for reading</p>
+                </div>
             </main>
 
-            {# Right Sidebar (TOC) - Hidden on Tablet/Mobile #}
-             <aside class="hidden xl:block xl:w-64 flex-shrink-0">
-                <div class="sticky top-24">
-                     <div class="text-xs font-bold text-base-content/40 uppercase tracking-widest mb-6">On This Page</div>
-                     <nav id="toc" class="space-y-1 relative border-l border-base-200">
-                         {# JS populates this #}
-                     </nav>
+            {# Right Sidebar (TOC) #}
+            <aside class="hidden xl:block xl:w-56 flex-shrink-0">
+                <div class="sticky top-10">
+                    <div class="text-sm font-semibold text-base-content/70 mb-4">On this page</div>
+                    <nav id="toc" class="space-y-0.5 border-l border-base-content/10">
+                        {# JS populates this #}
+                    </nav>
                 </div>
             </aside>
 
@@ -135,7 +113,7 @@
         // Progress Bar
         const progressBar = document.getElementById('progress-bar');
         window.addEventListener('scroll', () => {
-            const h = document.documentElement, 
+            const h = document.documentElement,
                   b = document.body,
                   st = 'scrollTop',
                   sh = 'scrollHeight';
@@ -146,8 +124,9 @@
         // TOC
         const article = document.getElementById('article-content');
         const toc = document.getElementById('toc');
+        if (!article || !toc) return;
         const headers = article.querySelectorAll('h2, h3');
-        
+
         headers.forEach((header, index) => {
             const id = header.id || 'section-' + index;
             header.id = id;
@@ -155,11 +134,11 @@
             const link = document.createElement('a');
             link.href = '#' + id;
             link.textContent = header.textContent;
-            link.className = `block text-sm py-2 pl-4 border-l-2 border-transparent transition-all duration-200 
-                ${header.tagName === 'H3' ? 'ml-4 opacity-80' : 'font-medium'}
-                text-base-content/60 hover:text-primary hover:border-base-300`;
+            const isH3 = header.tagName === 'H3';
+            link.className = 'block text-sm py-1.5 border-l-2 border-transparent transition-all duration-150 hover:text-primary hover:border-primary/40 text-base-content/50'
+                + (isH3 ? ' pl-6' : ' pl-4');
             link.dataset.target = id;
-            
+
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 header.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -176,14 +155,17 @@
                     const activeId = entry.target.id;
                     toc.querySelectorAll('a').forEach(link => {
                         const isActive = link.dataset.target === activeId;
-                        link.classList.toggle('text-primary', isActive);
-                        link.classList.toggle('border-primary', isActive);
-                        link.classList.toggle('text-base-content/60', !isActive);
-                        link.classList.toggle('border-transparent', !isActive);
+                        if (isActive) {
+                            link.classList.add('text-primary', 'border-primary');
+                            link.classList.remove('text-base-content/50', 'border-transparent');
+                        } else {
+                            link.classList.remove('text-primary', 'border-primary');
+                            link.classList.add('text-base-content/50', 'border-transparent');
+                        }
                     });
                 }
             });
-        }, { rootMargin: '-100px 0px -66%' });
+        }, { rootMargin: '-80px 0px -70%' });
 
         headers.forEach(h => observer.observe(h));
     });
