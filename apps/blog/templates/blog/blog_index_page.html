@@ -38,63 +38,62 @@
     {# Posts List #}
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         {% for post in blogpages %}
-        <a href="{% pageurl post %}" class="group block">
-            <article class="flex flex-col md:flex-row gap-6 md:gap-8 py-8 md:py-10 border-b border-base-content/5 transition-all">
+            <a href="{% pageurl post %}" class="group block">
+                <article class="flex flex-col md:flex-row gap-6 md:gap-8 py-8 md:py-10 border-b border-base-content/5 transition-all">
+                    {# Image #}
+                    {% if post.feed_image %}
+                    <div class="flex-shrink-0 md:w-60 lg:w-72">
+                        <figure class="rounded-box overflow-hidden aspect-[16/10] bg-base-200 ring-1 ring-base-content/5">
+                            {% image post.feed_image fill-600x375 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" %}
+                        </figure>
+                    </div>
+                    {% endif %}
 
-                {# Image #}
-                {% if post.feed_image %}
-                <div class="flex-shrink-0 md:w-60 lg:w-72">
-                    <figure class="rounded-box overflow-hidden aspect-[16/10] bg-base-200 ring-1 ring-base-content/5">
-                        {% image post.feed_image fill-600x375 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" %}
-                    </figure>
-                </div>
-                {% endif %}
-
-                {# Content #}
-                <div class="flex flex-col justify-center flex-1 min-w-0">
-                    {# Author & Date on top #}
-                    <div class="flex items-center gap-2 mb-2 text-xs text-base-content/40">
-                        <div class="avatar">
-                            <div class="w-5 h-5 rounded-full">
-                                <img src="{{ post.author_avatar_url }}" alt="{{ post.owner.get_full_name|default:post.owner.username }}" />
+                    {# Content #}
+                    <div class="flex flex-col justify-center flex-1 min-w-0">
+                        {# Author & Date on top #}
+                        <div class="flex items-center gap-2 mb-2 text-xs text-base-content/40">
+                            <div class="avatar">
+                                <div class="w-5 h-5 rounded-full">
+                                    <img src="{{ post.author_avatar_url }}" alt="{{ post.owner.get_full_name|default:post.owner.username }}" />
+                                </div>
                             </div>
+                            <span class="font-medium text-base-content/60">{{ post.owner.get_full_name|default:post.owner.username }}</span>
+                            <span class="text-base-content/20">·</span>
+                            <time>{{ post.date }}</time>
                         </div>
-                        <span class="font-medium text-base-content/60">{{ post.owner.get_full_name|default:post.owner.username }}</span>
-                        <span class="text-base-content/20">·</span>
-                        <time>{{ post.date }}</time>
-                    </div>
 
-                    {# Title #}
-                    <h2 class="text-xl md:text-2xl font-bold tracking-tight group-hover:text-primary transition-colors mb-2 leading-snug">
-                        {{ post.title }}
-                    </h2>
+                        {# Title #}
+                        <h2 class="text-xl md:text-2xl font-bold tracking-tight group-hover:text-primary transition-colors mb-2 leading-snug">
+                            {{ post.title }}
+                        </h2>
 
-                    {# Excerpt #}
-                    <p class="text-base-content/50 text-sm md:text-base leading-relaxed line-clamp-2 mb-3">
-                        {{ post.intro }}
-                    </p>
+                        {# Excerpt #}
+                        <p class="text-base-content/50 text-sm md:text-base leading-relaxed line-clamp-2 mb-3">
+                            {{ post.intro }}
+                        </p>
 
-                    {# Tags + Read More #}
-                    <div class="flex items-center justify-between gap-4">
-                        {% if post.tags.all %}
-                        <div class="flex flex-wrap gap-1.5">
-                            {% for tag in post.tags.all|slice:":3" %}
-                            <span class="badge badge-ghost badge-xs text-base-content/40">{{ tag }}</span>
-                            {% endfor %}
+                        {# Tags + Read More #}
+                        <div class="flex items-center justify-between gap-4">
+                            {% if post.tags.all %}
+                            <div class="flex flex-wrap gap-1.5">
+                                {% for tag in post.tags.all|slice:":3" %}
+                                <span class="badge badge-ghost badge-xs text-base-content/40">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div></div>
+                            {% endif %}
+                            <span class="text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">READ MORE</span>
                         </div>
-                        {% else %}
-                        <div></div>
-                        {% endif %}
-                        <span class="text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">READ MORE</span>
                     </div>
-                </div>
-            </article>
-        </a>
+                </article>
+            </a>
         {% empty %}
-        <div class="py-32 text-center">
-            <div class="text-6xl mb-4 opacity-10">📝</div>
-            <p class="text-lg text-base-content/30">No posts yet.</p>
-        </div>
+            <div class="py-32 text-center">
+                <div class="text-6xl mb-4 opacity-10">📝</div>
+                <p class="text-lg text-base-content/30">No posts yet.</p>
+            </div>
         {% endfor %}
     </div>
 </div>

@@ -9,3 +9,8 @@ dependencies = [
     "wagtail>=7.3",
     "wagtailcodeblock>=1.30.0.0",
 ]
+
+[dependency-groups]
+dev = [
+    "django-debug-toolbar>=6.2.0",
+]

@@ -13,7 +13,7 @@ export default defineConfig({
             input: {
                 vite: resolve('./assets/vite.ts'),
                 tailwindcss: resolve('./assets/tailwind.css'),
-                inter: resolve('./assets/fonts/inter.css'),
+                inter: resolve('./assets/fonts/inter.scss'),
             },
         },
     },
