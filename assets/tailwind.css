@@ -1,12 +1,71 @@
 @import "tailwindcss";
-@import "@fontsource/inter";
 
 @plugin "@tailwindcss/typography";
 
-@plugin "daisyui"{
-  themes: black --default;
+@plugin "daisyui" {
+  themes: dark;
   logs: true;
-};
+}
 
+@plugin "daisyui/theme" {
+  name: "tanstack";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
 
+  /* Deep dark backgrounds — like TanStack */
+  --color-base-100: oklch(14% 0.005 260);
+  --color-base-200: oklch(18% 0.008 260);
+  --color-base-300: oklch(23% 0.01 260);
+  --color-base-content: oklch(90% 0.01 250);
 
+  /* Teal primary — signature TanStack color */
+  --color-primary: oklch(72% 0.17 185);
+  --color-primary-content: oklch(14% 0.005 260);
+
+  /* Slate blue secondary */
+  --color-secondary: oklch(60% 0.12 260);
+  --color-secondary-content: oklch(95% 0.01 260);
+
+  /* Warm amber accent */
+  --color-accent: oklch(75% 0.18 75);
+  --color-accent-content: oklch(18% 0.02 75);
+
+  /* Neutral */
+  --color-neutral: oklch(30% 0.01 260);
+  --color-neutral-content: oklch(85% 0.01 260);
+
+  /* Status colors */
+  --color-info: oklch(68% 0.15 230);
+  --color-info-content: oklch(95% 0.01 230);
+  --color-success: oklch(68% 0.19 155);
+  --color-success-content: oklch(15% 0.02 155);
+  --color-warning: oklch(80% 0.18 80);
+  --color-warning-content: oklch(20% 0.04 80);
+  --color-error: oklch(65% 0.22 25);
+  --color-error-content: oklch(95% 0.01 25);
+
+  /* Rounded but not bubbly */
+  --radius-selector: 1rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+
+  --depth: 1;
+  --noise: 0;
+}
+
+@layer theme {
+  /* Inter font family */
+  html {
+    @apply antialiased;
+  }
+  body {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
+}

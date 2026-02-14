@@ -26,7 +26,13 @@
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
+        {% endblock %}  
+        {# Vite Polyfill #}
+        {% vite_asset 'assets/vite.ts' %}
+        
+
+        {# Fonts #}
+        {% vite_asset 'assets/fonts/inter.css' %}
 
         {# Tailwind CSS #}
         {% vite_asset 'assets/tailwind.css' %}

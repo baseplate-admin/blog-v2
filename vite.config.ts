@@ -11,7 +11,9 @@ export default defineConfig({
         outDir: resolve('./static'),
         rollupOptions: {
             input: {
+                vite: resolve('./assets/vite.ts'),
                 tailwindcss: resolve('./assets/tailwind.css'),
+                inter: resolve('./assets/fonts/inter.css'),
             },
         },
     },
