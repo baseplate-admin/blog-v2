@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% load static wagtailcore_tags wagtailimages_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'blog/css/blog.css' %}" />
+{% endblock %} {% block content %}
+<div class="container blog-page">
+    <article class="blog-post">
+        <h1>{{ page.title }}</h1>
+        <p class="meta" style="color: #666; font-size: 0.9em">
+            Posted on {{ page.date }}
+        </p>
+
+        {% if page.tags.all.count %}
+        <div class="tags" style="margin-bottom: 20px">
+            Tags: {% for tag in page.tags.all %}
+            <a
+                href="{% pageurl page.get_parent %}?tag={{ tag }}"
+                class="tag"
+                style="
+                    background: #eee;
+                    padding: 2px 5px;
+                    border-radius: 3px;
+                    text-decoration: none;
+                "
+                >{{ tag }}</a
+            >
+            {% endfor %}
+        </div>
+        {% endif %} {% if page.feed_image %}
+        <figure class="main-image" style="margin-bottom: 20px">
+            {% image page.feed_image original class="img-responsive" %}
+        </figure>
+        {% endif %}
+
+        <div
+            class="intro"
+            style="font-weight: bold; font-size: 1.2em; margin-bottom: 20px"
+        >
+            {{ page.intro }}
+        </div>
+
+        <div class="body">
+            {% for block in page.body %}
+                {% include_block block %}
+            {% endfor %}
+        </div>
+
+        <hr />
+        <p><a href="{% pageurl page.get_parent %}">← Back to blog</a></p>
+    </article>
+</div>
+{% endblock %}

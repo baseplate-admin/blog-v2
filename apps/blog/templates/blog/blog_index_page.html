@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% load static wagtailcore_tags wagtailimages_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'blog/css/blog.css' %}" />
+{% endblock %} {% block content %}
+<div class="container blog-list">
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    {% if request_tag %}
+    <div style="margin-bottom: 20px; padding: 10px; background-color: #f0f0f0">
+        Showing posts tagged with "<strong>{{ request_tag }}</strong>".
+        <a href="{% pageurl page %}">Show all</a>
+    </div>
+    {% endif %}
+
+    <div class="blog-list">
+        {% for post in blogpages %}
+        <article class="blog-post" style="margin-bottom: 40px">
+            <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+            <p class="date" style="color: #666; font-size: 0.9em">
+                {{ post.date }}
+            </p>
+
+            {% if post.feed_image %}
+            <div class="image">
+                {% image post.feed_image fill-800x400 class="img-responsive" %}
+            </div>
+            {% endif %}
+
+            <p>{{ post.intro }}</p>
+            <a href="{% pageurl post %}" class="button">Read more</a>
+        </article>
+        {% empty %}
+        <p>No posts found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
