@@ -1,16 +1,16 @@
 from django.db import models
 from django import forms
 
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
-from wagtail.models import Page, Orderable
+from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
 from wagtail.blocks import RichTextBlock
 from wagtailcodeblock.blocks import CodeBlock
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.search import index
 
 
@@ -83,3 +83,10 @@ class BlogPage(Page):
 
     parent_page_types = ["BlogIndexPage"]
     subpage_types = []
+
+    @property
+    def author_avatar_url(self):
+        import hashlib
+        email = self.owner.email if self.owner and self.owner.email else "nobody@example.com"
+        hash_email = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+        return f"https://seccdn.libravatar.org/avatar/{hash_email}?s=200&d=retro"

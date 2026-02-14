@@ -10,7 +10,11 @@ SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8
 ALLOWED_HOSTS = ["*"]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": True,
+    }
+}
 
 try:
     from .local import *

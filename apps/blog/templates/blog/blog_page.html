@@ -1,49 +1,160 @@
-{% extends "base.html" %} {% load static wagtailcore_tags wagtailimages_tags %}
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'blog/css/blog.css' %}" />
-{% endblock %} {% block content %}
-<div class="container blog-page">
-    <article class="blog-post">
-        <h1>{{ page.title }}</h1>
-        <p class="meta" style="color: #666; font-size: 0.9em">
-            Posted on {{ page.date }}
-        </p>
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
-        {% if page.tags.all.count %}
-        <div class="tags" style="margin-bottom: 20px">
-            Tags: {% for tag in page.tags.all %}
-            <a
-                href="{% pageurl page.get_parent %}?tag={{ tag }}"
-                class="tag"
-                style="
-                    background: #eee;
-                    padding: 2px 5px;
-                    border-radius: 3px;
-                    text-decoration: none;
-                "
-                >{{ tag }}</a
-            >
-            {% endfor %}
+{% block content %}
+<div class="min-h-screen bg-white">
+    {# Progress Bar #}
+    <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-primary z-50 w-0 transition-all duration-100"></div>
+
+    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+            
+            {# Left Sidebar: Meta & Author #}
+            <aside class="hidden lg:block lg:col-span-3">
+                <div class="sticky top-8 space-y-8">
+                    <a href="{% pageurl page.get_parent %}" class="btn btn-ghost btn-sm gap-2 pl-0 hover:bg-transparent hover:text-primary">
+                        ← Back to Blog
+                    </a>
+                    
+                    <div>
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-2">Published</div>
+                        <div class="text-gray-900 font-medium">{{ page.date }}</div>
+                    </div>
+
+                    <div>
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-2">Author</div>
+                        <div class="flex items-center gap-3">
+                            <div class="avatar">
+                                <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                    <img src="{{ page.author_avatar_url }}" alt="Author" />
+                                </div>
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-900">{{ page.owner.get_full_name|default:page.owner.username }}</div>
+                                <div class="text-xs text-gray-500">Editor</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if page.tags.all %}
+                    <div>
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-2">Tags</div>
+                        <div class="flex flex-wrap gap-2">
+                            {% for tag in page.tags.all %}
+                                <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-ghost hover:badge-primary transition-colors cursor-pointer">
+                                    {{ tag }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </aside>
+
+            {# Main Content #}
+            <main class="lg:col-span-6 min-w-0">
+                <article class="prose prose-lg prose-slate max-w-none focus:outline-none">
+                    {# Title Header #}
+                    <div class="not-prose mb-12">
+                        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-6 font-serif">
+                            {{ page.title }}
+                        </h1>
+                        <p class="text-xl text-gray-500 leading-relaxed font-serif">
+                            {{ page.intro }}
+                        </p>
+                    </div>
+
+                    {% if page.feed_image %}
+                    <div class="not-prose mb-12 -mx-4 sm:mx-0 rounded-2xl overflow-hidden shadow-xl">
+                        {% image page.feed_image original class="w-full h-auto object-cover" %}
+                    </div>
+                    {% endif %}
+
+                    <div id="article-content">
+                        {% for block in page.body %}
+                            {% include_block block %}
+                        {% endfor %}
+                    </div>
+                </article>
+            </main>
+
+            {# Right Sidebar: TOC #}
+            <aside class="hidden lg:block lg:col-span-3">
+                <div class="sticky top-8">
+                    <div class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">On This Page</div>
+                    <nav id="toc" class="space-y-1 text-sm border-l border-gray-200">
+                        {# JS will populate this #}
+                    </nav>
+                </div>
+            </aside>
         </div>
-        {% endif %} {% if page.feed_image %}
-        <figure class="main-image" style="margin-bottom: 20px">
-            {% image page.feed_image original class="img-responsive" %}
-        </figure>
-        {% endif %}
-
-        <div
-            class="intro"
-            style="font-weight: bold; font-size: 1.2em; margin-bottom: 20px"
-        >
-            {{ page.intro }}
-        </div>
-
-        <div class="body">
-            {% for block in page.body %} {% include_block block %} {% endfor %}
-        </div>
-
-        <hr />
-        <p><a href="{% pageurl page.get_parent %}">← Back to blog</a></p>
-    </article>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Progress Bar
+        const progressBar = document.getElementById('progress-bar');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        // TOC Generation
+        const article = document.getElementById('article-content');
+        const toc = document.getElementById('toc');
+        const headers = article.querySelectorAll('h2, h3');
+        
+        headers.forEach((header, index) => {
+            // Create ID if missing
+            if (!header.id) {
+                header.id = 'heading-' + index;
+            }
+
+            const link = document.createElement('a');
+            link.href = '#' + header.id;
+            link.textContent = header.textContent;
+            link.className = `block py-1 pl-4 border-l-2 border-transparent hover:border-gray-300 text-gray-500 hover:text-gray-900 transition-colors ${header.tagName === 'H3' ? 'ml-4' : ''}`;
+            link.dataset.target = header.id;
+            
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                header.scrollIntoView({ behavior: 'smooth' });
+                // Update URL
+                history.pushState(null, null, '#' + header.id);
+            });
+
+            toc.appendChild(link);
+        });
+
+        // Scroll Spy
+        const observerOptions = {
+            root: null,
+            rootMargin: '-100px 0px -66%',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const links = toc.querySelectorAll('a');
+                    links.forEach(link => {
+                        if (link.dataset.target === id) {
+                            link.classList.add('border-primary', 'text-primary', 'font-medium');
+                            link.classList.remove('border-transparent', 'text-gray-500');
+                        } else {
+                            link.classList.remove('border-primary', 'text-primary', 'font-medium');
+                            link.classList.add('border-transparent', 'text-gray-500');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        headers.forEach(header => observer.observe(header));
+    });
+</script>
 {% endblock %}

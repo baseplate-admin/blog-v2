@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
+    "django_vite",
     "django_filters",
     "wagtailcodeblock",
     "django.contrib.admin",
@@ -135,7 +136,7 @@ STATICFILES_FINDERS = [
 ]
 
 STATICFILES_DIRS = [
-    PROJECT_DIR / "static",
+    PROJECT_DIR / "assets",
 ]
 
 STATIC_ROOT = BASE_DIR / "static"
