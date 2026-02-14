@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@fontsource/inter";
+
 @plugin "@tailwindcss/typography";
 
 @plugin "daisyui"{
@@ -6,5 +8,5 @@
   logs: true;
 };
 
-@import "@fontsource/open-sans";
+
 

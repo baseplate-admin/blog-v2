@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "@fontsource/open-sans": "^5.2.7",
+        "@fontsource/inter": "^5.2.8",
         "@tailwindcss/vite": "^4.1.18",
         "tailwindcss": "^4.1.18",
         "vite": "^7.3.1"
