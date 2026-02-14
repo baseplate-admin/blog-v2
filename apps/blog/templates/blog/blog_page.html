@@ -39,9 +39,7 @@
         </div>
 
         <div class="body">
-            {% for block in page.body %}
-                {% include_block block %}
-            {% endfor %}
+            {% for block in page.body %} {% include_block block %} {% endfor %}
         </div>
 
         <hr />

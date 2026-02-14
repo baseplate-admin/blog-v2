@@ -45,11 +45,14 @@ class BlogIndexPage(Page):
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
-    body = StreamField([
-        ('paragraph', RichTextBlock()),
-        ('image', ImageChooserBlock()),
-        ('code', CodeBlock(label='Code')),
-    ], use_json_field=True)
+    body = StreamField(
+        [
+            ("paragraph", RichTextBlock()),
+            ("image", ImageChooserBlock()),
+            ("code", CodeBlock(label="Code")),
+        ],
+        use_json_field=True,
+    )
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
     feed_image = models.ForeignKey(
