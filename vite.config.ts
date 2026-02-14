@@ -2,11 +2,11 @@ import { defineConfig } from 'vite';
 
 import { resolve } from 'path';
 import tailwindcss from '@tailwindcss/vite';
-import twemoji from 'twemoji';
 
 export default defineConfig({
     plugins: [tailwindcss()],
     base: '/static/',
+    publicDir: resolve('./public'),
     build: {
         manifest: 'manifest.json',
         outDir: resolve('./static'),
