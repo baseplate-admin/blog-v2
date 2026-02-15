@@ -1,0 +1,14 @@
+{
+    "emeraldwalk.runonsave": {
+        "autoShowOutputPanel": "error",
+        "commands": [
+            {
+                "match": "[/\\\\]templates[/\\\\].*\\.html$", // match templates on Windows & POSIX
+                "cmd": "${workspaceFolder}\\\\.venv\\\\Scripts\\\\djhtml.exe \"${file}\" -t 4"
+            }
+        ]
+    },
+    "[django-html]": {
+        "editor.formatOnSave": false
+    }
+}

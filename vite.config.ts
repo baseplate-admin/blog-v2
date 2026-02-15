@@ -20,8 +20,8 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 vite: resolve('./assets/vite.ts'),
-                tailwindcss: resolve('./assets/tailwind.css'),
-                inter: resolve('./assets/fonts/inter.scss'),
+                tailwindcss: resolve('./assets/tailwind/tailwind.js'),
+                inter: resolve('./assets/fonts/inter.js'),
                 twemoji: resolve('./assets/twemoji/index.ts'),
             },
         },
