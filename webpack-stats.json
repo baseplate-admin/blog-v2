@@ -1,8 +1,8 @@
 {
-  "status": "error",
-  "assets": {},
-  "chunks": {},
-  "publicPath": "auto",
-  "error": "ModuleNotFoundError",
-  "message": "Module not found: Error: Can't resolve './assets/js/index' in 'D:\\Programming\\blog'"
+    "status": "error",
+    "assets": {},
+    "chunks": {},
+    "publicPath": "auto",
+    "error": "ModuleNotFoundError",
+    "message": "Module not found: Error: Can't resolve './assets/js/index' in 'D:\\Programming\\blog'"
 }
