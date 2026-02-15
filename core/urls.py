@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
-from debug_toolbar.toolbar import debug_toolbar_urls
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -20,6 +19,7 @@ urlpatterns = [
 if settings.DEBUG:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    from debug_toolbar.toolbar import debug_toolbar_urls
 
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()

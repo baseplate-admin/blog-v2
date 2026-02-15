@@ -1,0 +1,1 @@
+granian --interface wsgi core.wsgi:application
