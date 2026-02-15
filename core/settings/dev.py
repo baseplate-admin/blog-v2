@@ -19,11 +19,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DJANGO_VITE = {
-    "default": {
-        "dev_mode": True,
-    }
-}
+
 
 try:
     from .local import *

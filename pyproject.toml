@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "django-vite>=3.1.0",
+    "django-webpack-loader>=3.2.3",
     "wagtail>=7.3",
     "wagtailcodeblock>=1.30.0.0",
 ]
