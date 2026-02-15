@@ -21,7 +21,7 @@ export default defineConfig({
             input: {
                 vite: resolve('./assets/vite.ts'),
                 tailwindcss: resolve('./assets/tailwind/tailwind.js'),
-                inter: resolve('./assets/fonts/inter.js'),
+                inter: resolve('./assets/fonts/inter/inter.js'),
                 twemoji: resolve('./assets/twemoji/index.ts'),
             },
         },
