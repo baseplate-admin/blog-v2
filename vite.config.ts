@@ -27,6 +27,7 @@ export default defineConfig({
                 'right-arrow-icon': resolve('./assets/icons/RightArrow.svelte'),
                 'calendar-icon': resolve('./assets/icons/Calendar.svelte'),
                 'eye-icon': resolve('./assets/icons/Eye.svelte'),
+                'circle-icon': resolve('./assets/icons/Circle.svelte'),
             },
         },
     },
