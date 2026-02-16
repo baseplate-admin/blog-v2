@@ -41,14 +41,6 @@
                 });
             });
 
-            // Reading time calculation
-            const readingTimeEl = document.getElementById('reading-time');
-            if (readingTimeEl && article.innerText) {
-                const words = article.innerText.trim().split(/\s+/).length;
-                const mins = Math.max(1, Math.round(words / 230));
-                readingTimeEl.textContent = mins + ' min read';
-            }
-
             entries = items;
 
             const observer = new IntersectionObserver(

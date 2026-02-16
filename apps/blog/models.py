@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -13,6 +12,11 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.search import index
 from apps.home.models import HomePage
+from django.utils.html import strip_tags
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+import readtime
+
 
 class BlogPageTag(TaggedItemBase):
     content_object = ParentalKey(
@@ -23,7 +27,7 @@ class BlogPageTag(TaggedItemBase):
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
     subpage_types = ["BlogPage"]
-    parent_page_types=[HomePage]
+    parent_page_types = [HomePage]
 
     content_panels = Page.content_panels + [
         FieldPanel("intro"),
@@ -40,6 +44,16 @@ class BlogIndexPage(Page):
         tag = request.GET.get("tag")
         if tag:
             blogpages = blogpages.filter(blogpage__tags__name=tag)
+
+        # Pagination
+        page = request.GET.get("page")
+        paginator = Paginator(blogpages, 5)  # Show 5 blog posts per page
+        try:
+            blogpages = paginator.page(page)
+        except PageNotAnInteger:
+            blogpages = paginator.page(1)
+        except EmptyPage:
+            blogpages = paginator.page(paginator.num_pages)
 
         context["blogpages"] = blogpages
         context["request_tag"] = tag
@@ -97,3 +111,18 @@ class BlogPage(Page):
         email = self.owner.email if self.owner and self.owner.email else ""
         hash_email = hashlib.sha256(email.lower().encode("utf-8")).hexdigest()
         return f"https://seccdn.libravatar.org/avatar/{hash_email}?s=200&d=retro"
+
+    @property
+    def reading_time(self):
+        parts = []
+
+        for block in self.body:
+            if block.block_type == "paragraph":
+                # RichText stores HTML
+                parts.append(strip_tags(block.value.source))
+            elif block.block_type == "code":
+                parts.append(str(block.value))
+
+        text = "\n\n".join(parts)
+        result = readtime.of_text(text)
+        return result.text
