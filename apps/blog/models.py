@@ -12,7 +12,7 @@ from wagtailcodeblock.blocks import CodeBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.search import index
-
+from apps.home.models import HomePage
 
 class BlogPageTag(TaggedItemBase):
     content_object = ParentalKey(
@@ -22,6 +22,8 @@ class BlogPageTag(TaggedItemBase):
 
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
+    subpage_types = ["BlogPage"]
+    parent_page_types=[HomePage]
 
     content_panels = Page.content_panels + [
         FieldPanel("intro"),
@@ -45,6 +47,8 @@ class BlogIndexPage(Page):
 
 
 class BlogPage(Page):
+    parent_page_types = [BlogIndexPage]
+
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
     body = StreamField(
