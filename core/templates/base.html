@@ -24,8 +24,8 @@
             <base target="_blank">
         {% endif %}
 
-        {% block extra_css %}
-        {# Override this in templates to add extra stylesheets #}
+        {% block head %}
+            {# Override this in templates to add extra head contents #}
         {% endblock %}
         {# Vite Polyfill #}
         {% vite_asset 'assets/vite.ts' %}
