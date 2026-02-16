@@ -10,22 +10,27 @@ RUN npm run build
 # --- Stage 2: Python Builder (uv) ---
 FROM ghcr.io/astral-sh/uv:python3.14-alpine AS python-builder
 WORKDIR /app
-# Minimal build deps for Pillow/Postgres (No MariaDB)
-RUN apk add --no-cache build-base jpeg-dev zlib-dev libwebp-dev
+ENV UV_PYTHON_DOWNLOADS=0
 
-RUN --mount=type=bind \
-    uv venv /opt/venv && \
-    uv sync
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-default-groups
+
+COPY . /app
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-default-groups
 
 # --- Stage 3: Final Runtime ---
 FROM python:3.14-alpine
 WORKDIR /app
 
 # Runtime libraries
-RUN apk add --no-cache libpq libjpeg-turbo zlib libwebp && adduser -D wagtail
+RUN apk add --no-cache  zlib && adduser -D wagtail
 
 COPY --from=python-builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH" \
+ENV PATH="/app/.venv/bin:$PATH"\
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000
