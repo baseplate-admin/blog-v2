@@ -5,15 +5,50 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0001_initial'),
+        ("blog", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='body',
-            field=wagtail.fields.StreamField([('paragraph', 0), ('image', 1), ('code', 4)], block_lookup={0: ('wagtail.blocks.RichTextBlock', (), {}), 1: ('wagtail.images.blocks.ImageChooserBlock', (), {}), 2: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('bash', 'Bash/Shell'), ('css', 'CSS'), ('diff', 'diff'), ('html', 'HTML'), ('javascript', 'Javascript'), ('json', 'JSON'), ('python', 'Python'), ('scss', 'SCSS'), ('yaml', 'YAML')], 'help_text': 'Coding language', 'identifier': 'language', 'label': 'Language'}), 3: ('wagtail.blocks.TextBlock', (), {'identifier': 'code', 'label': 'Code'}), 4: ('wagtail.blocks.StructBlock', [[('language', 2), ('code', 3)]], {'label': 'Code'})}),
+            model_name="blogpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                [("paragraph", 0), ("image", 1), ("code", 4)],
+                block_lookup={
+                    0: ("wagtail.blocks.RichTextBlock", (), {}),
+                    1: ("wagtail.images.blocks.ImageChooserBlock", (), {}),
+                    2: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("bash", "Bash/Shell"),
+                                ("css", "CSS"),
+                                ("diff", "diff"),
+                                ("html", "HTML"),
+                                ("javascript", "Javascript"),
+                                ("json", "JSON"),
+                                ("python", "Python"),
+                                ("scss", "SCSS"),
+                                ("yaml", "YAML"),
+                            ],
+                            "help_text": "Coding language",
+                            "identifier": "language",
+                            "label": "Language",
+                        },
+                    ),
+                    3: (
+                        "wagtail.blocks.TextBlock",
+                        (),
+                        {"identifier": "code", "label": "Code"},
+                    ),
+                    4: (
+                        "wagtail.blocks.StructBlock",
+                        [[("language", 2), ("code", 3)]],
+                        {"label": "Code"},
+                    ),
+                },
+            ),
         ),
     ]
