@@ -8,107 +8,127 @@
 
 {% block content %}
     {% include "components/navbar.html" %}
-    <progress-bar></progress-bar>
+    <div class="min-h-screen bg-base-100 font-sans text-base-content py-8 px-4">
 
-    <div class="min-h-screen bg-base-100 font-sans text-base-content pb-12">
+        {# ── Main Card ────────────────────────────────────────── #}
+        <div class="card max-w-6xl mx-auto bg-base-200 shadow-2xl">
 
-        {# ── Article Header ──────────────────────────────────────── #}
-        <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 pb-12 text-center">
+            {# ── Card Body ─────────────────────────────────────── #}
+            <div class="card-body p-0">
 
-            {# Back Link #}
-            <div class="mb-8 flex justify-center">
-                <a href="{% pageurl page.get_parent %}" class="inline-flex items-center gap-2 text-sm font-medium text-base-content/60 hover:text-primary transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
-                    Back to blog
-                </a>
-            </div>
-
-            {# Tags #}
-            {% if page.tags.all %}
-                <div class="flex flex-wrap justify-center gap-2 mb-6">
-                    {% for tag in page.tags.all %}
-                        <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="px-2.5 py-1 rounded-md bg-base-200 border border-base-300 text-base-content/70 text-xs font-semibold hover:border-base-content/20 hover:text-primary transition-colors">
-                            #{{ tag }}
-                        </a>
-                    {% endfor %}
+                {# Back Link #}
+                <div class="px-6 sm:px-8 pt-8 pb-4">
+                    <a href="{% pageurl page.get_parent %}" class="inline-flex items-center gap-2 text-sm font-medium text-base-content/60 hover:text-primary transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
+                        Back to blog
+                    </a>
                 </div>
-            {% endif %}
 
-            {# Title #}
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-                {{ page.title }}
-            </h1>
+                {# Article Header #}
+                <header class="text-center px-6 sm:px-8 md:px-12 lg:px-16 pb-8">
 
-            {# Meta #}
-            <div class="flex items-center justify-center gap-2 text-base-content/60 text-sm font-medium">
-                <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"M j, Y" }}</time>
-                <span class="text-base-content/40">&middot;</span>
-                <span id="reading-time" class="italic"></span>
-            </div>
-        </header>
-
-        {# ── Cover Image ─────────────────────────────────────────── #}
-        {% if page.feed_image %}
-            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                <figure class="rounded-2xl overflow-hidden shadow-2xl ring-1 ring-base-300 bg-base-200 aspect-video md:aspect-21/9">
-                    {% image page.feed_image original class="w-full h-full object-cover" %}
-                </figure>
-            </div>
-        {% endif %}
-
-        {# ── Main Layout ────────────────────────────────────────── #}
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex gap-12 lg:gap-16">
-
-                {# Left Sidebar (TOC) #}
-                <aside class="hidden xl:block w-64 shrink-0 pt-2 sticky top-24 self-start h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar">
-                    <div class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-6">On this page</div>
-                    <table-of-contents></table-of-contents>
-                </aside>
-
-                {# Content #}
-                <main class="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
-
-                    {% if page.intro %}
-                        <p class="text-xl md:text-2xl text-base-content/80 font-medium leading-relaxed mb-10 border-l-4 border-primary/50 pl-6">
-                            {{ page.intro }}
-                        </p>
+                    {# Tags #}
+                    {% if page.tags.all %}
+                        <div class="flex flex-wrap justify-center gap-2 mb-6">
+                            {% for tag in page.tags.all %}
+                                <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-outline">
+                                    #{{ tag }}
+                                </a>
+                            {% endfor %}
+                        </div>
                     {% endif %}
 
-                    <article id="article-content" class="prose prose-invert prose-lg max-w-none
-                                                         prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content
-                                                         prose-h2:text-3xl prose-h2:mt-16 prose-h2:mb-6
-                                                         prose-h3:text-2xl prose-h3:mt-12
-                                                         prose-p:leading-8 prose-p:text-base-content/80
-                                                         prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                                                         prose-strong:text-white prose-strong:font-bold
-                                                         prose-code:text-primary/80 prose-code:bg-base-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:border prose-code:border-base-300
-                                                         prose-pre:bg-base-200 prose-pre:border prose-pre:border-base-300 prose-pre:rounded-xl
-                                                         prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-300
-                                                         prose-blockquote:border-l-primary prose-blockquote:bg-base-200/50 prose-blockquote:py-2 prose-blockquote:text-base-content/70
-                                                         prose-hr:border-base-300 prose-hr:my-12">
+                    {# Title #}
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                        {{ page.title }}
+                    </h1>
 
-                        {# Author Meta #}
-                        <div class="not-prose flex items-center gap-4 text-sm mb-12">
-                            <div class="w-12 h-12 rounded-full overflow-hidden bg-base-300 ring-2 ring-base-300">
-                                <img src="{{ page.author_avatar_url }}" alt="" class="w-full h-full object-cover">
+                    {# Meta #}
+                    <div class="flex items-center justify-center gap-3 text-base-content/60 text-sm font-medium">
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Updated</span>
+                            <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"F j, Y" }}</time>
+                        </div>
+                        <span class="text-base-content/40">&middot;</span>
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span id="reading-time" class="italic"></span>
+                        </div>
+                    </div>
+                </header>
+
+                {# Cover Image #}
+                {% if page.feed_image %}
+                    <figure class="w-full aspect-video md:aspect-[21/9] overflow-hidden bg-base-300">
+                        {% image page.feed_image original class="w-full h-full object-cover" %}
+                    </figure>
+                {% endif %}
+
+                {# Content Area with Sidebar Layout #}
+                <div class="px-6 sm:px-8 md:px-12 lg:px-16 py-12">
+                    <div class="flex gap-8 lg:gap-12">
+
+                        {# Left Sidebar - TOC #}
+                        <aside class="hidden lg:block w-56 xl:w-64 shrink-0 self-start">
+                            <div class="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
+                                <div class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">On this page</div>
+                                <table-of-contents></table-of-contents>
                             </div>
-                            <div class="flex flex-col">
-                                <span class="font-bold text-base-content flex items-center gap-2">
-                                    {{ page.owner.get_full_name|default:page.owner.username }}
-                                </span>
-                                <div class="flex items-center gap-2 text-base-content/60 mt-0.5 font-medium">
-                                    <span class="bg-primary/20 text-primary px-1.5 py-0.5 rounded text-xs font-semibold">Author</span>
+                        </aside>
+
+                        {# Main Content #}
+                        <div class="flex-1 min-w-0 max-w-3xl">
+
+                            {# Author Meta #}
+                            <div class="flex items-center gap-3 text-sm mb-8 pb-8 border-b border-base-content/10">
+                                <div class="w-10 h-10 rounded-full overflow-hidden bg-base-300 ring-2 ring-primary/20 shrink-0">
+                                    <img src="{{ page.author_avatar_url }}" alt="" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-base-content">
+                                        {{ page.owner.get_full_name|default:page.owner.username }}
+                                    </span>
                                 </div>
                             </div>
+
+                            {% if page.intro %}
+                                <p class="text-xl md:text-2xl text-base-content/80 font-medium leading-relaxed mb-12 border-l-4 border-primary/50 pl-6">
+                                    {{ page.intro }}
+                                </p>
+                            {% endif %}
+
+                            <article id="article-content" class="prose prose-invert prose-lg max-w-none
+                                                                 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content
+                                                                 prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
+                                                                 prose-h3:text-2xl prose-h3:mt-10
+                                                                 prose-p:leading-8 prose-p:text-base-content/80
+                                                                 prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                                                                 prose-strong:text-white prose-strong:font-bold
+                                                                 prose-code:text-primary/80 prose-code:bg-base-300 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:border prose-code:border-base-content/20
+                                                                 prose-pre:bg-base-300 prose-pre:border prose-pre:border-base-content/10 prose-pre:rounded-xl
+                                                                 prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-content/10
+                                                                 prose-blockquote:border-l-primary prose-blockquote:bg-base-300/50 prose-blockquote:py-2 prose-blockquote:text-base-content/70
+                                                                 prose-hr:border-base-content/20 prose-hr:my-10">
+
+                                {% for block in page.body %}
+                                    {% include_block block %}
+                                {% endfor %}
+                            </article>
+
+                            {# Table of Contents - Mobile/Tablet #}
+                            <div class="mt-12 p-6 bg-base-300 rounded-xl border border-base-content/10 lg:hidden">
+                                <div class="text-sm font-bold text-base-content/70 uppercase tracking-widest mb-4">On this page</div>
+                                <table-of-contents></table-of-contents>
+                            </div>
                         </div>
-
-                        {% for block in page.body %}
-                            {% include_block block %}
-                        {% endfor %}
-                    </article>
-
-                </main>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

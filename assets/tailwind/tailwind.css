@@ -14,9 +14,9 @@
   color-scheme: dark;
 
   /* Hashnode-inspired Deep Dark Theme (Purple Tint) */
-  --color-base-100: oklch(15% 0.02 280); /* Deep Purple/Slate */
-  --color-base-200: oklch(20% 0.04 280); /* Surface Purple/Slate */
-  --color-base-300: oklch(30% 0.05 280); /* Border Purple/Slate */
+  --color-base-100: rgb(8, 8, 9); /* Deep Purple/Slate */
+  --color-base-200: rgb(17, 17, 20); /* Surface Purple/Slate */
+  --color-base-300: rgb(25, 25, 20); /* Border Purple/Slate */
   --color-base-content: oklch(98% 0.01 280); /* White/Off-white */
 
   /* Vibrant Purple Primary */
