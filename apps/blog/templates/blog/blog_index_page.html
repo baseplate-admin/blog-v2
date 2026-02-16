@@ -3,6 +3,8 @@
 
 {% block head %}
     {% vite_asset 'assets/icons/X.svelte' %}
+    {% vite_asset 'assets/icons/Circle.svelte' %}
+
 {% endblock %}
 
 
@@ -72,9 +74,9 @@
                                 {# Meta Footer #}
                                 <div class="flex flex-wrap items-center gap-3 text-sm text-base-content/60">
                                     <span>{{ post.date|date:"F j, Y" }}</span>
-                                    <span>&middot;</span>
+                                    <span><circle-icon class='size-1.5 fill-base-content'></circle-icon></span>
                                     <span>{{ post.reading_time|default:"4 min read" }}</span>
-                                    <span>&middot;</span>
+                                    <span><circle-icon class='size-1.5 fill-base-content'></circle-icon></span>
                                     <span>{{ post.owner.get_full_name|default:post.owner.username }}</span>
                                 </div>
 
