@@ -35,10 +35,13 @@
     function applyTheme(dark: boolean) {
         const theme = dark ? 'tanstack-dark' : 'tanstack-light';
         document.documentElement.setAttribute('data-theme', theme);
+        document.body.className = `bg-base-100 text-base-content min-h-screen transition-colors duration-300`;
     }
 </script>
 
-<nav class="navbar max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<nav
+    class="navbar bg-base-100 text-base-content max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300"
+>
     <div class="navbar-start">
         <a href="/" class="text-xl font-bold tracking-tight">The Tinkerer</a>
     </div>
