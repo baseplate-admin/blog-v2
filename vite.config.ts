@@ -2,18 +2,12 @@ import { defineConfig } from 'vite';
 
 import { resolve } from 'path';
 import tailwindcss from '@tailwindcss/vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), svelte()],
     base: '/static/',
     publicDir: resolve('./public'),
-    css: {
-        preprocessorOptions: {
-            scss: {
-                additionalData: `$base-url: '${'/static/'}';`,
-            },
-        },
-    },
     build: {
         manifest: 'manifest.json',
         outDir: resolve('./static'),
@@ -23,6 +17,11 @@ export default defineConfig({
                 tailwindcss: resolve('./assets/tailwind/tailwind.ts'),
                 inter: resolve('./assets/fonts/inter/inter.ts'),
                 twemoji: resolve('./assets/twemoji/index.ts'),
+
+                // Svelte components
+                navbar: resolve('./assets/components/Navbar.svelte'),
+                progressbar: resolve('./assets/components/ProgressBar.svelte'),
+                toc: resolve('./assets/components/TableOfContents.svelte'),
             },
         },
     },

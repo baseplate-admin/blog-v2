@@ -13,8 +13,13 @@
         "isolatedModules": true,
         "allowJs": true,
         "baseUrl": ".",
-        "types": ["vite/client", "node"]
+        "types": ["vite/client", "node", "svelte"]
     },
-    "include": ["assets/**/*", "vite.config.ts", "vite-env.d.ts"],
+    "include": [
+        "assets/**/*",
+        "vite.config.ts",
+        "vite-env.d.ts",
+        "**/*.svelte"
+    ],
     "exclude": ["node_modules", "static", "dist"]
 }
