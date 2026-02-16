@@ -28,9 +28,9 @@
     });
 </script>
 
-<div class="fixed top-0 left-0 w-full h-0.5 z-50 pointer-events-none">
+<div class="fixed top-0 left-0 w-full h-1 z-50 pointer-events-none">
     <div
-        class="h-full bg-primary transition-[width] duration-75 ease-out"
+        class="h-full bg-primary transition-[width] duration-75 ease-out shadow-[0_0_10px_var(--color-primary)]"
         style="width: {width}%"
     ></div>
 </div>

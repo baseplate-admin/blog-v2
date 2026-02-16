@@ -13,17 +13,17 @@
   prefersdark: true;
   color-scheme: dark;
 
-  /* Deep dark backgrounds — like TanStack */
-  --color-base-100: oklch(14% 0.005 260);
-  --color-base-200: oklch(18% 0.008 260);
-  --color-base-300: oklch(23% 0.01 260);
-  --color-base-content: oklch(90% 0.01 250);
+  /* Hashnode-inspired Deep Dark Theme (Purple Tint) */
+  --color-base-100: oklch(15% 0.02 280); /* Deep Purple/Slate */
+  --color-base-200: oklch(20% 0.04 280); /* Surface Purple/Slate */
+  --color-base-300: oklch(30% 0.05 280); /* Border Purple/Slate */
+  --color-base-content: oklch(98% 0.01 280); /* White/Off-white */
 
-  /* Teal primary — signature TanStack color */
-  --color-primary: oklch(72% 0.17 185);
-  --color-primary-content: oklch(14% 0.005 260);
+  /* Vibrant Purple Primary */
+  --color-primary: oklch(60% 0.2 290);
+  --color-primary-content: oklch(98% 0.01 290);
 
-  /* Slate blue secondary */
+  /* Secondary */
   --color-secondary: oklch(60% 0.12 260);
   --color-secondary-content: oklch(95% 0.01 260);
 

@@ -18,109 +18,81 @@
     let activeId = $state<string>('');
     let backUrl = $state('');
 
-    // Read back-url attribute
     let el: HTMLElement | undefined = $state();
 
-    onMount(async () => {
-        await tick();
+    onMount(() => {
+        tick().then(() => {
+            const host = el?.closest('table-of-contents');
+            backUrl = host?.getAttribute('data-back-url') || '/blog/';
 
-        // Get the back URL from the host element attribute
-        const host = el?.closest('table-of-contents');
-        backUrl = host?.getAttribute('data-back-url') || '/blog/';
+            const article = document.getElementById('article-content');
+            if (!article) return;
 
-        const article = document.getElementById('article-content');
-        if (!article) return;
+            const headers = article.querySelectorAll('h2, h3');
+            const items: TocEntry[] = [];
 
-        const headers = article.querySelectorAll('h2, h3');
-
-        // Build entries and assign IDs
-        const items: TocEntry[] = [];
-        headers.forEach((header, index) => {
-            const id = header.id || 'section-' + index;
-            header.id = id;
-            items.push({
-                id,
-                text: header.textContent?.trim() || '',
-                level: header.tagName === 'H3' ? 3 : 2,
+            headers.forEach((header, index) => {
+                const id = header.id || 'section-' + index;
+                header.id = id;
+                items.push({
+                    id,
+                    text: header.textContent?.trim() || '',
+                    level: header.tagName === 'H3' ? 3 : 2,
+                });
             });
+
+            // Reading time calculation
+            const readingTimeEl = document.getElementById('reading-time');
+            if (readingTimeEl && article.innerText) {
+                const words = article.innerText.trim().split(/\s+/).length;
+                const mins = Math.max(1, Math.round(words / 230));
+                readingTimeEl.textContent = mins + ' min read';
+            }
+
+            entries = items;
+
+            const observer = new IntersectionObserver(
+                (observedEntries) => {
+                    observedEntries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            activeId = entry.target.id;
+                        }
+                    });
+                },
+                { rootMargin: '-80px 0px -70%' },
+            );
+
+            headers.forEach((h) => observer.observe(h));
+
+            return () => observer.disconnect();
         });
-        entries = items;
-
-        // Also compute reading time
-        const readingTimeEl = document.getElementById('reading-time');
-        if (readingTimeEl) {
-            const text = article.innerText || article.textContent || '';
-            const words = text.trim().split(/\s+/).length;
-            const mins = Math.max(1, Math.round(words / 230));
-            readingTimeEl.textContent = mins + ' min read';
-        }
-
-        // Scroll spy
-        const observer = new IntersectionObserver(
-            (observedEntries) => {
-                for (const entry of observedEntries) {
-                    if (entry.isIntersecting) {
-                        activeId = entry.target.id;
-                    }
-                }
-            },
-            { rootMargin: '-80px 0px -70%' },
-        );
-
-        headers.forEach((h) => observer.observe(h));
-
-        return () => observer.disconnect();
     });
 
     function scrollTo(id: string) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             history.pushState(null, '', '#' + id);
+            activeId = id;
         }
     }
 </script>
 
-<div class="sticky top-8" bind:this={el}>
-    <div
-        class="text-[11px] font-bold text-base-content/30 uppercase tracking-[0.15em] mb-4"
-    >
-        Contents
-    </div>
-    <nav class="flex flex-col border-l border-base-content/10">
+<div class="sticky top-24" bind:this={el}>
+    <nav class="flex flex-col border-l border-base-300">
         {#each entries as entry (entry.id)}
             <button
                 onclick={() => scrollTo(entry.id)}
-                class="block text-left border-l-2 -ml-px transition-all duration-150 hover:text-primary cursor-pointer
+                class="block text-left border-l-2 -ml-px transition-all duration-200 outline-none
                     {entry.level === 3
-                    ? 'pl-6 text-[11px] py-1'
-                    : 'pl-4 text-xs font-medium py-1.5'}
+                    ? 'pl-6 py-1.5 text-xs'
+                    : 'pl-4 py-2 text-sm font-medium'}
                     {activeId === entry.id
-                    ? 'text-primary border-primary font-medium'
-                    : 'text-base-content/40 border-transparent'}"
+                    ? 'text-primary border-primary'
+                    : 'text-base-content/60 border-transparent hover:text-base-content hover:border-base-300/50'}"
             >
                 {entry.text}
             </button>
         {/each}
     </nav>
-    <a
-        href={backUrl}
-        class="inline-flex items-center gap-1.5 mt-8 text-xs font-medium text-base-content/30 hover:text-primary transition-colors"
-    >
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-3.5 h-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"
-            />
-        </svg>
-        All posts
-    </a>
 </div>
