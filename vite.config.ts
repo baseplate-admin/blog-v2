@@ -20,8 +20,12 @@ export default defineConfig({
 
                 // Svelte components
                 navbar: resolve('./assets/components/Navbar.svelte'),
-                progressbar: resolve('./assets/components/ProgressBar.svelte'),
                 toc: resolve('./assets/components/TableOfContents.svelte'),
+
+                // Icons
+                'x-icon': resolve('./assets/icons/X.svelte'),
+                'right-arrow-icon': resolve('./assets/icons/RightArrow.svelte'),
+                'calendar-icon': resolve('./assets/icons/Calendar.svelte'),
             },
         },
     },
