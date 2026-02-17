@@ -70,6 +70,10 @@
             body.classList.remove('dark');
         }
     }
+    const mapping = $derived([
+        { href: blogUrl, description: `Blog` },
+        { href: projectUrl, description: `Projects` },
+    ]);
 </script>
 
 <nav
@@ -90,20 +94,15 @@
             class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
             >About</a
         >
-        {#if blogUrl}
-            <a
-                href={blogUrl}
-                class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
-                >Blog</a
-            >
-        {/if}
-        {#if projectUrl}
-            <a
-                href={projectUrl}
-                class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
-                >Projects</a
-            >
-        {/if}
+        {#each mapping as item}
+            {#if item.href}
+                <a
+                    href={item.href}
+                    class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
+                    >{item.description}</a
+                >
+            {/if}
+        {/each}
         <a
             href="/contact/"
             class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
