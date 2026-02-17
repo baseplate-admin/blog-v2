@@ -18,12 +18,11 @@ services:
     container_name: blog
     restart: unless-stopped
     environment:
-      POSTGRES_SERVER: postgres
+      POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: blog
-      POSTGRES_HOST: postgres
       DJANGO_ALLOWED_HOSTS: 'blog.zad.bd'
       DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd'
     networks:
