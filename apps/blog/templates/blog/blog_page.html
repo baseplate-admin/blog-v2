@@ -15,142 +15,148 @@
 
 {% block content %}
     {% include "components/navbar.html" %}
-    <div class="min-h-screen bg-base-100 font-sans text-base-content py-8 px-4">
+    <div class="min-h-screen flex flex-col bg-base-100 font-sans text-base-content">
 
         {# ── Main Card ────────────────────────────────────────── #}
-        <div class="card max-w-6xl mx-auto bg-base-200 shadow-2xl">
+        <main class="flex-1 px-4 py-8">
+            <div class="card max-w-6xl mx-auto bg-base-200 shadow-2xl">
 
             {# ── Card Body ─────────────────────────────────────── #}
-            <div class="card-body p-0">
+                <div class="card-body p-0">
 
                 {# Back Link #}
-                <div class="px-6 sm:px-8 pt-8 pb-4">
-                    <a href="{% pageurl page.get_parent %}" class="inline-flex items-center gap-2 text-sm font-medium text-base-content/60 hover:text-primary transition-colors">
-                        <right-arrow-icon></right-arrow-icon>
-                        Back to blog
-                    </a>
-                </div>
+                    <div class="px-6 sm:px-8 pt-8 pb-4">
+                        <a href="{% pageurl page.get_parent %}" class="inline-flex items-center gap-2 text-sm font-medium text-base-content/60 hover:text-primary transition-colors">
+                            <right-arrow-icon></right-arrow-icon>
+                            Back to blog
+                        </a>
+                    </div>
 
                 {# Article Header #}
-                <header class="text-center px-6 sm:px-8 md:px-12 lg:px-16 pb-8">
+                    <header class="text-center px-6 sm:px-8 md:px-12 lg:px-16 pb-8">
 
                     {# Tags #}
-                    {% if page.tags.all %}
-                        <div class="flex flex-wrap justify-center gap-2 mb-6">
-                            {% for tag in page.tags.all %}
-                                <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-outline items-center">
-                                    #{{ tag }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                        {% if page.tags.all %}
+                            <div class="flex flex-wrap justify-center gap-2 mb-6">
+                                {% for tag in page.tags.all %}
+                                    <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-outline items-center">
+                                        #{{ tag }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
                     {# Title #}
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-                        {{ page.title }}
-                    </h1>
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                            {{ page.title }}
+                        </h1>
 
                     {# Meta #}
-                    <div class="flex items-center justify-center gap-3 text-base-content/60 text-sm font-medium">
-                        <div class="flex items-center gap-1.5">
-                            <calendar-icon></calendar-icon>
-                            <span>Updated</span>
-                            <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"F j, Y" }}</time>
+                        <div class="flex items-center justify-center gap-3 text-base-content/60 text-sm font-medium">
+                            <div class="flex items-center gap-1.5">
+                                <calendar-icon></calendar-icon>
+                                <span>Updated</span>
+                                <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"F j, Y" }}</time>
+                            </div>
+                            <span class="text-base-content/40"><circle-icon class='size-1.5 fill-base-content'></circle-icon></span>
+                            <div class="flex items-center gap-1.5">
+                                <eye-icon></eye-icon>
+                                <span >{{ page.reading_time }}</span>
+                            </div>
                         </div>
-                        <span class="text-base-content/40"><circle-icon class='size-1.5 fill-base-content'></circle-icon></span>
-                        <div class="flex items-center gap-1.5">
-                            <eye-icon></eye-icon>
-                            <span >{{ page.reading_time }}</span>
-                        </div>
-                    </div>
-                </header>
+                    </header>
 
                 {# Cover Image #}
-                {% if page.feed_image %}
-                    <figure class="w-full aspect-video md:aspect-21/9 overflow-hidden bg-base-300">
-                        {% image page.feed_image original class="w-full h-full object-cover" %}
-                    </figure>
-                {% endif %}
+                    {% if page.feed_image %}
+                        <figure class="w-full aspect-video md:aspect-21/9 overflow-hidden bg-base-300">
+                            {% image page.feed_image original class="w-full h-full object-cover" %}
+                        </figure>
+                    {% endif %}
 
                 {# Content Area with Sidebar Layout #}
-                <div class="px-6 sm:px-8 md:px-12 lg:px-16 py-12">
-                    <div class="flex gap-8 lg:gap-12">
+                    <div class="px-6 sm:px-8 md:px-12 lg:px-16 py-12">
+                        <div class="flex gap-8 lg:gap-12">
 
                         {# Left Sidebar - TOC #}
-                        <aside class="hidden lg:block w-56 xl:w-64 shrink-0 self-start">
-                            <div class="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
-                                <div class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">On this page</div>
-                                <table-of-contents></table-of-contents>
-                            </div>
-                        </aside>
+                            <aside class="hidden lg:block w-56 xl:w-64 shrink-0 self-start">
+                                <div class="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
+                                    <div class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">On this page</div>
+                                    <table-of-contents></table-of-contents>
+                                </div>
+                            </aside>
 
                         {# Main Content #}
-                        <div class="flex-1 min-w-0 max-w-3xl">
+                            <div class="flex-1 min-w-0 max-w-3xl">
 
                             {# Author Meta #}
-                            <div class="flex items-center gap-3 text-sm mb-8 pb-8 border-b border-base-content/10">
-                                <div class="avatar">
-                                    <div class="w-10 rounded-full">
-                                        <img src="{{ page.author_avatar_url }}" alt="" class="w-full h-full object-cover">
+                                <div class="flex items-center gap-3 text-sm mb-8 pb-8 border-b border-base-content/10">
+                                    <div class="avatar">
+                                        <div class="w-10 rounded-full">
+                                            <img src="{{ page.author_avatar_url }}" alt="" class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-base-content">
+                                            {{ page.owner.get_full_name|default:page.owner.username }}
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="flex flex-col">
-                                    <span class="font-bold text-base-content">
-                                        {{ page.owner.get_full_name|default:page.owner.username }}
-                                    </span>
-                                </div>
-                            </div>
 
-                            {% if page.intro %}
-                                <p class="text-xl md:text-2xl text-base-content/80 font-medium leading-relaxed mb-12 border-l-4 border-primary/50 pl-6">
-                                    {{ page.intro }}
-                                </p>
-                            {% endif %}
+                                {% if page.intro %}
+                                    <p class="text-xl md:text-2xl text-base-content/80 font-medium leading-relaxed mb-12 border-l-4 border-primary/50 pl-6">
+                                        {{ page.intro }}
+                                    </p>
+                                {% endif %}
 
-                            <article id="article-content" class="prose prose-invert prose-lg max-w-none
-                                                                 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content
-                                                                 prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
-                                                                 prose-h3:text-2xl prose-h3:mt-10
-                                                                 prose-p:leading-8 prose-p:text-base-content/80
-                                                                 prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                                                                 prose-strong:text-white prose-strong:font-bold
-                                                                 prose-code:text-primary/80 prose-code:bg-base-300 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:border prose-code:border-base-content/20
-                                                                 prose-pre:bg-base-300 prose-pre:border prose-pre:border-base-content/10 prose-pre:rounded-xl
-                                                                 prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-content/10
-                                                                 prose-blockquote:border-l-primary prose-blockquote:bg-base-300/50 prose-blockquote:py-2 prose-blockquote:text-base-content/70
-                                                                 prose-hr:border-base-content/20 prose-hr:my-10">
+                                <article id="article-content" class="prose prose-invert prose-lg max-w-none
+                                                                     prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content
+                                                                     prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
+                                                                     prose-h3:text-2xl prose-h3:mt-10
+                                                                     prose-p:leading-8 prose-p:text-base-content/80
+                                                                     prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                                                                     prose-strong:text-white prose-strong:font-bold
+                                                                     prose-code:text-primary/80 prose-code:bg-base-300 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:border prose-code:border-base-content/20
+                                                                     prose-pre:bg-base-300 prose-pre:border prose-pre:border-base-content/10 prose-pre:rounded-xl
+                                                                     prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-content/10
+                                                                     prose-blockquote:border-l-primary prose-blockquote:bg-base-300/50 prose-blockquote:py-2 prose-blockquote:text-base-content/70
+                                                                     prose-hr:border-base-content/20 prose-hr:my-10">
 
-                                {% for block in page.body %}
-                                    {% include_block block %}
-                                {% endfor %}
-                            </article>
+                                    {% for block in page.body %}
+                                        {% include_block block %}
+                                    {% endfor %}
+                                </article>
 
                             {# Table of Contents - Mobile/Tablet #}
-                            <div class="lg:hidden">
-                                <button class="btn btn-circle btn-primary fixed bottom-6 left-6 z-50 shadow-xl" onclick="toc_modal.showModal()" aria-label="Table of Contents">
-                                    <toc-icon></toc-icon>
-                                </button>
-                                <dialog id="toc_modal" class="modal modal-bottom sm:modal-middle">
-                                    <div class="modal-box">
-                                        <h3 class="font-bold text-lg mb-4">Table of Contents</h3>
-                                        <div class="max-h-[60vh] overflow-y-auto">
-                                            <table-of-contents></table-of-contents>
+                                <div class="lg:hidden">
+                                    <button class="btn btn-circle btn-primary fixed bottom-6 left-6 z-50 shadow-xl" onclick="toc_modal.showModal()" aria-label="Table of Contents">
+                                        <toc-icon></toc-icon>
+                                    </button>
+                                    <dialog id="toc_modal" class="modal modal-bottom sm:modal-middle">
+                                        <div class="modal-box">
+                                            <h3 class="font-bold text-lg mb-4">Table of Contents</h3>
+                                            <div class="max-h-[60vh] overflow-y-auto">
+                                                <table-of-contents></table-of-contents>
+                                            </div>
+                                            <div class="modal-action">
+                                                <form method="dialog">
+                                                    <button class="btn">Close</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="modal-action">
-                                            <form method="dialog">
-                                                <button class="btn">Close</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <form method="dialog" class="modal-backdrop">
-                                        <button>close</button>
-                                    </form>
-                                </dialog>
+                                        <form method="dialog" class="modal-backdrop">
+                                            <button>close</button>
+                                        </form>
+                                    </dialog>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        </main>
+
+        {% include "components/footer.html" %}
+
     </div>
 {% endblock %}
