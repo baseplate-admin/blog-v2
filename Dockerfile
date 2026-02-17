@@ -22,10 +22,10 @@ WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project
+    uv sync --frozen --no-install-project --no-default-groups
 COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen
+    uv sync --frozen --no-default-groups
 
 # Then, use a final image without uv
 FROM python:3.14-alpine
@@ -43,7 +43,7 @@ WORKDIR /app
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-ENV DJANGO_SETTINGS_MODULE="core.settings.dev"
+ENV DJANGO_SETTINGS_MODULE="core.settings.production"
 # Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles

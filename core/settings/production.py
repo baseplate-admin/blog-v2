@@ -9,7 +9,7 @@ DEBUG = False
 STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesStorage"
 
 SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["blog.zad.bd"]
 
 try:
     from .local import *
