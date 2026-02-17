@@ -1,4 +1,14 @@
 services:
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: blog
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
   backend:
       build:
         context: .
@@ -27,3 +37,7 @@ services:
 networks:
   proxy:
     external: true
+
+
+volumes:
+  postgres_data:
