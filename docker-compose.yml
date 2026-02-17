@@ -16,11 +16,11 @@ services:
             - proxy
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.kuma.rule=Host(`blog.zad.bd`)"
-        - "traefik.http.routers.kuma.entrypoints=websecure"
-        - "traefik.http.routers.kuma.tls=true"
-        - "traefik.http.routers.kuma.tls.certresolver=letsencrypt"
-        - "traefik.http.services.kuma.loadbalancer.server.port=8000"
+        - "traefik.http.routers.backend.rule=Host(`blog.zad.bd`)"
+        - "traefik.http.routers.backend.entrypoints=websecure"
+        - "traefik.http.routers.backend.tls=true"
+        - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+        - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
 
 networks:
