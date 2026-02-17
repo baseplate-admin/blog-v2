@@ -8,9 +8,14 @@ services:
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: blog
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     networks:
       - backend_net  # This is fine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d blog"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -28,7 +33,8 @@ services:
       DJANGO_ALLOWED_HOSTS: 'blog.zad.bd,localhost,127.0.0.1,blog'
       DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd,http://blog:8000'
     depends_on:
-      - postgres # Ensures postgres starts first
+          postgres:
+            condition: service_healthy
     networks:
       - backend_net
       - proxy
