@@ -7,39 +7,42 @@ services:
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: blog
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_net
 
   backend:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      container_name: blog
-      restart: unless-stopped
-      environment:
-        POSTGRES_SERVER: postgres
-        POSTGRES_PORT: 5432
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: supersecretpassword
-        POSTGRES_DB: blog
-        POSTGRES_HOST: postgres
-        DJANGO_ALLOWED_HOSTS: 'blog.zad.bd'
-        DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd'
-
-      networks:
-            - proxy
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.blog.rule=Host(`blog.zad.bd`)"
-        - "traefik.http.routers.blog.entrypoints=websecure"
-        - "traefik.http.routers.blog.tls=true"
-        - "traefik.http.routers.blog.tls.certresolver=letsencrypt"
-        - "traefik.http.services.blog.loadbalancer.server.port=8000"
-
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog
+    restart: unless-stopped
+    environment:
+      POSTGRES_SERVER: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: blog
+      POSTGRES_HOST: postgres
+      DJANGO_ALLOWED_HOSTS: 'blog.zad.bd'
+      DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd'
+    networks:
+      - proxy
+      - backend_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blog.rule=Host(`blog.zad.bd`)"
+      - "traefik.http.routers.blog.entrypoints=websecure"
+      - "traefik.http.routers.blog.tls=true"
+      - "traefik.http.routers.blog.tls.certresolver=letsencrypt"
+      - "traefik.http.services.blog.loadbalancer.server.port=8000"
 
 networks:
   proxy:
     external: true
-
+  backend_net:
+    driver: bridge
+    internal: true
 
 volumes:
   postgres_data:
