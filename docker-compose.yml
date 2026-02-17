@@ -1,9 +1,9 @@
 services:
-  blog-backend:
+  backend:
       build:
         context: .
         dockerfile: Dockerfile
-      container_name: blog-backend
+      container_name: blog
       restart: unless-stopped
       ports:
         - 8000:8000
@@ -20,11 +20,11 @@ services:
             - proxy
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.blog-backend.rule=Host(`blog.zad.bd`)"
-        - "traefik.http.routers.blog-backend.entrypoints=websecure"
-        - "traefik.http.routers.blog-backend.tls=true"
-        - "traefik.http.routers.blog-backend.tls.certresolver=letsencrypt"
-        - "traefik.http.services.blog-backend.loadbalancer.server.port=8000"
+        - "traefik.http.routers.blog.rule=Host(`blog.zad.bd`)"
+        - "traefik.http.routers.blog.entrypoints=websecure"
+        - "traefik.http.routers.blog.tls=true"
+        - "traefik.http.routers.blog.tls.certresolver=letsencrypt"
+        - "traefik.http.services.blog.loadbalancer.server.port=8000"
 
 
 networks:
