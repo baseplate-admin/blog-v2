@@ -18,6 +18,7 @@
 />
 
 <script lang="ts">
+    import { v7 } from 'uuid';
     import { Menu, Moon, Sun, X } from '@lucide/svelte';
     import { onMount } from 'svelte';
 
@@ -30,6 +31,9 @@
     let { blogUrl, projectUrl }: Props = $props();
     let isDark = $state(false);
     let mobileOpen = $state(false);
+    const uid = v7();
+    const popoverId = `popover-${uid}`;
+    const anchorName = `--anchor-${uid}`;
 
     // Initial load logic
     onMount(() => {
@@ -133,6 +137,8 @@
                 aria-label="Toggle menu"
                 class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all"
                 onclick={() => (mobileOpen = !mobileOpen)}
+                popovertarget={popoverId}
+                style={`anchor-name:${anchorName}`}
             >
                 <span class="relative inline-block w-5 h-5">
                     <!-- Menu icon (hidden when open) -->
@@ -157,57 +163,38 @@
                 </span>
             </button>
 
-            {#if mobileOpen}
-                <div
-                    class="absolute right-0 mt-2 w-56 bg-base-100 border rounded-lg shadow-lg z-50"
-                >
-                    <nav class="flex flex-col p-2">
-                        <a
-                            href="/about/"
-                            class="p-2 rounded text-sm hover:bg-base-200"
-                            >About</a
-                        >
-                        {#each mapping as item}
-                            {#if item.href}
-                                <a
-                                    href={item.href}
-                                    class="p-2 rounded text-sm hover:bg-base-200"
-                                    >{item.description}</a
-                                >
+            <!-- Popover dropdown using popover API (daisyUI) -->
+            <ul
+                class="dropdown menu w-56 rounded-box bg-base-100 border shadow-lg z-50 p-2"
+                popover
+                id={popoverId}
+                style={`position-anchor:${anchorName}`}
+            >
+                <li><a href="/about/">About</a></li>
+                {#each mapping as item}
+                    {#if item.href}
+                        <li><a href={item.href}>{item.description}</a></li>
+                    {/if}
+                {/each}
+                <li><a href="/contact/">Contact</a></li>
+                <li class="pt-2 mt-2 border-t">
+                    <label class="flex items-center gap-2 cursor-pointer p-2">
+                        <input
+                            type="checkbox"
+                            class="sr-only"
+                            bind:checked={isDark}
+                        />
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            {#if isDark}
+                                <Moon class="w-5 h-5 text-current" />
+                            {:else}
+                                <Sun class="w-5 h-5 text-current" />
                             {/if}
-                        {/each}
-                        <a
-                            href="/contact/"
-                            class="p-2 rounded text-sm hover:bg-base-200"
-                            >Contact</a
-                        >
-
-                        <div class="pt-2 mt-2 border-t">
-                            <label
-                                class="flex items-center gap-2 cursor-pointer p-2"
-                            >
-                                <input
-                                    type="checkbox"
-                                    class="sr-only"
-                                    bind:checked={isDark}
-                                />
-                                <div
-                                    class="w-6 h-6 flex items-center justify-center"
-                                >
-                                    {#if isDark}
-                                        <Moon class="w-5 h-5 text-current" />
-                                    {:else}
-                                        <Sun class="w-5 h-5 text-current" />
-                                    {/if}
-                                </div>
-                                <span class="text-sm text-base-content/70"
-                                    >Theme</span
-                                >
-                            </label>
                         </div>
-                    </nav>
-                </div>
-            {/if}
+                        <span class="text-sm text-base-content/70">Theme</span>
+                    </label>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
