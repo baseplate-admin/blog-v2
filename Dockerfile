@@ -50,4 +50,4 @@ ENV DJANGO_SETTINGS_MODULE="core.settings.production"
 RUN python manage.py collectstatic --noinput --clear --link
 
 EXPOSE 8000
-CMD set -xe; python manage.py migrate --noinput; uvicorn core.asgi:application
+CMD set -xe; python manage.py migrate --noinput; uvicorn core.asgi:application --host 0.0.0.0 --port 8000
