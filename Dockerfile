@@ -27,9 +27,6 @@ COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-default-groups
 
-# Remove the .egg-info file that are created from setuptools
-RUN find /app -type d -name '*.egg-info' -exec rm -rf {} +
-
 # Then, use a final image without uv
 FROM python:3.14-alpine
 # It is important to use the image that matches the builder, as the path to the
