@@ -17,6 +17,8 @@ services:
       dockerfile: Dockerfile
     container_name: blog
     restart: unless-stopped
+    ports:
+      - 8001:8000
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
