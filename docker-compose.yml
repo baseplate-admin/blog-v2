@@ -5,6 +5,8 @@ services:
         dockerfile: Dockerfile
       container_name: blog-backend
       restart: unless-stopped
+      ports:
+        - 8000:8000
       environment: &backend-variable
         POSTGRES_SERVER: postgres
         POSTGRES_PORT: 5432
