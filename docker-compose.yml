@@ -13,6 +13,8 @@ services:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: supersecretpassword
         POSTGRES_DB: chithi
+        DJANGO_ALLOWED_HOSTS: 'blog.zad.bd'
+        DJANGO_CSRF_TRUSTED_ORIGINS: 'blog.zad.bd'
 
       networks:
             - proxy
