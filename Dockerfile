@@ -40,7 +40,9 @@ FROM python:3.14-alpine
 COPY --from=builder --chown=app:app /app /app
 COPY --from=frontend-builder /app/static /app/static
 
-# 3. Collectstatic:
+WORKDIR /app
+
+# Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
 RUN python manage.py collectstatic --noinput --clear --link
