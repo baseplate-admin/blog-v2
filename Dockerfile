@@ -42,14 +42,15 @@ COPY --from=frontend-builder /app/static /app/static
 
 WORKDIR /app
 
+# Place executables in the environment at the front of the path
+
+ENV PATH="/app/.venv/bin:$PATH"
+
+ENV DJANGO_SETTINGS_MODULE="core.settings.prod"
 # Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
 RUN python manage.py collectstatic --noinput --clear --link
-
-# Place executables in the environment at the front of the path
-ENV PATH="/app/.venv/bin:$PATH"
-
 
 EXPOSE 8000
 CMD set -xe; python manage.py migrate --noinput; uvicorn core.asgi:application
