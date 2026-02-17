@@ -1,9 +1,10 @@
 from django.db import models
 
 from wagtail.models import Page
-from wagtail.admin.panels import FieldPanel
-from wagtail.fields import RichTextField
+from wagtail.admin.panels import FieldPanel, StreamFieldPanel
+from wagtail.fields import RichTextField, StreamField
 
+from .blocks import CTABlock
 
 class HomePage(Page):
     max_count = 1
@@ -12,10 +13,10 @@ class HomePage(Page):
     # Editable hero fields
     hero_title = models.CharField(max_length=255, blank=False, default="Building things with Code & Passion")
     hero_subtitle = RichTextField(blank=True)
-    hero_cta_primary_text = models.CharField(max_length=64, blank=True)
-    hero_cta_primary_url = models.URLField(blank=True)
-    hero_cta_secondary_text = models.CharField(max_length=64, blank=True)
-    hero_cta_secondary_url = models.URLField(blank=True)
+
+    hero_ctas = StreamField([
+        ('cta', CTABlock()),
+    ], blank=True)
 
     # Allow editors to control how many latest posts are shown
     latest_posts_count = models.PositiveSmallIntegerField(default=3)
@@ -23,10 +24,7 @@ class HomePage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('hero_title'),
         FieldPanel('hero_subtitle'),
-        FieldPanel('hero_cta_primary_text'),
-        FieldPanel('hero_cta_primary_url'),
-        FieldPanel('hero_cta_secondary_text'),
-        FieldPanel('hero_cta_secondary_url'),
+        StreamFieldPanel('hero_ctas'),
         FieldPanel('latest_posts_count'),
     ]
 

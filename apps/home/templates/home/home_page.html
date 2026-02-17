@@ -35,11 +35,16 @@
                             {{ page.hero_subtitle|richtext }}
                         </p>
                         <div class="flex gap-4 justify-center mt-4">
-                            {% if page.hero_cta_primary_url and page.hero_cta_primary_text %}
-                                <a href="{{ page.hero_cta_primary_url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ page.hero_cta_primary_text }}</a>
-                            {% endif %}
-                            {% if page.hero_cta_secondary_url and page.hero_cta_secondary_text %}
-                                <a href="{{ page.hero_cta_secondary_url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ page.hero_cta_secondary_text }}</a>
+                            {% if page.hero_ctas %}
+                                {% for block in page.hero_ctas|slice:":2" %}
+                                    {% with cta=block.value %}
+                                        {% if forloop.first %}
+                                            <a href="{{ cta.url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ cta.text }}</a>
+                                        {% else %}
+                                            <a href="{{ cta.url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ cta.text }}</a>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
                             {% endif %}
                         </div>
                     </div>
