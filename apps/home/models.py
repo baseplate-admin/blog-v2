@@ -1,7 +1,7 @@
 from django.db import models
 
 from wagtail.models import Page
-from wagtail.admin.panels import FieldPanel, StreamFieldPanel
+from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField, StreamField
 
 from .blocks import CTABlock
@@ -24,7 +24,7 @@ class HomePage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('hero_title'),
         FieldPanel('hero_subtitle'),
-        StreamFieldPanel('hero_ctas'),
+        FieldPanel('hero_ctas'),
         FieldPanel('latest_posts_count'),
     ]
 
