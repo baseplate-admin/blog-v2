@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from pathlib import Path
+import os 
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PROJECT_DIR.parent
@@ -196,17 +197,19 @@ WAGTAILDOCS_EXTENSIONS = [
     "zip",
 ]
 
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "console": {"class": "logging.StreamHandler"},
+        "console": {
+            "class": "logging.StreamHandler",
+        },
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "ERROR",
-            "propagate": True,
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
         },
     },
 }
