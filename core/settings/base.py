@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "apps.home",
     "apps.blog",
     "apps.projects",
+    "apps.tags",
     "search",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",

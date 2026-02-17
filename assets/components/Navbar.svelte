@@ -8,6 +8,11 @@
                 reflect: true,
                 type: 'String',
             },
+            projectUrl: {
+                attribute: 'project-url',
+                reflect: true,
+                type: 'String',
+            },
         },
     }}
 />
@@ -19,10 +24,10 @@
     // Explicitly define prop types for better TS support in custom elements
     interface Props {
         blogUrl?: string | null;
+        projectUrl: string | null;
     }
 
-    let { blogUrl = null }: Props = $props();
-    $inspect(blogUrl);
+    let { blogUrl, projectUrl }: Props = $props();
     let isDark = $state(false);
 
     // Initial load logic
@@ -90,6 +95,13 @@
                 href={blogUrl}
                 class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
                 >Blog</a
+            >
+        {/if}
+        {#if projectUrl}
+            <a
+                href={projectUrl}
+                class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
+                >Projects</a
             >
         {/if}
         <a
