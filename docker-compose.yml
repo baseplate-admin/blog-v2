@@ -1,9 +1,9 @@
 services:
-  blog-backend:
+  backend:
       build:
         context: .
         dockerfile: Dockerfile
-      container_name: backend
+      container_name: blog-backend
       restart: unless-stopped
       command: /bin/sh /app/scripts/start_backend.sh
       environment: &backend-variable
