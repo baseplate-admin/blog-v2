@@ -29,14 +29,18 @@
                 <div class="hero-content text-center flex-col max-w-4xl">
                     <div class="max-w-2xl">
                         <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
-                            Building things with <span class="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">Code</span> & <span class="decoration-accent underline decoration-4 underline-offset-4">Passion</span>
+                            {{ page.hero_title }}
                         </h1>
                         <p class="py-6 text-xl md:text-2xl text-base-content/80 leading-relaxed">
-                            Welcome to my digital garden. I write about web development, explore new technologies, and build open-source projects.
+                            {{ page.hero_subtitle|richtext }}
                         </p>
                         <div class="flex gap-4 justify-center mt-4">
-                            <a href="#projects" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">View Projects</a>
-                            <a href="#contact" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">Contact Me</a>
+                            {% if page.hero_cta_primary_url and page.hero_cta_primary_text %}
+                                <a href="{{ page.hero_cta_primary_url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ page.hero_cta_primary_text }}</a>
+                            {% endif %}
+                            {% if page.hero_cta_secondary_url and page.hero_cta_secondary_text %}
+                                <a href="{{ page.hero_cta_secondary_url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ page.hero_cta_secondary_text }}</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -118,85 +122,58 @@
                 </div>
 
                 <div class="flex flex-col gap-24">
-                    {# Project 1 #}
-                    <div class="flex flex-col lg:flex-row gap-12 items-center group">
-                        <div class="w-full lg:w-1/2">
-                            <div class="mockup-browser border border-base-300 bg-base-200 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/10">
-                                <div class="mockup-browser-toolbar border-b border-base-300">
-                                    <div class="input border border-base-300">https://awesome-saas.com</div>
+                    {% if featured_projects %}
+                        {% for project in featured_projects %}
+                            {% if forloop.counter0|divisibleby:"2" %}
+                                <div class="flex flex-col lg:flex-row gap-12 items-center group">
+                            {% else %}
+                                <div class="flex flex-col lg:flex-row-reverse gap-12 items-center group">
+                            {% endif %}
+                            <div class="w-full lg:w-1/2">
+                                <div class="mockup-browser border border-base-300 bg-base-200 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/10">
+                                    <div class="mockup-browser-toolbar border-b border-base-300">
+                                        <div class="input border border-base-300">{{ project.demo_url|default:'' }}</div>
+                                    </div>
+                                    <div class="flex justify-center items-center bg-base-100 aspect-video relative overflow-hidden text-base-content/10 font-black text-6xl select-none">
+                                        {% if project.image %}
+                                            {% image project.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                        {% else %}
+                                            PROJECT
+                                        {% endif %}
+                                        <div class="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    </div>
                                 </div>
-                                <div class="flex justify-center items-center bg-base-100 aspect-video relative overflow-hidden text-base-content/10 font-black text-6xl select-none">
-                                    PROJECT
-                                    <div class="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            </div>
+                            <div class="w-full lg:w-1/2 space-y-6 {% if not forloop.counter0|divisibleby:"2" %}lg:text-right{% endif %}">
+                                <h3 class="text-3xl font-bold">{{ project.title }}</h3>
+                                <p class="text-lg text-base-content/80 leading-relaxed">{{ project.description|richtext }}</p>
+                                <div class="flex gap-4 pt-4 {% if not forloop.counter0|divisibleby:"2" %}lg:justify-end{% endif %}">
+                                    {% if project.demo_url %}
+                                        <a href="{{ project.demo_url }}" class="btn btn-primary rounded-box shadow-lg hover:shadow-primary/30">Live Demo</a>
+                                    {% endif %}
+                                    {% if project.github_url %}
+                                        <a href="{{ project.github_url }}" class="btn btn-ghost rounded-box border border-base-content/10">GitHub</a>
+                                    {% endif %}
                                 </div>
                             </div>
+                            </div>
+                            {% if not forloop.last %}
+                                <div class="w-px h-24 bg-base-300 mx-auto hidden lg:block"></div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
+                            <span>No featured projects yet.</span>
                         </div>
-                        <div class="w-full lg:w-1/2 space-y-6">
-                            <h3 class="text-3xl font-bold">SaaS Starter Kit</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <div class="badge badge-outline badge-primary">React</div>
-                                <div class="badge badge-outline badge-secondary">Django</div>
-                                <div class="badge badge-outline">Tailwind</div>
-                            </div>
-                            <p class="text-lg text-base-content/80 leading-relaxed">
-                                A comprehensive starter kit for building SaaS applications.
-                                Includes authentication, subscription management (Stripe), and a dashboard UI.
-                                Built to save weeks of development time.
-                            </p>
-                            <div class="flex gap-4 pt-4">
-                                <button class="btn btn-primary rounded-box shadow-lg hover:shadow-primary/30">Live Demo</button>
-                                <button class="btn btn-ghost rounded-box border border-base-content/10">GitHub</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# Vertical Line #}
-                    <div class="w-px h-24 bg-base-300 mx-auto hidden lg:block"></div>
-
-                    {# Project 2 #}
-                    <div class="flex flex-col lg:flex-row-reverse gap-12 items-center group">
-                        <div class="w-full lg:w-1/2">
-                            <div class="mockup-code bg-neutral text-neutral-content shadow-2xl transition-transform duration-500 group-hover:-translate-y-2">
-                                <pre data-prefix="$"><code>npm install @my-org/awesome-tool</code></pre> 
-                                <pre data-prefix=">"><code>installing...</code></pre> 
-                                <pre data-prefix=">"><code>Done! Happy coding.</code></pre> 
-                                <pre data-prefix="$" class="text-success blink"><code>_</code></pre>
-                            </div>
-                        </div>
-                        <div class="w-full lg:w-1/2 space-y-6 lg:text-right">
-                            <h3 class="text-3xl font-bold">DevTool CLI</h3>
-                            <div class="flex flex-wrap gap-2 lg:justify-end">
-                                <div class="badge badge-outline badge-accent">Rust</div>
-                                <div class="badge badge-outline badge-info">CLI</div>
-                                <div class="badge badge-outline">Performance</div>
-                            </div>
-                            <p class="text-lg text-base-content/80 leading-relaxed">
-                                A blazing fast command line tool for managing development environments.
-                                Automates setup, manages dotfiles, and syncs configurations across machines instantly.
-                            </p>
-                            <div class="flex gap-4 pt-4 lg:justify-end">
-                                <button class="btn btn-secondary rounded-box shadow-lg hover:shadow-secondary/30">Download</button>
-                                <button class="btn btn-ghost rounded-box border border-base-content/10">Documentation</button>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
 
         {# ── Footer ──────────────────────────────────────────────── #}
-        <footer class="footer footer-center p-10 bg-base-200 text-base-content rounded-t-none border-t border-base-300">
-            <div class="grid grid-flow-col gap-4">
-                <a href="/about" class="link link-hover">About us</a>
-                <a href="/contact" class="link link-hover">Contact</a>
-                <a href="/blog" class="link link-hover">Blog</a>
-                <a href="/press" class="link link-hover">Press kit</a>
-            </div>
-            <div>
-                <p>Copyright © 2026 - All right reserved by My Blog</p>
-            </div>
-        </footer>
+        {% include "components/footer.html" %}
+
 
     </div>
 {% endblock %}

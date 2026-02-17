@@ -30,6 +30,7 @@ class ProjectPage(Page):
     description = RichTextField()
     github_url = models.URLField(blank=True, help_text="Link to the GitHub repository")
     demo_url = models.URLField(blank=True, help_text="Link to the live demo")
+    featured = models.BooleanField(default=False, help_text="Mark this project as featured on the homepage")
     
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -45,6 +46,7 @@ class ProjectPage(Page):
         MultiFieldPanel([
             FieldPanel("github_url"),
             FieldPanel("demo_url"),
+            FieldPanel("featured"),
         ], heading="Links"),
         FieldPanel("image"),
     ]

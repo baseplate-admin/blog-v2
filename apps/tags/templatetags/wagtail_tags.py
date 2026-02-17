@@ -18,7 +18,7 @@ def wagtail_url_from_model_slug(app_model, slug=None):
         app_label, model_name = app_model.split(".")
         PageModel = apps.get_model(app_label, model_name)
     except Exception:
-        return "#"
+        return None
 
     qs = PageModel.objects.live()
     if slug:
@@ -27,4 +27,4 @@ def wagtail_url_from_model_slug(app_model, slug=None):
     page = qs.first()  # max_count=1 ensures only one exists
     if page:
         return page.url
-    return "#"
+    return None
