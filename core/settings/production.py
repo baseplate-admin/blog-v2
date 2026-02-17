@@ -1,3 +1,4 @@
+import os
 from .base import *
 
 DEBUG = False
@@ -10,6 +11,18 @@ STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesSt
 
 SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
 ALLOWED_HOSTS = ["*"]
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+    }
+}
+
 
 try:
     from .local import *

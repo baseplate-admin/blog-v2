@@ -1,16 +1,17 @@
 services:
-  blog-backend:
+  backend:
       build:
         context: .
         dockerfile: Dockerfile
       container_name: blog-backend
       restart: unless-stopped
-      environment: &backend-variable
+      environment:
         POSTGRES_SERVER: postgres
         POSTGRES_PORT: 5432
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: supersecretpassword
-        POSTGRES_DB: chithi
+        POSTGRES_DB: blog
+        POSTGRES_HOST: postgres
 
       networks:
             - proxy
