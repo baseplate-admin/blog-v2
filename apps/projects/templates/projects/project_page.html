@@ -17,11 +17,12 @@
     {# Navbar #}
     {% include "components/navbar.html" %}
 
-    <div class="min-h-screen bg-base-100 font-sans text-base-content relative">
-        <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
-        
-        {# ── Project Header ───────────────────────────────────────── #}
-        <div class="max-w-7xl mx-auto px-4 md:px-12 py-16 md:py-24 relative z-10">
+    <div class="min-h-screen flex flex-col bg-base-100 font-sans text-base-content relative">
+        <main class="flex-1">
+            <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+
+            {# ── Project Header ───────────────────────────────────────── #}
+            <div class="max-w-7xl mx-auto px-4 md:px-12 py-16 md:py-24 relative z-10">
             <div class="text-secondary font-mono mb-4 text-sm tracking-widest"><a href="{{ page.get_parent.url }}" class="hover:underline">← BACK TO PROJECTS</a></div>
             
             <h1 class="text-4xl md:text-6xl font-black mb-8 leading-tight max-w-4xl tracking-tight">
@@ -64,6 +65,8 @@
                  </button>
             </div>
         </div>
+
+        </main>
 
         {% include "components/footer.html" %}
 
