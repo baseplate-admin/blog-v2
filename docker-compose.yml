@@ -1,0 +1,17 @@
+services:
+  backend:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      container_name: backend
+      restart: unless-stopped
+      command: /bin/sh /app/scripts/start_backend.sh
+      ports:
+        - "8000:8000"
+      environment: &backend-variable
+        POSTGRES_SERVER: postgres
+        POSTGRES_PORT: 5432
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: supersecretpassword
+        POSTGRES_DB: chithi
+

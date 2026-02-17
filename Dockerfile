@@ -7,49 +7,47 @@ COPY . .
 # This will create the /app/static/ directory containing manifest.json and assets
 RUN npm run build
 
-# --- Stage 2: Python Builder (uv) ---
-FROM ghcr.io/astral-sh/uv:python3.14-alpine AS python-builder
-WORKDIR /app
+# First, build the application in the `/app` directory.
+# See `Dockerfile` for details.
+FROM ghcr.io/astral-sh/uv:python3.14-alpine AS builder
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+
+# Disable Python downloads, because we want to use the system interpreter
+# across both images. If using a managed Python version, it needs to be
+# copied from the build image into the final image; see `standalone.Dockerfile`
+# for an example.
 ENV UV_PYTHON_DOWNLOADS=0
 
+WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --no-install-project --no-default-groups
-
 COPY . /app
-
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-default-groups
 
-# --- Stage 3: Final Runtime ---
+# Remove the .egg-info file that are created from setuptools
+RUN find /app -type d -name '*.egg-info' -exec rm -rf {} +
+
+# Then, use a final image without uv
 FROM python:3.14-alpine
-WORKDIR /app
+# It is important to use the image that matches the builder, as the path to the
+# Python executable must be the same, e.g., using `python:3.11-slim-bookworm`
+# will fail.
 
-# Runtime libraries
-RUN apk add --no-cache  zlib && adduser -D wagtail
-
-COPY --from=python-builder /opt/venv /opt/venv
-ENV PATH="/app/.venv/bin:$PATH"\
-    PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PORT=8000
-
-# 1. Copy the Django project code
-COPY . .
-
-# 2. Link Vite Assets:
-# Copy the built 'static' folder from Node stage to the 'static' folder in Python stage
-# This ensures manifest.json and compiled JS/CSS are where django-vite expects them.
-COPY --from=frontend-builder /app/static ./static
-
-RUN chown -R wagtail:wagtail /app
-USER wagtail
+# Copy the application from the builder
+COPY --from=builder --chown=app:app /app /app
+COPY --from=frontend-builder /app/static /app/static
 
 # 3. Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
 RUN python manage.py collectstatic --noinput --clear --link
+
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
+
 
 EXPOSE 8000
 CMD set -xe; python manage.py migrate --noinput; uvicorn core.asgi:application
