@@ -46,7 +46,7 @@ WORKDIR /app
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-ENV DJANGO_SETTINGS_MODULE="core.settings.prod"
+ENV DJANGO_SETTINGS_MODULE="core.settings.production"
 # Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
