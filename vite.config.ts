@@ -28,6 +28,7 @@ export default defineConfig({
                 'calendar-icon': resolve('./assets/icons/Calendar.svelte'),
                 'eye-icon': resolve('./assets/icons/Eye.svelte'),
                 'circle-icon': resolve('./assets/icons/Circle.svelte'),
+                'toc-icon': resolve('./assets/icons/TOC.svelte'),
             },
         },
     },

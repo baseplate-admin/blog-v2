@@ -14,6 +14,7 @@ from wagtail.search import index
 from apps.home.models import HomePage
 from django.utils.html import strip_tags
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.functional import cached_property
 
 import readtime
 
@@ -23,11 +24,11 @@ class BlogPageTag(TaggedItemBase):
         "BlogPage", related_name="tagged_items", on_delete=models.CASCADE
     )
 
-
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
     subpage_types = ["BlogPage"]
     parent_page_types = [HomePage]
+    max_count = 1
 
     content_panels = Page.content_panels + [
         FieldPanel("intro"),
@@ -104,7 +105,7 @@ class BlogPage(Page):
     parent_page_types = ["BlogIndexPage"]
     subpage_types = []
 
-    @property
+    @cached_property
     def author_avatar_url(self):
         import hashlib
 
@@ -112,7 +113,7 @@ class BlogPage(Page):
         hash_email = hashlib.sha256(email.lower().encode("utf-8")).hexdigest()
         return f"https://seccdn.libravatar.org/avatar/{hash_email}?s=200&d=retro"
 
-    @property
+    @cached_property
     def reading_time(self):
         parts = []
 
