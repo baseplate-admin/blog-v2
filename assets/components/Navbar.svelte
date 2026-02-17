@@ -2,6 +2,13 @@
     customElement={{
         tag: 'custom-navbar',
         shadow: 'none',
+        props: {
+            blogUrl: {
+                attribute: 'blog-url',
+                reflect: true,
+                type: 'String',
+            },
+        },
     }}
 />
 
@@ -9,8 +16,16 @@
     import { Moon, Sun } from '@lucide/svelte';
     import { onMount } from 'svelte';
 
+    // Explicitly define prop types for better TS support in custom elements
+    interface Props {
+        blogUrl?: string | null;
+    }
+
+    let { blogUrl = null }: Props = $props();
+    $inspect(blogUrl);
     let isDark = $state(false);
 
+    // Initial load logic
     onMount(() => {
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia(
@@ -20,10 +35,11 @@
         isDark =
             savedTheme === 'tanstack-dark' ||
             (!savedTheme && systemPrefersDark);
-
+        // Initial application
         applyTheme(isDark);
     });
 
+    //  The $effect will trigger whenever isDark changes
     $effect(() => {
         applyTheme(isDark);
         localStorage.setItem(
@@ -33,19 +49,20 @@
     });
 
     function applyTheme(dark: boolean) {
+        // Ensure this only runs in the browser
+        if (typeof document === 'undefined') return;
+
         const theme = dark ? 'tanstack-dark' : 'tanstack-light';
         document.documentElement.setAttribute('data-theme', theme);
-        // Removed explicit body class manipulation that overrides page-specific styles
-        // document.body.className = `bg-base-100 text-base-content min-h-screen transition-colors duration-300`;
-        document.body.classList.add(
-            'transition-colors',
-            'duration-300',
-            'min-h-screen',
-        );
+
+        // Using classList is cleaner than overwriting className
+        const body = document.body;
+        body.classList.add('transition-colors', 'duration-300', 'min-h-screen');
+
         if (dark) {
-            document.body.classList.add('dark');
+            body.classList.add('dark');
         } else {
-            document.body.classList.remove('dark');
+            body.classList.remove('dark');
         }
     }
 </script>
@@ -68,11 +85,13 @@
             class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
             >About</a
         >
-        <a
-            href="/blog/"
-            class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
-            >Blog</a
-        >
+        {#if blogUrl}
+            <a
+                href={blogUrl}
+                class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
+                >Blog</a
+            >
+        {/if}
         <a
             href="/contact/"
             class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"

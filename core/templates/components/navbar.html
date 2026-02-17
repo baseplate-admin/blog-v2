@@ -1,6 +1,6 @@
-{% load django_vite %}
+{% load django_vite wagtailcore_tags %}
 
 
-<custom-navbar ></custom-navbar/>
+<custom-navbar blog-url="{% slugurl 'blog' %}"></custom-navbar>
 
 {% vite_asset "assets/components/Navbar.svelte" %}
