@@ -1,18 +1,27 @@
 services:
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: blog
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
   backend:
       build:
         context: .
         dockerfile: Dockerfile
       container_name: blog
       restart: unless-stopped
-      ports:
-        - 8000:8000
-      environment: &backend-variable
+      environment:
         POSTGRES_SERVER: postgres
         POSTGRES_PORT: 5432
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: supersecretpassword
-        POSTGRES_DB: chithi
+        POSTGRES_DB: blog
+        POSTGRES_HOST: postgres
         DJANGO_ALLOWED_HOSTS: 'blog.zad.bd'
         DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd'
 
@@ -30,3 +39,7 @@ services:
 networks:
   proxy:
     external: true
+
+
+volumes:
+  postgres_data:
