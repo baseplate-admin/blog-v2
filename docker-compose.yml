@@ -25,8 +25,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: blog
-      DJANGO_ALLOWED_HOSTS: 'blog.zad.bd'
-      DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd'
+      DJANGO_ALLOWED_HOSTS: 'blog.zad.bd,localhost,127.0.0.1,blog'
+      DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd,http://blog:8000'
+
     networks:
       - proxy
       - backend_net
