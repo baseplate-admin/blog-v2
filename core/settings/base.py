@@ -195,7 +195,7 @@ WAGTAILDOCS_EXTENSIONS = [
     "zip",
 ]
 
-AUTH_USER_MODEL = "apps.users.User"
+AUTH_USER_MODEL = "users.User"
 
 WAGTAIL_CODE_BLOCK_LANGUAGES = (
     ("abap", "ABAP"),
