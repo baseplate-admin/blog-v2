@@ -3,9 +3,25 @@
         <a href="/about" class="link link-hover">About us</a>
         <a href="/contact" class="link link-hover">Contact</a>
         <a href="/blog" class="link link-hover">Blog</a>
-        <a href="/press" class="link link-hover">Press kit</a>
     </div>
     <div>
-        <p>Copyright © 2026 - All right reserved by My Blog</p>
+        {% with site_conf=settings.site_settings.SiteConfigSettings %}
+            <p>
+                Copyright ©
+                {% if site_conf.copyright_start_year %}
+                    {{ site_conf.copyright_start_year }}{% if site_conf.copyright_start_year != site_conf.copyright_end_year %}-{{ site_conf.copyright_end_year }}{% endif %}
+                {% else %}
+                    {{ site_conf.copyright_end_year }}
+                {% endif %}
+
+                {% if site_conf.site_name %}
+                    | All rights reserved by {{ site_conf.site_name }}
+                {% endif %}
+
+                {% if site_conf.license_type %}
+                    | Licensed Under: {{ site_conf.get_license_type_display }}
+                {% endif %}
+            </p>
+        {% endwith %}
     </div>
 </footer>

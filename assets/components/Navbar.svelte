@@ -21,6 +21,7 @@
     import { v7 } from 'uuid';
     import { Menu, Moon, Sun, X } from '@lucide/svelte';
     import { onMount } from 'svelte';
+    import { normalizeProps } from '../functions/props';
 
     // Explicitly define prop types for better TS support in custom elements
     interface Props {
@@ -75,10 +76,12 @@
             body.classList.remove('dark');
         }
     }
+    let normalizedBlogUrl = $derived(normalizeProps(blogUrl)),
+        normalizedProjectUrl = $derived(normalizeProps(projectUrl));
 
     const mapping = $derived([
-        { href: blogUrl, description: `Blog` },
-        { href: projectUrl, description: `Projects` },
+        { href: normalizedBlogUrl, description: `Blog` },
+        { href: normalizedProjectUrl, description: `Projects` },
     ]);
 </script>
 
