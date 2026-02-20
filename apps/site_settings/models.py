@@ -38,7 +38,7 @@ class SiteConfigSettings(BaseSiteSetting):
     license_type = models.CharField(
         max_length=20,
         choices=LicenseOptions.choices,
-        default=LicenseOptions.ALL_RIGHTS,
+        null=True,
         help_text="The legal license governing the site's content.",
     )
 
