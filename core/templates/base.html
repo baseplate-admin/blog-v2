@@ -178,8 +178,7 @@
                      hx-boost="true"
                      hx-target="main"
                      hx-select="main"
-                     hx-select-oob="title"
-                     hx-history="true">
+                     hx-select-oob="title">
                     <main class="page-main">
                         {% block inner_content %}
                             {% block content %}{% endblock %}
@@ -245,9 +244,8 @@
                         }, 300);
                     }, 150);
                 }
-                document.body.addEventListener("htmx:beforeRequest", showProgress);
-                document.body.addEventListener("htmx:afterRequest", completeProgress);
-                document.body.addEventListener("htmx:afterSettle", completeProgress);
+                document.body.addEventListener("htmx:before:request", showProgress);
+                document.body.addEventListener("htmx:after:request", completeProgress);
 
       // Search open/close
                 window.openSearch = () => { $("#search-dialog")?.showModal(); setTimeout(() => $("#search-input")?.focus(), 100); };

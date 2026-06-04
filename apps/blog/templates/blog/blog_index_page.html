@@ -124,8 +124,8 @@
                     {% if blogpages.has_next %}
                         <div id="load-more-trigger"
                              hx-get="{% url 'blog_page_partial' %}?page={{ blogpages.next_page_number }}{% if request_tag %}&tag={{ request_tag }}{% endif %}{% if request_mood %}&mood={{ request_mood }}{% endif %}"
-                             hx-swap="before"
-                             hx-trigger="revealed"
+                             hx-swap="outerHTML"
+                             hx-trigger="intersect"
                              hx-indicator="#load-more-spinner">
                             <div id="load-more-spinner" class="py-12 text-center">
                                 <span class="loading loading-spinner loading-lg text-primary"></span>

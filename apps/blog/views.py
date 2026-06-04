@@ -10,6 +10,20 @@ def blog_page_partial(request: HttpRequest) -> HttpResponse:
     if not (blog_index := BlogIndexPage.objects.live().first()):
         return HttpResponse("")
 
+    load_type: str | None = request.GET.get("type", None)
+
+    # Lazy-load tag cloud (HTMX 4.x lazy-load pattern)
+    if load_type == "tags":
+        tag_cloud = blog_index.get_tag_cloud()
+        return render(
+            request,
+            "blog/_partial/tag_cloud.html",
+            {
+                "tag_cloud": tag_cloud,
+                "page": blog_index,
+            },
+        )
+
     page_num: int = int(request.GET.get("page", 1))
     tag: str | None = request.GET.get("tag", None)
     mood: str | None = request.GET.get("mood", None)

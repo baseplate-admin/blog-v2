@@ -1,13 +1,10 @@
 import '../tailwind/tailwind.css';
 import htmx from 'htmx.org';
 
-// -- HTMX config --
+// -- HTMX 4.x config --
 Object.assign((htmx as any).config, {
-    historyEnabled: true,
-    allowNestedHxHistory: false,
+    history: true,
     timeout: 10000,
-    disableExternalRefInheritance: true,
-    swapStyleOverwrite: 'transition:opacity 200ms ease-in-out,opacity 200ms ease-in-out',
 });
 
 // Inject HTMX transition styles via StyleSheet API (no <style> elements)
@@ -22,15 +19,55 @@ if (document.adoptedStylesheets) {
 }
 
 // Loading state on body during HTMX requests
-document.body.addEventListener('htmx:request', () => {
+document.body.addEventListener('htmx:before:request', () => {
     document.body.classList.add('htmx-requesting');
 });
-document.body.addEventListener('htmx:responseOnReady', () => {
+document.body.addEventListener('htmx:after:request', () => {
     document.body.classList.remove('htmx-requesting');
 });
 
+// Progress bar for boosted navigation
+const showProgress = () => {
+    const bar = document.querySelector('#nprogress-bar');
+    if (!bar) return;
+    bar.style.width = '0%';
+    bar.style.opacity = '1';
+    bar.style.transition = 'width 0.4s ease';
+    requestAnimationFrame(() => { bar.style.width = '70%'; });
+};
+const hideProgress = () => {
+    const bar = document.querySelector('#nprogress-bar');
+    if (!bar) return;
+    bar.style.transition = 'width 0.3s ease, opacity 0.5s ease';
+    bar.style.width = '100%';
+    bar.style.opacity = '0';
+    setTimeout(() => { bar.style.width = '0%'; bar.style.opacity = '0'; }, 300);
+};
+
+document.body.addEventListener('htmx:before:request', ((evt: Event) => {
+    const elt = evt.target as HTMLElement | null;
+    const isBoosted = elt?.hasAttribute('hx-boost') || elt?.closest('[hx-boost]');
+    if (isBoosted) showProgress();
+}) as EventListener);
+document.body.addEventListener('htmx:after:request', ((evt: Event) => {
+    const elt = evt.target as HTMLElement | null;
+    const isBoosted = elt?.hasAttribute('hx-boost') || elt?.closest('[hx-boost]');
+    if (isBoosted) hideProgress();
+}) as EventListener);
+
+// Progress bar CSS
+const style = document.createElement('style');
+style.textContent = `
+    #nprogress-bar {
+        position: fixed; top: 0; left: 0; width: 100%; height: 0.25rem; z-index: 9999;
+        background: linear-gradient(to right, oklch(var(--p)), oklch(var(--s)));
+        transform-origin: left;
+        width: 0%; opacity: 0;
+    }
+`;
+document.head.appendChild(style);
+
 // Popstate buffering: browser fires popstate before scripts initialize.
-// Without buffering, back/forward triggers a full page load instead of HTMX swap.
 const bufferedUrl: { href: string } = { href: window.location.href };
 let hasBuffer: boolean = false;
 
@@ -42,7 +79,6 @@ const bufferPopState = (e: PopStateEvent) => {
 };
 window.addEventListener('popstate', bufferPopState, { capture: true });
 
-// Flush buffer once HTMX starts processing requests
 const flushBuffer = () => {
     window.removeEventListener('popstate', bufferPopState, true);
     if (hasBuffer) {
@@ -50,7 +86,7 @@ const flushBuffer = () => {
         htmx.ajax('GET', bufferedUrl.href, { target: 'body', select: 'body' });
     }
 };
-document.body.addEventListener('htmx:beforeRequest', flushBuffer, { once: true });
+document.body.addEventListener('htmx:before:request', flushBuffer, { once: true });
 
 // Expose globally
 (window as any).htmx = htmx;

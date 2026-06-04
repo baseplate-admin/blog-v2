@@ -19,6 +19,6 @@ if (document.readyState === 'loading') {
 }
 
 // Re-render after HTMX swaps so dynamic content gets icons
-document.body.addEventListener('htmx:swapComplete', () => {
+document.body.addEventListener('htmx:after:swap', () => {
     requestAnimationFrame(renderIcons);
 });

@@ -21,6 +21,6 @@ if (document.readyState === 'loading') {
 }
 
 // Re-init after HTMX swaps so dynamically loaded elements animate
-document.body.addEventListener('htmx:swapComplete', () => {
+document.body.addEventListener('htmx:after:swap', () => {
     requestAnimationFrame(() => AOS.refresh());
 });
