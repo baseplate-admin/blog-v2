@@ -67,26 +67,5 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Popstate buffering: browser fires popstate before scripts initialize.
-const bufferedUrl: { href: string } = { href: window.location.href };
-let hasBuffer: boolean = false;
-
-const bufferPopState = (e: PopStateEvent) => {
-    if ((e.state as any)?.htmx !== undefined) return;
-    e.preventDefault();
-    hasBuffer = true;
-    bufferedUrl.href = new URL(e.state?.url ?? window.location.href, document.baseURI).href;
-};
-window.addEventListener('popstate', bufferPopState, { capture: true });
-
-const flushBuffer = () => {
-    window.removeEventListener('popstate', bufferPopState, true);
-    if (hasBuffer) {
-        hasBuffer = false;
-        htmx.ajax('GET', bufferedUrl.href, { target: 'body', select: 'body' });
-    }
-};
-document.body.addEventListener('htmx:before:request', flushBuffer, { once: true });
-
 // Expose globally
 (window as any).htmx = htmx;

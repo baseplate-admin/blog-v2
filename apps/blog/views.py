@@ -1,8 +1,9 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from apps.blog.models import BlogIndexPage
+from apps.blog.models import BlogIndexPage, BlogPageTag
 
 
 def blog_page_partial(request: HttpRequest) -> HttpResponse:
@@ -14,12 +15,19 @@ def blog_page_partial(request: HttpRequest) -> HttpResponse:
 
     # Lazy-load tag cloud (HTMX 4.x lazy-load pattern)
     if load_type == "tags":
-        tag_cloud = blog_index.get_tag_cloud()
+        all_pages = blog_index.get_children().live().specific()
+        tag_counts = (
+            BlogPageTag.objects.select_related("tag")
+            .filter(content_object__in=all_pages)
+            .values("tag__name")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+        )
         return render(
             request,
             "blog/_partial/tag_cloud.html",
             {
-                "tag_cloud": tag_cloud,
+                "tag_cloud": tag_counts,
                 "page": blog_index,
             },
         )

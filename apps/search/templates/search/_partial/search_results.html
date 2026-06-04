@@ -7,7 +7,7 @@
         <li>
           <a href="{% pageurl post %}"
              class="block px-4 py-3 hover:bg-base-200 transition-colors group search-result-link"
-             hx-on::click="this.closest('dialog').close()">
+             onclick="this.closest('dialog')?.close()">
             <div class="flex items-center gap-2 mb-1">
               <div class="shrink-0">{% mood_badge post.mood %}</div>
               <span class="text-sm font-medium group-hover:text-primary transition-colors truncate">{{ post.title }}</span>

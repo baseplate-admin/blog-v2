@@ -9,16 +9,15 @@
         "htmx.org": "^4.0.0-beta4",
         "lucide": "^1.17.0",
         "tailwindcss": "^4.1.18",
-        "vite": "^7.3.1"
+        "vite": "^7.3.1",
+        "@tailwindcss/typography": "^0.5.19",
+        "@types/node": "^25.2.3",
+        "daisyui": "^5.5.18",
+        "typescript": "^5.9.3"
     },
     "scripts": {
         "dev": "vite dev",
         "build": "vite build"
     },
-    "devDependencies": {
-        "@tailwindcss/typography": "^0.5.19",
-        "@types/node": "^25.2.3",
-        "daisyui": "^5.5.18",
-        "typescript": "^5.9.3"
-    }
+    "devDependencies": {}
 }
