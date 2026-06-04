@@ -53,11 +53,10 @@
                 <base target="_blank">
             {% endif %}
 
-            {# Vite: HTMX (bundles Tailwind CSS), AOS, Lucide #}
+            {# Vite: HTMX (bundles Tailwind CSS), AOS #}
             {% vite_asset "assets/tailwind/tailwind.css" %}
             {% vite_asset 'assets/htmx/htmx.ts' %}
             {% vite_asset 'assets/aos/aos.ts' %}
-            {% vite_asset 'assets/lucide/lucide.ts' %}
             {% vite_asset 'assets/toc/toc.ts' %}
 
             {% block head %}{% endblock %}
