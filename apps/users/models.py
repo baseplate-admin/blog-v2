@@ -1,26 +1,24 @@
-from django.db import models
+from __future__ import annotations
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    PermissionsMixin,
-)
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
 
 from .manager import MyUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
+    username: models.CharField = models.CharField(max_length=150, unique=True, help_text="Required. Used for login.")
+    email: models.EmailField = models.EmailField(unique=True, help_text="Required. Primary email address.")
 
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    is_staff: models.BooleanField = models.BooleanField(default=False)
+    is_active: models.BooleanField = models.BooleanField(default=True)
+    date_joined: models.DateTimeField = models.DateTimeField(auto_now_add=True)
 
-    objects = MyUserManager()
+    objects: MyUserManager = MyUserManager()
 
-    USERNAME_FIELD = "username"
+    USERNAME_FIELD: str = "username"
 
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS: list[str] = ["email"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username

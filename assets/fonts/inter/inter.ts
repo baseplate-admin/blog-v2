@@ -1,1 +1,1 @@
-import './inter.scss';
+import '@fontsource-variable/inter';

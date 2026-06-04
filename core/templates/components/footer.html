@@ -1,27 +1,8 @@
-<footer class="footer footer-center p-10 bg-base-200 text-base-content rounded-t-none border-t border-base-300 w-full z-20">
-    <div class="grid grid-flow-col gap-4">
-        <a href="/about" class="link link-hover">About us</a>
-        <a href="/contact" class="link link-hover">Contact</a>
-        <a href="/blog" class="link link-hover">Blog</a>
-    </div>
-    <div>
-        {% with site_conf=settings.site_settings.SiteConfigSettings %}
-            <p>
-                Copyright ©
-                {% if site_conf.copyright_start_year %}
-                    {{ site_conf.copyright_start_year }}{% if site_conf.copyright_start_year != site_conf.copyright_end_year %}-{{ site_conf.copyright_end_year }}{% endif %}
-                {% else %}
-                    {{ site_conf.copyright_end_year }}
-                {% endif %}
-
-                {% if site_conf.site_name %}
-                    | All rights reserved by {{ site_conf.site_name }}
-                {% endif %}
-
-                {% if site_conf.license_type %}
-                    | Licensed Under: {{ site_conf.get_license_type_display }}
-                {% endif %}
-            </p>
-        {% endwith %}
-    </div>
-</footer>
+{% with site_conf=settings.site_settings.SiteConfigSettings %}
+    <custom-footer
+        site-name="{{ site_conf.site_name|default:'' }}"
+        copyright-start="{{ site_conf.copyright_start_year|default:'' }}"
+        copyright-end="{{ site_conf.copyright_end_year|default:'' }}"
+        license="{{ site_conf.get_license_type_display|default:'' }}"
+    ></custom-footer>
+{% endwith %}

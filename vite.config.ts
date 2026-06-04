@@ -18,9 +18,17 @@ export default defineConfig({
                 inter: resolve('./assets/fonts/inter/inter.ts'),
                 twemoji: resolve('./assets/twemoji/index.ts'),
 
+                // HTMX
+                htmx: resolve('./assets/htmx/htmx.ts'),
+
+                // AOS scroll animations
+                aos: resolve('./assets/aos/aos.ts'),
+
                 // Svelte components
                 navbar: resolve('./assets/components/Navbar.svelte'),
+                footer: resolve('./assets/components/Footer.svelte'),
                 toc: resolve('./assets/components/TableOfContents.svelte'),
+                'mood-badge': resolve('./assets/components/MoodBadge.svelte'),
 
                 // Icons
                 'x-icon': resolve('./assets/icons/X.svelte'),

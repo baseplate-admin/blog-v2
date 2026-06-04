@@ -1,7 +1,10 @@
 {
     "dependencies": {
+        "@fontsource-variable/inter": "^5.2.8",
         "@lucide/svelte": "^0.564.0",
         "@tailwindcss/vite": "^4.1.18",
+        "aos": "^2.3.4",
+        "htmx.org": "^2.0.10",
         "sass": "^1.97.3",
         "svelte": "^5.51.2",
         "tailwindcss": "^4.1.18",

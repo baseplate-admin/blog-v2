@@ -1,46 +1,55 @@
-from django.db import models
+from __future__ import annotations
 
-from wagtail.models import Page
+from typing import Any
+
+from django.db import models
+from django.http import HttpRequest
+
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Page
 
 from .blocks import CTABlock
 
+
 class HomePage(Page):
-    max_count = 1
-    parent_page_types = ['wagtailcore.Page']
+    max_count: int = 1
+    parent_page_types: list[str] = ["wagtailcore.Page"]
 
     # Editable hero fields
-    hero_title = models.CharField(max_length=255, blank=False, default="Building things with Code & Passion")
-    hero_subtitle = RichTextField(blank=True)
+    hero_title: models.CharField = models.CharField(
+        max_length=255, blank=False, default="Building things with Code & Passion",
+        help_text="Main heading displayed in the hero section.",
+    )
+    hero_subtitle: RichTextField = RichTextField(blank=True, help_text="Supporting text below the hero title.")
 
-    hero_ctas = StreamField([
-        ('cta', CTABlock()),
-    ], blank=True)
+    hero_ctas: StreamField = StreamField(
+        [("cta", CTABlock())],
+        blank=True,
+        help_text="Call-to-action buttons in the hero section.",
+    )
 
     # Allow editors to control how many latest posts are shown
-    latest_posts_count = models.PositiveSmallIntegerField(default=3)
+    latest_posts_count: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
+        default=3, help_text="Number of recent blog posts to display on the homepage.",
+    )
 
-    content_panels = Page.content_panels + [
-        FieldPanel('hero_title'),
-        FieldPanel('hero_subtitle'),
-        FieldPanel('hero_ctas'),
-        FieldPanel('latest_posts_count'),
+    content_panels: list[FieldPanel] = Page.content_panels + [
+        FieldPanel("hero_title"),
+        FieldPanel("hero_subtitle"),
+        FieldPanel("hero_ctas"),
+        FieldPanel("latest_posts_count"),
     ]
 
-    def get_context(self, request):
-        context = super().get_context(request)
+    def get_context(self, request: HttpRequest) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context(request)
         # Import dynamically to avoid circular dependency
         from apps.blog.models import BlogPage
         # Get latest published blog posts using editable count
-        count = getattr(self, 'latest_posts_count', 3) or 3
-        context['latest_posts'] = BlogPage.objects.live().public().order_by('-first_published_at')[:count]
+        count: int = getattr(self, "latest_posts_count", 3) or 3
+        context["latest_posts"] = BlogPage.objects.live().public().order_by("-first_published_at")[:count]
 
         # Get featured projects for the homepage
         from apps.projects.models import ProjectPage
-        try:
-            context['featured_projects'] = ProjectPage.objects.live().public().filter(featured=True).order_by('-first_published_at')[:3]
-        except ProjectPage.DoesNotExist:
-            context['featured_projects'] = []
+        context["featured_projects"] = ProjectPage.objects.live().public().filter(featured=True).order_by("-first_published_at")[:3]
         return context
- 

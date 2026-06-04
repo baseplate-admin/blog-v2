@@ -1,184 +1,151 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags django_vite %}
+{% load wagtailcore_tags wagtailimages_tags django_vite %}
 
-{% block head %}
-    {% vite_asset 'assets/icons/X.svelte' %}
-    {% vite_asset 'assets/icons/Circle.svelte' %}
-    {% vite_asset 'assets/icons/RightArrow.svelte' %}
-    <style>
-        .grid-bg {
-            background-size: 40px 40px;
-            background-image:
-            linear-gradient(to right, oklch(var(--b3) / .3) 1px, transparent 1px),
-            linear-gradient(to bottom, oklch(var(--b3) / .3) 1px, transparent 1px);
-        }
-    </style>
-{% endblock %}
+{% block inner_content %}
 
-{% block content %}
-    {# Navbar #}
-    {% include "components/navbar.html" %}
+    {# ── Hero Section ───────────────────────────────────────── #}
+    <div class="relative w-full border-b border-base-300 overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
 
-    <div class="min-h-screen bg-base-100 font-sans text-base-content relative overflow-hidden">
-
-        {# ── Hero Section ───────────────────────────────────────── #}
-        <div class="relative w-full border-b border-base-300">
-            <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
-
-            <div class="hero min-h-[70vh] bg-base-100/50 relative z-10">
-                <div class="hero-content text-center flex-col max-w-4xl">
-                    <div class="max-w-2xl">
-                        <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
-                            {{ page.hero_title }}
-                        </h1>
-                        <p class="py-6 text-xl md:text-2xl text-base-content/80 leading-relaxed">
-                            {{ page.hero_subtitle|richtext }}
-                        </p>
-                        <div class="flex gap-4 justify-center mt-4">
-                            {% if page.hero_ctas %}
-                                {% for block in page.hero_ctas|slice:":2" %}
-                                    {% with cta=block.value %}
-                                        {% if forloop.first %}
-                                            <a href="{{ cta.url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ cta.text }}</a>
-                                        {% else %}
-                                            <a href="{{ cta.url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ cta.text }}</a>
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+        <div class="hero min-h-[70vh] bg-base-100/50 relative z-10">
+            <div class="hero-content text-center flex-col max-w-4xl">
+                <div class="max-w-2xl">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-aos="fade-up">
+                        {{ page.hero_title }}
+                    </h1>
+                    <p class="py-6 text-xl md:text-2xl text-base-content/80 leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+                        {{ page.hero_subtitle|richtext }}
+                    </p>
+                    <div class="flex gap-4 justify-center mt-4" data-aos="fade-up" data-aos-delay="200">
+                        {% if page.hero_ctas %}
+                            {% for block in page.hero_ctas|slice:":2" %}
+                                {% with cta=block.value %}
+                                    {% if forloop.first %}
+                                        <a href="{{ cta.url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ cta.text }}</a>
+                                    {% else %}
+                                        <a href="{{ cta.url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ cta.text }}</a>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
-
-            {# Decorative animated line #}
-            <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary to-transparent opacity-50"></div>
         </div>
+        <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary to-transparent opacity-50"></div>
+    </div>
 
-        {# ── Latest Posts Section ────────────────────────────────── #}
-        <div class="relative border-b border-base-300 bg-base-100">
-             {# Left vertical line decoration #}
-            <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
-             {# Right vertical line decoration #}
-            <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+    {# ── Latest Posts Section ────────────────────────────────── #}
+    <div class="relative border-b border-base-300 bg-base-100">
+        <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+        <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
 
-            <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-base-300 pb-8">
-                    <div>
-                        <div class="text-primary font-mono mb-2">01. WRITINGS</div>
-                        <h2 class="text-4xl md:text-5xl font-bold">Latest <span class="font-light italic text-base-content/60">Thoughts</span></h2>
-                    </div>
-                    <a href="/blog/" class="btn btn-outline btn-sm gap-2 mt-4 md:mt-0 group">
-                        Read all posts
-                        <right-arrow-icon class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </a>
+        <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-base-300 pb-8" data-aos="fade-up">
+                <div>
+                    <div class="text-primary font-mono mb-2">01. WRITINGS</div>
+                    <h2 class="text-4xl md:text-5xl font-bold">Latest <span class="font-light italic text-base-content/60">Thoughts</span></h2>
                 </div>
+                <a href="/blog/" class="btn btn-outline btn-sm gap-2 mt-4 md:mt-0 group">
+                    Read all posts
+                    <right-arrow-icon class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </a>
+            </div>
 
-                {% if latest_posts %}
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {% for post in latest_posts %}
-                            <a href="{% pageurl post %}" class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full rounded-none md:rounded-box">
-                                <figure class="aspect-video relative overflow-hidden border-b border-base-300">
-                                    {% if post.feed_image %}
-                                        {% image post.feed_image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
-                                    {% else %}
-                                        <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/20 font-mono text-4xl">
-                                            Wait...
-                                        </div>
-                                    {% endif %}
-                                    <div class="absolute top-4 right-4 badge badge-neutral bg-base-100/80 backdrop-blur-sm border-0 font-mono text-xs">
-                                        {{ post.first_published_at|date:"M d, Y" }}
-                                    </div>
-                                </figure>
-                                <div class="card-body p-6">
-                                    <h3 class="card-title text-xl font-bold group-hover:text-primary transition-colors leading-tight mb-2">
-                                        {{ post.title }}
-                                    </h3>
-                                    <p class="text-base-content/70 line-clamp-3 text-sm">
-                                        {{ post.intro }}
-                                    </p>
-                                    <div class="card-actions justify-end mt-4 pt-4 border-t border-base-300/50 w-full">
-                                        <div class="text-xs font-mono uppercase text-base-content/50 group-hover:text-primary transition-colors flex items-center gap-1">
-                                            Read Article <right-arrow-icon class="w-3 h-3" />
-                                        </div>
+            {% if latest_posts %}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {% for post in latest_posts %}
+                        <a href="{% pageurl post %}" class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full rounded-none md:rounded-box"
+                           data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'100' }}">
+                            <figure class="aspect-video relative overflow-hidden border-b border-base-300">
+                                {% if post.feed_image %}
+                                    {% image post.feed_image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                {% else %}
+                                    <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/20 font-mono text-4xl">Wait...</div>
+                                {% endif %}
+                                <div class="absolute top-4 right-4 badge badge-neutral bg-base-100/80 backdrop-blur-sm border-0 font-mono text-xs">
+                                    {{ post.first_published_at|date:"M d, Y" }}
+                                </div>
+                            </figure>
+                            <div class="card-body p-6">
+                                <h3 class="card-title text-xl font-bold group-hover:text-primary transition-colors leading-tight mb-2">{{ post.title }}</h3>
+                                <p class="text-base-content/70 line-clamp-3 text-sm">{{ post.intro }}</p>
+                                <div class="card-actions justify-end mt-4 pt-4 border-t border-base-300/50 w-full">
+                                    <div class="text-xs font-mono uppercase text-base-content/50 group-hover:text-primary transition-colors flex items-center gap-1">
+                                        Read Article <right-arrow-icon class="w-3 h-3" />
                                     </div>
                                 </div>
-                            </a>
-                        {% endfor %}
-                    </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
+                    <span>Check back soon for new articles!</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ── Featured Projects Section ───────────────────────────── #}
+    <div id="projects" class="relative border-b border-base-300 bg-base-200/30 overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
+            <div class="mb-16 border-b border-base-300 pb-8" data-aos="fade-up">
+                <div class="text-secondary font-mono mb-2">02. WORK</div>
+                <h2 class="text-4xl md:text-5xl font-bold">Featured <span class="font-light italic text-base-content/60">Projects</span></h2>
+            </div>
+
+            <div class="flex flex-col gap-24">
+                {% if featured_projects %}
+                    {% for project in featured_projects %}
+                        {% if forloop.counter0|divisibleby:"2" %}
+                            <div class="flex flex-col lg:flex-row gap-12 items-center group" data-aos="fade-right" data-aos-delay="{{ forloop.counter|add:'200' }}">
+                        {% else %}
+                            <div class="flex flex-col lg:flex-row-reverse gap-12 items-center group" data-aos="fade-left" data-aos-delay="{{ forloop.counter|add:'200' }}">
+                        {% endif %}
+                        <div class="w-full lg:w-1/2">
+                            <div class="mockup-browser border border-base-300 bg-base-200 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/10">
+                                <div class="mockup-browser-toolbar border-b border-base-300">
+                                    <div class="input border border-base-300">{{ project.demo_url|default:'' }}</div>
+                                </div>
+                                <div class="flex justify-center items-center bg-base-100 aspect-video relative overflow-hidden text-base-content/10 font-black text-6xl select-none">
+                                    {% if project.image %}
+                                        {% image project.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                    {% else %}
+                                        PROJECT
+                                    {% endif %}
+                                    <div class="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-1/2 space-y-6 {% if not forloop.counter0|divisibleby:"2" %}lg:text-right{% endif %}">
+                            <h3 class="text-3xl font-bold">{{ project.title }}</h3>
+                            <p class="text-lg text-base-content/80 leading-relaxed">{{ project.description|richtext }}</p>
+                            <div class="flex gap-4 pt-4 {% if not forloop.counter0|divisibleby:"2" %}lg:justify-end{% endif %}">
+                                {% if project.demo_url %}
+                                    <a href="{{ project.demo_url }}" class="btn btn-primary rounded-box shadow-lg hover:shadow-primary/30">Live Demo</a>
+                                {% endif %}
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" class="btn btn-ghost rounded-box border border-base-content/10">GitHub</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </div>
+                        {% if not forloop.last %}
+                            <div class="w-px h-24 bg-base-300 mx-auto hidden lg:block"></div>
+                        {% endif %}
+                    {% endfor %}
                 {% else %}
                     <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Check back soon for new articles!</span>
+                        <span>No featured projects yet.</span>
                     </div>
                 {% endif %}
             </div>
         </div>
-
-        {# ── Featured Projects Section ───────────────────────────── #}
-        <div id="projects" class="relative border-b border-base-300 bg-base-200/30">
-             {# Grid background again but fainter #}
-            <div class="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
-
-            <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
-                <div class="mb-16 border-b border-base-300 pb-8">
-                    <div class="text-secondary font-mono mb-2">02. WORK</div>
-                    <h2 class="text-4xl md:text-5xl font-bold">Featured <span class="font-light italic text-base-content/60">Projects</span></h2>
-                </div>
-
-                <div class="flex flex-col gap-24">
-                    {% if featured_projects %}
-                        {% for project in featured_projects %}
-                            {% if forloop.counter0|divisibleby:"2" %}
-                                <div class="flex flex-col lg:flex-row gap-12 items-center group">
-                            {% else %}
-                                <div class="flex flex-col lg:flex-row-reverse gap-12 items-center group">
-                            {% endif %}
-                            <div class="w-full lg:w-1/2">
-                                <div class="mockup-browser border border-base-300 bg-base-200 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/10">
-                                    <div class="mockup-browser-toolbar border-b border-base-300">
-                                        <div class="input border border-base-300">{{ project.demo_url|default:'' }}</div>
-                                    </div>
-                                    <div class="flex justify-center items-center bg-base-100 aspect-video relative overflow-hidden text-base-content/10 font-black text-6xl select-none">
-                                        {% if project.image %}
-                                            {% image project.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
-                                        {% else %}
-                                            PROJECT
-                                        {% endif %}
-                                        <div class="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-full lg:w-1/2 space-y-6 {% if not forloop.counter0|divisibleby:"2" %}lg:text-right{% endif %}">
-                                <h3 class="text-3xl font-bold">{{ project.title }}</h3>
-                                <p class="text-lg text-base-content/80 leading-relaxed">{{ project.description|richtext }}</p>
-                                <div class="flex gap-4 pt-4 {% if not forloop.counter0|divisibleby:"2" %}lg:justify-end{% endif %}">
-                                    {% if project.demo_url %}
-                                        <a href="{{ project.demo_url }}" class="btn btn-primary rounded-box shadow-lg hover:shadow-primary/30">Live Demo</a>
-                                    {% endif %}
-                                    {% if project.github_url %}
-                                        <a href="{{ project.github_url }}" class="btn btn-ghost rounded-box border border-base-content/10">GitHub</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            </div>
-                            {% if not forloop.last %}
-                                <div class="w-px h-24 bg-base-300 mx-auto hidden lg:block"></div>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
-                            <span>No featured projects yet.</span>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-
-        {# ── Footer ──────────────────────────────────────────────── #}
-        {% include "components/footer.html" %}
-
-
     </div>
+
+    {% include "components/footer.html" %}
+
 {% endblock %}

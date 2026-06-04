@@ -1,8 +1,18 @@
+from __future__ import annotations
+
+from typing import Any
+
 from django.contrib.auth.models import BaseUserManager
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, **extra_fields):
+    def create_user(
+        self,
+        username: str,
+        email: str,
+        password: str | None = None,
+        **extra_fields: Any,
+    ) -> "User":
         if not username:
             raise ValueError("The Username field must be set")
         if not email:
@@ -14,7 +24,13 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password=None, **extra_fields):
+    def create_superuser(
+        self,
+        username: str,
+        email: str,
+        password: str | None = None,
+        **extra_fields: Any,
+    ) -> "User":
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)

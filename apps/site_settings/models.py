@@ -1,48 +1,53 @@
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+from __future__ import annotations
+
 import datetime
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 
 
 class LicenseOptions(models.TextChoices):
-    ALL_RIGHTS = "all_rights", "All Rights Reserved"
-    MIT = "mit", "MIT License"
-    CC_BY = "cc_by", "Creative Commons BY"
-    CC_BY_SA = "cc_by_sa", "Creative Commons BY-SA"
-    GPL_3 = "gpl_3", "GNU GPL v3"
+    ALL_RIGHTS: str = "all_rights", "All Rights Reserved"
+    MIT: str = "mit", "MIT License"
+    CC_BY: str = "cc_by", "Creative Commons BY"
+    CC_BY_SA: str = "cc_by_sa", "Creative Commons BY-SA"
+    GPL_3: str = "gpl_3", "GNU GPL v3"
 
 
 @register_setting
 class SiteConfigSettings(BaseSiteSetting):
-    site_name = models.CharField(max_length=32)
+    site_name: models.CharField = models.CharField(max_length=32, help_text="Display name of the site.")
 
-    site_copyright_from = models.PositiveSmallIntegerField(
+    site_copyright_from: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
         validators=[
             MinValueValidator(1900),
             MaxValueValidator(datetime.date.today().year),
         ],
+        help_text="Starting year for the copyright notice.",
     )
-    site_copyright_to = models.PositiveSmallIntegerField(
+    site_copyright_to: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
         validators=[
             MinValueValidator(1900),
             MaxValueValidator(datetime.date.today().year),
         ],
+        help_text="Ending year for the copyright notice.",
     )
 
-    license_type = models.CharField(
+    license_type: models.CharField = models.CharField(
         max_length=20,
         choices=LicenseOptions.choices,
         null=True,
         help_text="The legal license governing the site's content.",
     )
 
-    panels = [
+    panels: list[FieldPanel | MultiFieldPanel] = [
         FieldPanel("site_name"),
         MultiFieldPanel(
             [
@@ -59,7 +64,7 @@ class SiteConfigSettings(BaseSiteSetting):
         ),
     ]
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         if self.site_copyright_from and self.site_copyright_to:
             if self.site_copyright_from > self.site_copyright_to:
