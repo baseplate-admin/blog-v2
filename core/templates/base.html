@@ -7,273 +7,279 @@
 {# Nav items + current path — used in navbar, mobile menu, footer #}
 {% with about="/about/" blog=blog_url projects=projects_url contact="/contact/" current_path=request.path %}
 
-<!DOCTYPE html>
-<html lang="en" data-theme="tanstack-dark">
-<head>
-    {% vite_hmr_client %}
-    <meta charset="utf-8">
-    <title>
-        {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-        {% wagtail_site as current_site %}
-        {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-    </title>
-    {% if page.search_description %}
-        <meta name="description" content="{{ page.search_description }}">
-    {% endif %}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!DOCTYPE html>
+    <html lang="en" data-theme="tanstack-dark">
+        <head>
+            {% vite_hmr_client %}
+            <meta charset="utf-8">
+            <title>
+                {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
+                {% wagtail_site as current_site %}
+                {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
+            </title>
+            {% if page.search_description %}
+                <meta name="description" content="{{ page.search_description }}">
+            {% endif %}
+            <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {# RSS feed link #}
-    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed/">
+            <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed/">
 
     {# Open Graph meta tags #}
-    {% if page %}
-        {% with title=page.seo_title|default:page.title description=page.search_description|default:page.intro site_name=current_site.site_name|default:"The Tinkerer" %}
-            {% wagtail_site as site %}
-            {% with og_url=site.root_url|add:page.url %}
-                <meta property="og:title" content="{{ title }}">
-                <meta property="og:description" content="{{ description }}">
-                <meta property="og:url" content="{{ og_url }}">
-                <meta property="og:site_name" content="{{ site_name }}">
-                <meta property="og:type" content="{% if page.content_type.app_label == 'blog' %}article{% else %}website{% endif %}">
-                {% if page.feed_image %}
-                    {% with image=page.feed_image %}
-                        <meta property="og:image" content="{{ site.root_url }}{{ image.file.url }}">
-                        <meta property="og:image:alt" content="{{ title }}">
-                    {% endwith %}
-                {% endif %}
+            {% if page %}
+                {% with title=page.seo_title|default:page.title description=page.search_description site_name=current_site.site_name|default:"The Tinkerer" %}
+                    {% wagtail_site as site %}
+                    {% with og_url=site.root_url|add:page.url %}
+                        <meta property="og:title" content="{{ title }}">
+                        <meta property="og:description" content="{{ description }}">
+                        <meta property="og:url" content="{{ og_url }}">
+                        <meta property="og:site_name" content="{{ site_name }}">
+                        <meta property="og:type" content="{% if page.content_type.app_label == 'blog' %}article{% else %}website{% endif %}">
+                        {% if page.feed_image %}
+                            {% with image=page.feed_image %}
+                                <meta property="og:image" content="{{ site.root_url }}{{ image.file.url }}">
+                                <meta property="og:image:alt" content="{{ title }}">
+                            {% endwith %}
+                        {% endif %}
                 {# Twitter Card #}
-                <meta name="twitter:card" content="summary_large_image">
-                <meta name="twitter:title" content="{{ title }}">
-                <meta name="twitter:description" content="{{ description }}">
-            {% endwith %}
-        {% endwith %}
-    {% endif %}
+                        <meta name="twitter:card" content="summary_large_image">
+                        <meta name="twitter:title" content="{{ title }}">
+                        <meta name="twitter:description" content="{{ description }}">
+                    {% endwith %}
+                {% endwith %}
+            {% endif %}
 
-    {% if request.in_preview_panel %}
-        <base target="_blank">
-    {% endif %}
+            {% if request.in_preview_panel %}
+                <base target="_blank">
+            {% endif %}
 
-    {# Vite: Tailwind first (styles), then HTMX, AOS #}
-    {% vite_asset 'assets/tailwind/tailwind.ts' %}
-    {% vite_asset 'assets/htmx/htmx.ts' %}
-    {% vite_asset 'assets/aos/aos.ts' %}
+            {# Vite: HTMX (bundles Tailwind CSS), AOS, Lucide #}
+            {% vite_asset "assets/tailwind/tailwind.css" %}
+            {% vite_asset 'assets/htmx/htmx.ts' %}
+            {% vite_asset 'assets/aos/aos.ts' %}
+            {% vite_asset 'assets/lucide/lucide.ts' %}
 
-    {% block head %}{% endblock %}
-</head>
+            {% block head %}{% endblock %}
+        </head>
 
-<body class="bg-base-100 font-sans text-base-content antialiased transition-colors duration-300 min-h-screen">
-    {% wagtailuserbar %}
+        <body class="bg-base-100 font-sans text-base-content antialiased transition-colors duration-300 min-h-screen">
+            {% wagtailuserbar %}
 
     {# Navigation progress bar (nprogress-style) #}
-    <div id="nav-progress" class="fixed top-0 left-0 w-full h-0.5 z-[70] pointer-events-none overflow-hidden">
-        <div class="progress-bar h-full bg-linear-to-r from-primary to-accent w-0 transition-all duration-300 ease-in-out"></div>
-    </div>
+            <div id="nav-progress" class="fixed top-0 left-0 w-full h-0.5 z-[70] pointer-events-none overflow-hidden">
+                <div class="progress-bar h-full bg-linear-to-r from-primary to-accent w-0 transition-all duration-300 ease-in-out"></div>
+            </div>
 
-    <div class="page-shell min-h-screen flex flex-col">
+            <div class="page-shell min-h-screen flex flex-col">
 
         {# ── Navbar (centered, max-w-7xl, persists across swaps) ── #}
-        <nav class="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300">
-            <div class="flex justify-between items-center">
+                <nav class="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300">
+                    <div class="flex justify-between items-center">
 
                 {# Logo #}
-                <a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
-                    The Tinkerer
-                </a>
+                        <a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
+                            The Tinkerer
+                        </a>
 
                 {# Desktop right side #}
-                <div class="hidden md:flex items-center gap-6">
-                    <a href="{{ about }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">About</a>
-                    <a href="{{ blog }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Blog</a>
-                    <a href="{{ projects }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Projects</a>
-                    <a href="{{ contact }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</a>
+                        <div class="hidden md:flex items-center gap-6">
+                            <a href="{{ about }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">About</a>
+                            <a href="{{ blog }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Blog</a>
+                            <a href="{{ projects }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Projects</a>
+                            <a href="{{ contact }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</a>
 
                     {# Search button — server-side visibility #}
-                    {% if current_path == blog or current_path == "/" %}
-                    <button id="search-btn" class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
-                        {% icon 'search' size=18 %}
-                        <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300">
-                            <span class="text-base-content/50">Ctrl</span>
-                            <span class="text-base-content/60">K</span>
-                        </kbd>
-                    </button>
-                    {% endif %}
+                            {% if current_path == blog %}
+                                <button id="search-btn" class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
+                                    <i data-lucide="search" style="width:18px;height:18px"></i>
+                                    <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300">
+                                        <span class="text-base-content/50">Ctrl</span>
+                                        <span class="text-base-content/60">K</span>
+                                    </kbd>
+                                </button>
+                            {% endif %}
 
                     {# Theme toggle — dark icon shown by default (site default) #}
-                    <button id="theme-toggle" class="cursor-pointer text-base-content/70 hover:text-base-content transition-colors p-1"
-                            aria-label="Toggle theme">
-                        <span class="theme-icon-dark inline">{% icon 'moon' size=20 %}</span>
-                        <span class="theme-icon-light hidden">{% icon 'sun' size=20 %}</span>
-                    </button>
-                </div>
+                            <button id="theme-toggle" class="cursor-pointer text-base-content/70 hover:text-base-content transition-colors p-1"
+                                    aria-label="Toggle theme">
+                                <span class="theme-icon-dark inline"><i data-lucide="moon"></i></span>
+                                <span class="theme-icon-light hidden"><i data-lucide="sun"></i></span>
+                            </button>
+                        </div>
 
                 {# Mobile right side #}
-                <div class="md:hidden flex items-center gap-2">
-                    {% if current_path == blog or current_path == "/" %}
-                    <button class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
-                        {% icon 'search' size=18 %}
-                    </button>
-                    {% endif %}
+                        <div class="md:hidden flex items-center gap-2">
+                            {% if current_path == blog %}
+                                <button class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
+                                    <i data-lucide="search" style="width:18px;height:18px"></i>
+                                </button>
+                            {% endif %}
 
-                    <button id="mobile-menu-btn"
-                            class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all">
-                        <span class="relative inline-block w-5 h-5">
-                            <span class="menu-icon absolute inset-0">{% icon 'menu' size=20 %}</span>
-                            <span class="close-icon absolute inset-0 hidden">{% icon 'x' size=20 %}</span>
-                        </span>
-                    </button>
-                </div>
+                            <button id="mobile-menu-btn"
+                                    class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all">
+                                <span class="relative inline-block w-5 h-5">
+                                    <span class="menu-icon absolute inset-0"><i data-lucide="menu"></i></span>
+                                    <span class="close-icon absolute inset-0 hidden"><i data-lucide="x"></i></span>
+                                </span>
+                            </button>
+                        </div>
 
-            </div>
-        </nav>
+                    </div>
+                </nav>
 
         {# Mobile dropdown menu #}
-        <div id="mobile-menu" class="hidden absolute right-4 top-full pt-2 z-50">
-            <div class="menu bg-base-100 rounded-box border border-base-300 shadow-xl p-2 w-56 animate-in fade-in slide-in-from-top-2 duration-200">
-                <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
-                <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
-                <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
-                <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
-                <div class="pt-2 mt-2 border-t border-base-300">
-                    <button id="mobile-theme-toggle" class="flex items-center gap-2 cursor-pointer p-2 w-full rounded-lg hover:bg-base-200 text-sm text-base-content/70">
-                        <span class="mobile-theme-dark inline">{% icon 'moon' size=20 %}</span>
-                        <span class="mobile-theme-light hidden">{% icon 'sun' size=20 %}</span>
-                        <span>Theme</span>
-                    </button>
+                <div id="mobile-menu" class="hidden absolute right-4 top-full pt-2 z-50">
+                    <div class="menu bg-base-100 rounded-box border border-base-300 shadow-xl p-2 w-56 animate-in fade-in slide-in-from-top-2 duration-200">
+                        <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
+                        <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
+                        <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
+                        <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
+                        <div class="pt-2 mt-2 border-t border-base-300">
+                            <button id="mobile-theme-toggle" class="flex items-center gap-2 cursor-pointer p-2 w-full rounded-lg hover:bg-base-200 text-sm text-base-content/70">
+                                <span class="mobile-theme-dark inline"><i data-lucide="moon"></i></span>
+                                <span class="mobile-theme-light hidden"><i data-lucide="sun"></i></span>
+                                <span>Theme</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
         {# Search dialog #}
-        <dialog id="search-dialog" class="modal modal-bottom sm:modal-middle backdrop:bg-black/60">
-            <div class="modal-box w-full max-w-2xl p-0 overflow-hidden shadow-2xl">
-                <div class="flex items-center gap-3 px-4 py-3 border-b border-base-300">
-                    <span class="text-base-content/50 shrink-0">{% icon 'search' size=20 %}</span>
-                    <input id="search-input"
-                           type="search"
-                           placeholder="Search articles..."
-                           class="input input-ghost flex-1 bg-transparent text-base focus:outline-none"
-                           autocomplete="off"
-                           hx-get="{% url 'search:search' %}"
-                           hx-target="#search-results"
-                           hx-trigger="input changed delay:300ms, search"
-                           hx-indicator=".search-spinner">
-                    <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300 hidden sm:inline-flex">ESC</kbd>
-                    <button onclick="closeSearch()" class="btn btn-ghost btn-xs">Close</button>
-                </div>
-                <div id="search-results" class="max-h-[60vh] overflow-y-auto px-4 pb-4">
-                    <div class="py-6 text-center text-xs text-base-content/30 font-mono">Start typing to search...</div>
-                </div>
-                <div class="search-spinner htmx-indicator flex justify-center py-4">
-                    <span class="loading loading-spinner loading-sm text-primary"></span>
-                </div>
-            </div>
-            <form method="dialog" class="modal-backdrop">
-                <button onclick="closeSearch()"></button>
-            </form>
-        </dialog>
+                <dialog id="search-dialog" class="modal modal-bottom sm:modal-middle backdrop:bg-black/60">
+                    <div class="modal-box w-full max-w-2xl p-0 overflow-hidden shadow-2xl">
+                        <div class="flex items-center gap-3 px-4 py-3 border-b border-base-300">
+                            <span class="text-base-content/50 shrink-0"><i data-lucide="search"></i></span>
+                            <input id="search-input"
+                                   type="search"
+                                   placeholder="Search articles..."
+                                   class="input input-ghost flex-1 bg-transparent text-base focus:outline-none"
+                                   autocomplete="off"
+                                   hx-get="{% url 'search:search' %}"
+                                   hx-target="#search-results"
+                                   hx-trigger="input changed delay:300ms, search"
+                                   hx-indicator=".search-spinner">
+                            <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300 hidden sm:inline-flex">ESC</kbd>
+                            <button onclick="closeSearch()" class="btn btn-ghost btn-xs">Close</button>
+                        </div>
+                        <div id="search-results" class="max-h-[60vh] overflow-y-auto px-4 pb-4">
+                            <div class="py-6 text-center text-xs text-base-content/30 font-mono">Start typing to search...</div>
+                        </div>
+                        <div class="search-spinner htmx-indicator flex justify-center py-4">
+                            <span class="loading loading-spinner loading-sm text-primary"></span>
+                        </div>
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button onclick="closeSearch()"></button>
+                    </form>
+                </dialog>
 
         {# ── HTMX boost wrapper: swaps only <main> ──────────── #}
-        <div class="boost-root flex-1"
-             hx-boost="true"
-             hx-target="main"
-             hx-select="main"
-             hx-select-oob="title"
-             hx-history="true">
-            <main class="page-main">
-                {% block inner_content %}
-                {% block content %}{% endblock %}
-                {% endblock %}
-            </main>
-        </div>
+                <div class="boost-root flex-1"
+                     hx-boost="true"
+                     hx-target="main"
+                     hx-select="main"
+                     hx-select-oob="title"
+                     hx-history="true">
+                    <main class="page-main">
+                        {% block inner_content %}
+                            {% block content %}{% endblock %}
+                        {% endblock %}
+                    </main>
+                </div>
 
         {# ── Footer (sticks to bottom via flexbox) ─────────── #}
-        {% include "components/footer.html" with about=about blog=blog projects=projects contact=contact %}
+                {% include "components/footer.html" with about=about blog=blog projects=projects contact=contact %}
 
-    </div>
+            </div>
 
     {# ── Minimal inline scripts — theme toggle, keyboard, mobile menu ── #}
-    <script type="module">
-      const $ = (sel) => document.querySelector(sel);
-      const $$ = (sel) => document.querySelectorAll(sel);
+            <script type="module">
+                const $ = (sel) => document.querySelector(sel);
+                const $$ = (sel) => document.querySelectorAll(sel);
 
       // Theme toggle
-      function syncTheme() {
-        const isDark = document.documentElement.dataset.theme === "tanstack-dark";
-        const show = isDark ? "" : "none";
-        const hide = isDark ? "none" : "";
-        $$(".theme-icon-dark").forEach(el => el.style.display = show);
-        $$(".theme-icon-light").forEach(el => el.style.display = hide);
-        $$(".mobile-theme-dark").forEach(el => el.style.display = show);
-        $$(".mobile-theme-light").forEach(el => el.style.display = hide);
-      }
-      function toggleTheme() {
-        const next = document.documentElement.dataset.theme === "tanstack-dark" ? "tanstack-light" : "tanstack-dark";
-        document.documentElement.dataset.theme = next;
-        localStorage.setItem("theme", next);
-        syncTheme();
-      }
-      syncTheme();
-      $("#theme-toggle")?.addEventListener("click", toggleTheme);
-      $("#mobile-theme-toggle")?.addEventListener("click", toggleTheme);
+                function syncTheme() {
+                    const isDark = document.documentElement.dataset.theme === "tanstack-dark";
+                    const show = isDark ? "" : "none";
+                    const hide = isDark ? "none" : "";
+                    $$(".theme-icon-dark").forEach(el => el.style.display = show);
+                    $$(".theme-icon-light").forEach(el => el.style.display = hide);
+                    $$(".mobile-theme-dark").forEach(el => el.style.display = show);
+                    $$(".mobile-theme-light").forEach(el => el.style.display = hide);
+                }
+                function toggleTheme() {
+                    const next = document.documentElement.dataset.theme === "tanstack-dark" ? "tanstack-light" : "tanstack-dark";
+                    document.documentElement.dataset.theme = next;
+                    localStorage.setItem("theme", next);
+                    syncTheme();
+                }
+                syncTheme();
+                $("#theme-toggle")?.addEventListener("click", toggleTheme);
+                $("#mobile-theme-toggle")?.addEventListener("click", toggleTheme);
 
       // Navigation progress bar (nprogress-style)
-      const progressBar = $(".progress-bar");
-      let progressTimeout: ReturnType<typeof setTimeout>;
-      function showProgress() {
-        if (!progressBar) return;
-        progressBar.style.width = "30%";
-        progressBar.style.transition = "width 0.3s ease";
-        clearTimeout(progressTimeout);
-        progressTimeout = setTimeout(() => {
-          progressBar.style.width = "60%";
-        }, 200);
-      }
-      function completeProgress() {
-        if (!progressBar) return;
-        progressBar.style.width = "100%";
-        progressBar.style.opacity = "1";
-        setTimeout(() => {
-          progressBar.style.opacity = "0";
-          setTimeout(() => {
-            progressBar.style.width = "0%";
-            progressBar.style.opacity = "1";
-          }, 300);
-        }, 150);
-      }
-      document.body.addEventListener("htmx:beforeRequest", showProgress);
-      document.body.addEventListener("htmx:afterRequest", completeProgress);
+                const progressBar = $(".progress-bar");
+                let progressTimeout;
+                function showProgress() {
+                    if (!progressBar) return;
+                    clearTimeout(progressTimeout);
+                    progressBar.style.opacity = "1";
+                    progressBar.style.width = "30%";
+                    progressBar.style.transition = "width 0.3s ease";
+                    progressTimeout = setTimeout(() => {
+                        if (progressBar) progressBar.style.width = "60%";
+                    }, 200);
+                }
+                function completeProgress() {
+                    if (!progressBar) return;
+                    clearTimeout(progressTimeout);
+                    progressBar.style.width = "100%";
+                    setTimeout(() => {
+                        if (!progressBar) return;
+                        progressBar.style.opacity = "0";
+                        setTimeout(() => {
+                            if (progressBar) {
+                                progressBar.style.width = "0%";
+                                progressBar.style.opacity = "1";
+                            }
+                        }, 300);
+                    }, 150);
+                }
+                document.body.addEventListener("htmx:beforeRequest", showProgress);
+                document.body.addEventListener("htmx:afterRequest", completeProgress);
+                document.body.addEventListener("htmx:afterSettle", completeProgress);
 
       // Search open/close
-      window.openSearch = () => { $("#search-dialog")?.showModal(); setTimeout(() => $("#search-input")?.focus(), 100); };
-      window.closeSearch = () => { $("#search-dialog")?.close(); };
+                window.openSearch = () => { $("#search-dialog")?.showModal(); setTimeout(() => $("#search-input")?.focus(), 100); };
+                window.closeSearch = () => { $("#search-dialog")?.close(); };
 
       // Keyboard shortcuts
-      document.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "k") { e.preventDefault(); window.openSearch?.(); }
-        if (e.key === "Escape") window.closeSearch?.();
-      });
+                document.addEventListener("keydown", (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === "k") { e.preventDefault(); window.openSearch?.(); }
+                    if (e.key === "Escape") window.closeSearch?.();
+                });
 
       // Mobile hamburger icon toggle
-      $("#mobile-menu-btn")?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const menu = $("#mobile-menu");
-        const m = $(".menu-icon"), c = $(".close-icon");
-        const isOpen = !m?.classList.contains("hidden");
-        m?.classList.toggle("hidden", !isOpen);
-        c?.classList.toggle("hidden", isOpen);
-        menu?.classList.toggle("hidden");
-      });
+                $("#mobile-menu-btn")?.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const menu = $("#mobile-menu");
+                    const m = $(".menu-icon"), c = $(".close-icon");
+                    const isMenuOpen = menu && !menu.classList.contains("hidden");
+                    m?.classList.toggle("hidden", isMenuOpen);
+                    c?.classList.toggle("hidden", !isMenuOpen);
+                    menu?.classList.toggle("hidden");
+                });
       // Close mobile menu when clicking outside
-      document.addEventListener("click", (e) => {
-        const menu = $("#mobile-menu");
-        const btn = $("#mobile-menu-btn");
-        if (menu && !menu.classList.contains("hidden") && !menu.contains(e.target) && !btn?.contains(e.target)) {
-          menu.classList.add("hidden");
-          $(".menu-icon")?.classList.remove("hidden");
-          $(".close-icon")?.classList.add("hidden");
-        }
-      });
-    </script>
+                document.addEventListener("click", (e) => {
+                    const menu = $("#mobile-menu");
+                    const btn = $("#mobile-menu-btn");
+                    if (menu && !menu.classList.contains("hidden") && !menu.contains(e.target) && !btn?.contains(e.target)) {
+                        menu.classList.add("hidden");
+                        $(".menu-icon")?.classList.remove("hidden");
+                        $(".close-icon")?.classList.add("hidden");
+                    }
+                });
+            </script>
 {% endwith %}
 </body>
 </html>

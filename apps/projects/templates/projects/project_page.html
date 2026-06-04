@@ -16,12 +16,12 @@
         <div class="flex flex-wrap gap-4 mb-12" data-aos="fade-up" data-aos-delay="150">
             {% if page.github_url %}
                 <a href="{{ page.github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-neutral gap-2">
-                    {% icon 'github' size=20 %} View Source
+                    <i data-lucide="github"></i> View Source
                 </a>
             {% endif %}
             {% if page.demo_url %}
                 <a href="{{ page.demo_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary gap-2">
-                    {% icon 'external-link' size=20 %} Live Demo
+                    <i data-lucide="external-link"></i> Live Demo
                 </a>
             {% endif %}
         </div>
@@ -39,7 +39,7 @@
         <div class="border-t border-base-300 mt-24 pt-12 flex justify-between items-center" data-aos="fade-in">
              <a href="{{ page.get_parent.url }}" class="btn btn-ghost gap-2">Start Over</a>
              <button class="btn btn-circle btn-outline" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-                {% icon 'chevron-up' size=24 %}
+                <i data-lucide="chevron-up" style="width:24px;height:24px"></i>
              </button>
         </div>
     </div>

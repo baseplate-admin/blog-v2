@@ -1,3 +1,4 @@
+import '../tailwind/tailwind.css';
 import htmx from 'htmx.org';
 
 // -- HTMX config --

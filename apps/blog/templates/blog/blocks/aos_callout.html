@@ -2,13 +2,13 @@
   class="alert border border-base-300/50 bg-base-200/50 my-6">
   {% with variant=self.block.value.variant %}
     {% if variant == "warning" %}
-      <span class="text-warning">{% icon 'lightning-bolt' size=20 %}</span>
+      <span class="text-warning"><i data-lucide="lightning-bolt"></i></span>
     {% elif variant == "success" %}
-      <span class="text-success">{% icon 'shield' size=20 %}</span>
+      <span class="text-success"><i data-lucide="shield"></i></span>
     {% elif variant == "error" %}
-      <span class="text-error">{% icon 'x' size=20 %}</span>
+      <span class="text-error"><i data-lucide="x"></i></span>
     {% else %}
-      <span class="text-info">{% icon 'info-circle' size=20 %}</span>
+      <span class="text-info"><i data-lucide="info"></i></span>
     {% endif %}
     <div class="flex-1">
       <h4 class="font-semibold text-base-content/80">{{ self.block.value.title }}</h4>

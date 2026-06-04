@@ -12,9 +12,12 @@ export default defineConfig({
         outDir: resolve('./static'),
         rollupOptions: {
             input: {
-                tailwindcss: resolve('./assets/tailwind/tailwind.ts'),
+                // CSS
+                tailwind: resolve('./assets/tailwind.css'),
+                // JavaScript
                 htmx: resolve('./assets/htmx/htmx.ts'),
                 aos: resolve('./assets/aos/aos.ts'),
+                lucide: resolve('./assets/lucide/lucide.ts'),
             },
         },
     },

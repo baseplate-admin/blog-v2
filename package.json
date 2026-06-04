@@ -7,6 +7,7 @@
         "@tailwindcss/vite": "^4.1.18",
         "aos": "^2.3.4",
         "htmx.org": "^2.0.10",
+        "lucide": "^1.17.0",
         "tailwindcss": "^4.1.18",
         "vite": "^7.3.1"
     },

@@ -1,4 +1,3 @@
-
 from typing import Any
 
 from django.db import models
@@ -12,7 +11,9 @@ from wagtail.models import Page
 
 
 class ProjectIndexPage(Page):
-    intro: RichTextField = RichTextField(blank=True, help_text="Introductory text shown at the top of the projects page.")
+    intro: RichTextField = RichTextField(
+        blank=True, help_text="Introductory text shown at the top of the projects page."
+    )
     max_count: int = 1
 
     content_panels: list[FieldPanel] = Page.content_panels + [
@@ -25,14 +26,22 @@ class ProjectIndexPage(Page):
     def get_context(self, request: HttpRequest) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context(request)
         # Get live project pages
-        context["projects"] = self.get_children().live().specific().order_by("-first_published_at")
+        context["projects"] = (
+            self.get_children().live().specific().order_by("-first_published_at")
+        )
         return context
 
 
 class ProjectPage(Page):
-    description: RichTextField = RichTextField(help_text="Detailed description of the project.")
-    github_url: models.URLField = models.URLField(blank=True, help_text="Link to the GitHub repository")
-    demo_url: models.URLField = models.URLField(blank=True, help_text="Link to the live demo")
+    description: RichTextField = RichTextField(
+        help_text="Detailed description of the project."
+    )
+    github_url: models.URLField = models.URLField(
+        blank=True, help_text="Link to the GitHub repository"
+    )
+    demo_url: models.URLField = models.URLField(
+        blank=True, help_text="Link to the live demo"
+    )
     featured: models.BooleanField = models.BooleanField(
         default=False, help_text="Mark this project as featured on the homepage"
     )

@@ -57,10 +57,11 @@ class BlogIndexPage(Page):
             self.get_children().live().specific().order_by("-first_published_at")
         )
 
-        # Filtering by tag
-        tag: str | None = request.GET.get("tag")
-        if tag:
+        # Filtering
+        if tag := request.GET.get("tag"):
             blogpages = blogpages.filter(blogpage__tags__name=tag)
+        if mood := request.GET.get("mood"):
+            blogpages = blogpages.filter(blogpage__mood=mood)
 
         # Pagination
         page_num: str | int = request.GET.get("page", 1)  # type: ignore[assignment]
@@ -74,6 +75,7 @@ class BlogIndexPage(Page):
 
         context["blogpages"] = blogpages
         context["request_tag"] = tag
+        context["request_mood"] = mood
         context["is_htmx"] = request.headers.get("HX-Request") == "true"
 
         # Sidebar data: all tags with post counts
