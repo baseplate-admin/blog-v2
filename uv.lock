@@ -39,6 +39,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "django-vite" },
+    { name = "modern-colorthief" },
     { name = "psycopg", extra = ["binary"] },
     { name = "readtime" },
     { name = "uvicorn" },
@@ -56,6 +57,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "django-vite", specifier = ">=3.1.0" },
+    { name = "modern-colorthief", specifier = ">=0.2.1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.2" },
     { name = "readtime", specifier = ">=3.0.0" },
     { name = "uvicorn", specifier = ">=0.40.0" },
@@ -411,6 +413,41 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/3f/49/751b8872bb9c1ec667d0d312ab90022f0426326109163ade4719466c2e4d/modelsearch-1.1.1.tar.gz", hash = "sha256:25f329c4d93572729c931f65c46cedb5cfc32d368690ebdabc223aa6205251d6", size = 87514, upload-time = "2025-11-10T14:29:57.223Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/88/4b/e3eb1f4e4f7ca4bfa9b71cea497352c1ce13261254d59cb33a36bcbff335/modelsearch-1.1.1-py3-none-any.whl", hash = "sha256:d2580790af76c3a6404f651c9d8ca8695b284551583bb8ca6ddeb17eca0cfb52", size = 106987, upload-time = "2025-11-10T14:29:55.946Z" },
+]
+
+[[package]]
+name = "modern-colorthief"
+version = "0.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/83/92400649419509a53459d1f26cf46af11604a617a0eef5a78a6682b5af04/modern_colorthief-0.2.1.tar.gz", hash = "sha256:547cefe346b567eacb30441fd0d12766741b33ec0e0557167a38d26505ecf580", size = 702466, upload-time = "2026-05-20T04:30:00.614Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/1c/e9321e8c564d8ff5f450aeca705e307c8a4e98aa4b90ce3bb87dc5651406/modern_colorthief-0.2.1-cp314-cp314-android_24_arm64_v8a.whl", hash = "sha256:c506c74ae927563f88fe07408fdc0fee491b81c251d1a03018aee01e357b9f0e", size = 855885, upload-time = "2026-05-20T04:29:33.246Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/e5/b26e8fc14c0776c340fa0e1364c587dad49d048e792974a78439ae34f4d3/modern_colorthief-0.2.1-cp314-cp314-android_24_x86_64.whl", hash = "sha256:d9c2ed0b7b5ca6a3a93585591dd7d774b3ac41a2efc0f0041a5688f1876d9ac5", size = 883258, upload-time = "2026-05-20T04:31:13.13Z" },
+    { url = "https://files.pythonhosted.org/packages/22/6a/0efce26308ef94f652255442fba12997bf3545da9f73cd092e8d2bafb578/modern_colorthief-0.2.1-cp314-cp314-macosx_10_12_x86_64.whl", hash = "sha256:74fd6aa781ed7f5f211a6271661cc305b9c14eafed3a3b3850217d216cb98753", size = 833574, upload-time = "2026-05-20T04:29:55.383Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/f6/5a0713d6945b28f13acd4c7c0ed43c94139f0c510fc65c3c74bfcb4be34a/modern_colorthief-0.2.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:2a71006f5432be24f10adcb1ddf1e904ac5ff890f33ec23f4c30ff556f21afa4", size = 780951, upload-time = "2026-05-20T04:30:32.664Z" },
+    { url = "https://files.pythonhosted.org/packages/60/5a/29e7426736863b781efa5d9891912322fc71d82f9ae49bd30fcaef292218/modern_colorthief-0.2.1-cp314-cp314-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:838fe91c7d36d83b6d4f7d21eb929a631f24138fcad97e33f5403cdc83dda690", size = 969826, upload-time = "2026-05-20T04:31:26.826Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/c3/b9c4303d46313422a75a7e3a9af5711104e0ca11704a9ea76c456472e91e/modern_colorthief-0.2.1-cp314-cp314-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b5d557dd6ee41df8b2cadbe0c049115da701c40ac1ff3202997b2dd519145bc6", size = 848611, upload-time = "2026-05-20T04:30:23.473Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/d5/b81e6583aac47ead6604fc1688575d76d677bfe32f501f63b0aa1421d545/modern_colorthief-0.2.1-cp314-cp314-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:f05c3e484964c2f76c178e5cce07a25f260823000ce89c4e2a3ea86f10d166de", size = 898031, upload-time = "2026-05-20T04:31:17.591Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/61/2d94724dc3f0abb69c225d598de6304b2da4acb5de49d5f78eefaa92dd5f/modern_colorthief-0.2.1-cp314-cp314-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:d490f720167073e1d57f4e49facabba1640cc743d0fc1a04a157d5f526bd01c6", size = 922291, upload-time = "2026-05-20T04:30:26.218Z" },
+    { url = "https://files.pythonhosted.org/packages/56/5c/929671f6e0bda3f382a5433c7d5108cd5d67456b0d779d98a576e00217d0/modern_colorthief-0.2.1-cp314-cp314-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:a5956b5d40325e522f2eb2c37b25c2bb69ca7c5b5116281cb14c02e1b639e38d", size = 878684, upload-time = "2026-05-20T04:30:43.204Z" },
+    { url = "https://files.pythonhosted.org/packages/68/d3/4b7a7818f88a317706e232f151fe3cff86380564a94da940f47c5d2c0f60/modern_colorthief-0.2.1-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0b8a6c69c6cc9a8634bd51e12a9cd58dd24db23eeb20ade6b1eb8b38d6988cc4", size = 871523, upload-time = "2026-05-20T04:30:14.636Z" },
+    { url = "https://files.pythonhosted.org/packages/21/73/1a214c7260e2f2e036649fe796034da192d627d9fb90d939ef887ff3a425/modern_colorthief-0.2.1-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:6b6f7e7c401aa4bfdca060cde528f7ffea4b63dd563784831a072d4bba48ca12", size = 1026173, upload-time = "2026-05-20T04:30:10.001Z" },
+    { url = "https://files.pythonhosted.org/packages/80/f0/58fece4c3fc47008ff1fa6b0fa33ecf85cd19faa0b8702552487e99960dc/modern_colorthief-0.2.1-cp314-cp314-musllinux_1_2_armv7l.whl", hash = "sha256:cdd42197a167f659724e8e21ea712ac11c9f952aaae294d5a158a2acd0030771", size = 1174548, upload-time = "2026-05-20T04:29:38.313Z" },
+    { url = "https://files.pythonhosted.org/packages/39/99/68cbcb172660301e8eb829577b06b8314aa51776221575eca723fc9dbee1/modern_colorthief-0.2.1-cp314-cp314-musllinux_1_2_i686.whl", hash = "sha256:498ba11385586088a10a941e2766db268025630228dcf3dc346d77a596dcc468", size = 1154588, upload-time = "2026-05-20T04:30:07.37Z" },
+    { url = "https://files.pythonhosted.org/packages/a1/49/fd4311ebded3504798e6cf55a61509b60f283c9b4967b2a679af575459dc/modern_colorthief-0.2.1-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:517a9dec43c8048526f4d93b2a3d0285fffa60d865d60bbfdcf58c9915077fe2", size = 1088183, upload-time = "2026-05-20T04:29:43.306Z" },
+    { url = "https://files.pythonhosted.org/packages/00/c5/184edbf0dc8f38d1d8f0768faa2f1da074be8118737c96868580a60013a1/modern_colorthief-0.2.1-cp314-cp314-win32.whl", hash = "sha256:ebab60c710b30dfe1ca6d6bde8be67f3edd88b7667cce13b67026c62791bee0a", size = 770815, upload-time = "2026-05-20T04:31:01.643Z" },
+    { url = "https://files.pythonhosted.org/packages/54/66/82bbdd0ddbd31f60909508f78d4b394338d85cd23bfa9f15c1a2fc785c58/modern_colorthief-0.2.1-cp314-cp314-win_amd64.whl", hash = "sha256:6081a5373feab2e4dcf4c1e2fe97d1fe1248db9c0625fa11e05a00daf75aab75", size = 743306, upload-time = "2026-05-20T04:30:55.581Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/18/61b5c7fb089a434640d2fbd3912fb6ae33b1df5665d8ebb2a1b0047e9f26/modern_colorthief-0.2.1-cp314-cp314-win_arm64.whl", hash = "sha256:e6c41b3dee4e0ec0a67fab21da2986d86e763b78c58d0a88972044ce1366d8cc", size = 717334, upload-time = "2026-05-20T04:30:52.355Z" },
+    { url = "https://files.pythonhosted.org/packages/46/c4/a615c61f6adb9ff9afa8e3764e87f354b4d0351601bec2dc59269aa6497f/modern_colorthief-0.2.1-cp314-cp314t-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a70cb52c725b35adc10de30d9a462fb1ff215ba30874a79870c075b9abf45561", size = 848187, upload-time = "2026-05-20T04:30:19.564Z" },
+    { url = "https://files.pythonhosted.org/packages/24/88/b173b5082690ce620bcbfe9c2c9208a2fcc06133b15ba9d452469e24c3de/modern_colorthief-0.2.1-cp314-cp314t-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:b314fd800adafb40abe4b284a6d549c83fbc0e33045fc9da5aab35b13df794a3", size = 897415, upload-time = "2026-05-20T04:30:49.425Z" },
+    { url = "https://files.pythonhosted.org/packages/56/65/0e4cd091e7b4c4928584342692af30f93a4ac8a424a3c99e2d98efe05602/modern_colorthief-0.2.1-cp314-cp314t-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:90663b518ed1d35ef09adc2c7321e3bdc5f424761fbb145ae11861fb7a329157", size = 921870, upload-time = "2026-05-20T04:29:34.983Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/46/2d889b5a071d72d34b570a7a380cb78d5c69bbeef2a2c2defa8eefe4f0df/modern_colorthief-0.2.1-cp314-cp314t-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:f022ed545f43a36974182a7c86c54bd01c96b38375b6f9c040b8db7c75933b22", size = 878275, upload-time = "2026-05-20T04:31:25.456Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/34/a298df2983faaccc652e24525c0f5d9bb7acc022ccb9b68ea2565b2aea82/modern_colorthief-0.2.1-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:435ceb796066830db785740aa29fa818ed0be7ceb70ebd6c9474ff1438344d2a", size = 1025484, upload-time = "2026-05-20T04:31:32.863Z" },
+    { url = "https://files.pythonhosted.org/packages/41/17/bf1f78ebdd829951920891951b0837cfe116204b889a3090ad422b503a0e/modern_colorthief-0.2.1-cp314-cp314t-musllinux_1_2_armv7l.whl", hash = "sha256:d4a0b3b2ca30e92d8aa70d86f0246849ae53f353342675f9c7fd9ca853f843dd", size = 1173854, upload-time = "2026-05-20T04:30:05.686Z" },
+    { url = "https://files.pythonhosted.org/packages/db/d2/f7fb9ea08237973828c442c09f994180088c680cb88d18d57ae5f3b195e7/modern_colorthief-0.2.1-cp314-cp314t-musllinux_1_2_i686.whl", hash = "sha256:067ac01c7f3129d77d28e38a10b8a836f463ad30cfef9a60bccd9ee566a5ccda", size = 1154260, upload-time = "2026-05-20T04:31:31.527Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/61/2e6af05ab71f677f8246f4b6c0c5e1be2c31ca0a11a645e760024af30cf2/modern_colorthief-0.2.1-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:6b5b2ee92020b608c4349811e63d7cc6b57ac2b3a5a836e05f65e857a01276da", size = 1087926, upload-time = "2026-05-20T04:30:08.649Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/12/212a4b12819b9a2c01a0084f11d91f6b8c9e2731214ef7bc0209fe6714bd/modern_colorthief-0.2.1-cp315-cp315-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:a0bd5e8afb7b3b71f43ac34300e3fb2f3414efa6b1138411a2d77cb6b304095e", size = 969826, upload-time = "2026-05-20T04:30:56.781Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/6d/36e88e6dd1ea0801d66d578ac00d6daffc02bd1be4d6287ba1c42ea8dd88/modern_colorthief-0.2.1-cp315-cp315-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f085ace4c722d33e62badc7a435a5233dc19701060187e80388e324dcdab0bc1", size = 871524, upload-time = "2026-05-20T04:30:21.254Z" },
 ]
 
 [[package]]

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags site_tags %}
+{% load wagtailcore_tags wagtailimages_tags site_tags image_colors %}
 
 {% block inner_content %}
 
@@ -44,7 +44,7 @@
                 <div class="text-primary font-mono mb-2">01. WRITINGS</div>
                 <h2 class="text-4xl md:text-5xl font-bold">Latest <span class="font-light italic text-base-content/60">Thoughts</span></h2>
             </div>
-            <a href="/blog/" class="btn btn-outline btn-sm gap-2 mt-4 md:mt-0 group">
+            <a href="{{ blog }}" class="btn btn-outline btn-sm gap-2 mt-4 md:mt-0 group">
                 Read all posts
                 <span class="transition-transform group-hover:translate-x-1">{% icon 'arrow-right' size=16 %}</span>
             </a>
@@ -53,8 +53,14 @@
         {% if latest_posts %}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {% for post in latest_posts %}
-                    <a href="{% pageurl post %}" class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full rounded-none md:rounded-box"
-                       data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'100' }}">
+                    {% with accent=post.feed_image|get_dominant_color %}
+                    <a href="{% pageurl post %}"
+                       class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full rounded-none md:rounded-box"
+                       data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'100' }}"
+                       {% if accent %}style="--card-accent: {{ accent}};"{% endif %}>
+                        {% if accent %}
+                        <div class="card-accent-bar h-1 w-full rounded-t-lg" style="background-color: {{ accent }}; opacity: 0.7;"></div>
+                        {% endif %}
                         <figure class="aspect-video relative overflow-hidden border-b border-base-300">
                             {% if post.feed_image %}
                                 {% image post.feed_image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
@@ -75,6 +81,7 @@
                             </div>
                         </div>
                     </a>
+                {% endwith %}
                 {% endfor %}
             </div>
         {% else %}

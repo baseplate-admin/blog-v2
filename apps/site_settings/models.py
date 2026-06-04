@@ -1,4 +1,3 @@
-from __future__ import annotations
 
 import datetime
 from django.core.exceptions import ValidationError

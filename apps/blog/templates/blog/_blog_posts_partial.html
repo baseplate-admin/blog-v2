@@ -1,0 +1,70 @@
+{% load wagtailcore_tags wagtailimages_tags site_tags image_colors %}
+
+{% for post in blogpages %}
+<div class="group relative flex flex-col lg:flex-row gap-12 items-start">
+    <div class="w-full lg:w-3/5 relative">
+        <div class="relative overflow-hidden rounded-2xl border border-base-300 shadow-2xl transition-transform duration-500 hover:shadow-secondary/10 group-hover:scale-[1.01]">
+            <a href="{% pageurl post %}" class="aspect-video bg-base-200 block w-full">
+                {% if post.feed_image %}
+                    {% image post.feed_image fill-1200x675 class="w-full h-full object-cover" %}
+                    {% with accent=post.feed_image|get_dominant_color %}
+                    {% if accent %}
+                    <div class="absolute bottom-0 left-0 w-full h-1.5 opacity-70" style="background-color: {{ accent }};"></div>
+                    {% endif %}
+                    {% endwith %}
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-base-content/10 font-black text-6xl select-none bg-base-300/50">BLOG</div>
+                {% endif %}
+            </a>
+            <div class="absolute inset-0 bg-base-100/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        </div>
+        <div class="absolute -top-4 -left-4 w-24 h-24 border-t border-l border-base-300 -z-10 rounded-tl-3xl opacity-60"></div>
+        <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b border-r border-base-300 -z-10 rounded-br-3xl opacity-60"></div>
+    </div>
+    <div class="w-full lg:w-2/5 space-y-6 relative z-10 pt-4">
+        <div class="space-y-4">
+            {% mood_badge post.mood %}
+            <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-base-content/60 font-mono tracking-wider uppercase">
+                <span>{{ post.date|date:"M j, Y" }}</span>
+                <span class="text-base-content/40">{% icon 'calendar' size=12 %}</span>
+                <span>{{ post.reading_time|default:"4 min read" }}</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold leading-tight group-hover:text-secondary transition-colors duration-300">
+                <a href="{% pageurl post %}">{{ post.title }}</a>
+            </h2>
+            <div class="w-12 h-1 bg-secondary rounded-full"></div>
+        </div>
+        <div class="text-lg text-base-content/80 leading-relaxed">{{ post.intro }}</div>
+        {% if post.tags.all %}
+            <div class="flex flex-wrap gap-2">
+                {% for tag in post.tags.all %}
+                    {% if request_tag == tag.slug %}
+                        <span class="badge badge-secondary badge-outline px-3 py-3">#{{ tag }}</span>
+                    {% else %}
+                        <a href="{% pageurl blog_index %}?tag={{ tag }}"
+                           class="badge badge-outline hover:badge-secondary transition-colors px-3 py-3">#{{ tag }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="pt-2">
+            <a href="{% pageurl post %}" class="btn btn-outline gap-2 group/btn">
+                Read Article
+                <span class="rotate-90 transition-transform group-hover/btn:translate-x-1">{% icon 'arrow-right' size=16 %}</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% if blogpages.has_next %}
+    <div id="load-more-trigger"
+         hx-get="{% url 'blog_page_partial' %}?page={{ blogpages.next_page_number }}{% if request_tag %}&tag={{ request_tag }}{% endif %}"
+         hx-swap="before:unset"
+         hx-trigger="revealed"
+         hx-indicator="#load-more-spinner">
+        <div class="py-12 text-center">
+            <span class="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+    </div>
+{% endif %}

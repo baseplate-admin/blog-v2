@@ -1,12 +1,37 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags site_tags %}
+{% load wagtailcore_tags wagtailimages_tags site_tags image_colors %}
+
+{% block head %}
+{# JSON-LD structured data for blog post #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ page.title|escapejs }}",
+  "description": "{{ page.intro|escapejs }}",
+  "datePublished": "{{ page.first_published_at|date:'c' }}",
+  "dateModified": "{{ page.last_published_at|date:'c'|default:page.first_published_at|date:'c' }}",
+  "author": {
+    "@type": "Person",
+    "name": "{% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username|escapejs }}{% else %}Author{% endif %}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Tinkerer"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.build_absolute_uri }}"
+  }
+  {% if page.feed_image %}
+  ,"image": "{{ request.build_absolute_uri }}{{ page.feed_image.file.url }}"
+  {% endif %}
+}
+</script>
+{% endblock %}
 
 {% block inner_content %}
 
-{# Reading progress bar #}
-<div id="reading-progress" class="fixed top-0 left-0 w-full h-1 z-[60]">
-    <div class="h-full bg-primary/80 transition-all duration-150" style="width: 0%"></div>
-</div>
 
 <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -192,20 +217,5 @@
   headers.forEach(h => observer.observe(h));
 </script>
 
-{# Reading progress bar #}
-<script type="module">
-  const bar = document.querySelector("#reading-progress > div");
-  const article = document.querySelector("article");
-  if (!bar || !article) throw new Error("Progress: missing elements");
-
-  function updateProgress() {
-    const rect = article.getBoundingClientRect();
-    const total = rect.height - window.innerHeight;
-    const progress = Math.max(0, Math.min(1, -rect.top / total));
-    bar.style.width = `${Math.round(progress * 100)}%`;
-  }
-  window.addEventListener("scroll", updateProgress, { passive: true });
-  updateProgress();
-</script>
 
 {% endblock %}

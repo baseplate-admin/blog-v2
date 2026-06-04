@@ -13,7 +13,7 @@ A hyper-modern personal blog powered by **Wagtail CMS** covering technology, per
 - **NO CSS-in-templates** — HTMX transition styles injected via JS from `assets/htmx/htmx.ts`.
 - **Backend-heavy** — use Python/Django to process everything. Reduce JS payload as much as possible. Server-side rendering for all logic.
 - **All deps through npm + Vite** — everything registered via `vite.config.ts` + `{% vite_asset %}`.
-- **Full type hints** — every Python file has `from __future__ import annotations` + type annotations on all functions, methods, and variables.
+- **Full type hints** — type annotations on all functions, methods, and variables. No `from __future__ import annotations` needed (Python 3.14+ has PEP 563 built-in).
 - **No em dashes** — use normal dash (-) instead. Never use — or &mdash; in text or templates.
 - **Prefer classes over IDs** — use CSS classes for styling and HTMX targeting. Only use IDs when strictly necessary.
 - **DRY principle** — reuse Wagtail/framework features instead of building custom endpoints. Use Wagtail API, not custom views.
@@ -23,6 +23,7 @@ A hyper-modern personal blog powered by **Wagtail CMS** covering technology, per
 - **Update CLAUDE.md after each iteration** — after completing work, update CLAUDE.md with any new facts about the project (changed conventions, new files, new patterns, removed features) so the documentation stays current.
 - **NO jQuery** — never use the jQuery library. All DOM manipulation must use vanilla JS (`querySelector`, `addEventListener`, etc.). Using `$` as a shorthand variable for `querySelector` is fine.
 - **Always use `@apply` in Tailwind CSS** — when adding custom styles in `tailwind.css`, always use `@apply` with Tailwind utility classes instead of raw CSS properties.
+- **No inline `style` when Tailwind suffices** — avoid inline `style="..."` attributes when the same effect can be achieved with Tailwind utility classes. Inline styles are only acceptable for dynamically computed values (colors from images, widths from JS).
 
 
 ## Project Structure
@@ -117,6 +118,9 @@ blog/
 - **Theme transition** via `@apply transition-colors` on all key elements
 - **Error pages** (404, 500) styled with AOS animations, centered layout
 - **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with SVG path registry
+- **Nav progress bar** nprogress-style bar at top shows during HTMX boost requests
+- **Infinite scroll** blog index uses HTMX `hx-trigger="revealed"` + partial view endpoint
+- **Image colors** via `modern_colorthief` template tags: `get_dominant_color`, `get_palette_colors`
 
 ## What to Do When...
 

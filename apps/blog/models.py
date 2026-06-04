@@ -1,4 +1,3 @@
-from __future__ import annotations
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
