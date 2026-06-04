@@ -4,7 +4,7 @@
 
 A hyper-modern personal blog powered by **Wagtail CMS** covering technology, personal life, and politics. Dark-first aesthetic inspired by Ghost blog, github.blog (mood badges), and MakerKit articles. SPA-like feel achieved through HTMX boost with zero web components.
 
-**Tech Stack:** Django + Wagtail 7.3 | Vite 7 | Tailwind CSS 4 + DaisyUI | HTMX (boost) | AOS (scroll animations) | django-vite 3.1
+**Tech Stack:** Django + Wagtail 7.3 | Vite 7 | Tailwind CSS 4 + DaisyUI | HTMX 4.0.0-beta4 (boost) | AOS (scroll animations) | django-vite 3.1
 
 ## Hard Rules
 
@@ -119,7 +119,9 @@ blog/
 - **Error pages** (404, 500) styled with AOS animations, centered layout
 - **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with SVG path registry
 - **Nav progress bar** nprogress-style bar at top shows during HTMX boost requests
-- **Infinite scroll** blog index uses HTMX `hx-trigger="revealed"` + partial view endpoint
+- **Infinite scroll** blog index uses HTMX `hx-trigger="intersect"` + `hx-swap="outerHTML"` partial view endpoint
+- **Lazy-load** tag cloud uses HTMX 4.x `hx-trigger="load"` pattern
+- **HTMX 4.0.0-beta4** all event names use `htmx:phase:action` format (e.g., `htmx:before:request`)
 - **Image colors** via `modern_colorthief` template tags: `get_dominant_color`, `get_palette_colors`
 
 ## What to Do When...

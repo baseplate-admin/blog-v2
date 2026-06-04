@@ -20,7 +20,18 @@ if (document.readyState === 'loading') {
     requestAnimationFrame(init);
 }
 
-// Re-init after HTMX swaps so dynamically loaded elements animate
+// After HTMX swaps, handle AOS for new elements
 document.body.addEventListener('htmx:after:swap', () => {
-    requestAnimationFrame(() => AOS.refresh());
+    // Immediately show all data-aos elements that are in viewport
+    // (AOS may hide them during refresh)
+    requestAnimationFrame(() => {
+        AOS.refresh();
+        // Force-show elements that are in viewport
+        document.querySelectorAll('[data-aos]').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                el.classList.add('aos-animate');
+            }
+        });
+    });
 });
