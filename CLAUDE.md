@@ -117,7 +117,7 @@ blog/
 - **Reading progress bar** fixed at top of blog pages, updates on scroll
 - **Theme transition** via `@apply transition-colors` on all key elements
 - **Error pages** (404, 500) styled with AOS animations, centered layout
-- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with SVG path registry
+- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with Lucide SVG path registry. No Lucide JS — all icons rendered server-side as inline SVGs. Icon names: `arrow-right`, `arrow-left`, `search`, `moon`, `sun`, `menu`, `x`, `github`, `external-link`, `chevron-up`, `calendar`, `list`, `lightning-bolt`, `shield`, `info`, `code`, `chart-bar`, `globe`, `puzzle-piece`
 - **Nav progress bar** nprogress-style bar at top shows during HTMX boost requests
 - **Infinite scroll** blog index uses HTMX `hx-trigger="intersect"` + `hx-swap="outerHTML"` partial view endpoint
 - **Lazy-load** tag cloud uses HTMX 4.x `hx-trigger="load"` pattern

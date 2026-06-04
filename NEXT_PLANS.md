@@ -12,6 +12,8 @@
 - [x] Verified lazy-loaded tag cloud endpoint works
 - [x] Removed duplicate back links on blog page (kept top "Back to blog" only)
 - [x] Fixed text readability on blog page (reduced spacing)
+- [x] Replaced Lucide JS icons with server-rendered `{% icon %}` template tag (zero JS, no tree-shaking issues, ~380 KB bundle removed)
+- [x] Removed dead code: lucide npm package, lucide.ts, icons.py, dead AOS handler in htmx.ts
 
 ## Active Issues
 - [x] HTMX 4 content flash — applied fix with `:inherited` modifiers + safety net handler (verify in browser)
@@ -19,7 +21,7 @@
 ## What to Do Next
 
 ### High Priority
-- [ ] Fix HTMX 4 content flash (settle + AOS interaction)
+- [ ] Add project pages (currently no ProjectIndexPage exists in DB)
 - [ ] Add project pages (currently no ProjectIndexPage exists in DB)
 - [ ] Add about/contact pages
 - [ ] Optimize font loading (subset Bengali fonts, preload critical fonts)

@@ -8,25 +8,6 @@ Object.assign((htmx as any).config, {
     noSwap: [204, 304, '4xx', '5xx'],
 });
 
-// After swap: re-init AOS for new elements (Lucide re-created by lucide.ts module)
-document.body.addEventListener('htmx:after:swap', ((evt: Event) => {
-    const detail = (evt as CustomEvent).detail;
-    if (!detail?.boosted) return;
-
-    requestAnimationFrame(() => {
-        const aos = (window as any).AOS;
-        if (aos) {
-            aos.refresh();
-            document.querySelectorAll('[data-aos]').forEach((el: Element) => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    el.classList.add('aos-animate');
-                }
-            });
-        }
-    });
-}) as EventListener);
-
 // Loading state on body during HTMX requests
 document.body.addEventListener('htmx:before:request', () => {
     document.body.classList.add('htmx-requesting');
