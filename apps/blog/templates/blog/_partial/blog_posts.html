@@ -27,7 +27,7 @@
             {% mood_badge post.mood %}
             <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-base-content/60 font-mono tracking-wider uppercase">
                 <span>{{ post.date|date:"M j, Y" }}</span>
-                <span class="text-base-content/40"><i data-lucide="calendar" style="width:12px;height:12px"></i></span>
+                <span class="text-base-content/40">{% icon "calendar" size=12 %}</span>
                 <span>{{ post.reading_time|default:"4 min read" }}</span>
             </div>
             <h2 class="text-3xl md:text-4xl font-bold leading-tight group-hover:text-secondary transition-colors duration-300">
@@ -51,7 +51,7 @@
         <div class="pt-2">
             <a href="{% pageurl post %}" class="btn btn-outline gap-2 group/btn">
                 Read Article
-                <span class="rotate-90 transition-transform group-hover/btn:translate-x-1"><i data-lucide="arrow-right" style="width:16px;height:16px"></i></span>
+                <span class="rotate-90 transition-transform group-hover/btn:translate-x-1">{% icon "arrow-right" size=16 %}</span>
             </a>
         </div>
     </div>

@@ -18,6 +18,7 @@ export default defineConfig({
                 htmx: resolve('./assets/htmx/htmx.ts'),
                 aos: resolve('./assets/aos/aos.ts'),
                 lucide: resolve('./assets/lucide/lucide.ts'),
+                toc: resolve('./assets/toc/toc.ts'),
             },
         },
     },
