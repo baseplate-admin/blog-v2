@@ -83,7 +83,6 @@
                     {% endif %}
 
                     <button id="mobile-menu-btn"
-                            popovertarget="mobile-menu"
                             class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all">
                         <span class="relative inline-block w-5 h-5">
                             <span class="menu-icon absolute inset-0">{% icon 'menu' size=20 %}</span>
@@ -95,18 +94,20 @@
             </div>
         </nav>
 
-        {# Mobile popover #}
-        <div id="mobile-menu" class="menu bg-base-100 rounded-box border border-base-300 shadow-lg z-50 p-2 absolute right-4 mt-2 w-56">
-            <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
-            <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
-            <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
-            <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
-            <div class="pt-2 mt-2 border-t border-base-300">
-                <button id="mobile-theme-toggle" class="flex items-center gap-2 cursor-pointer p-2 w-full rounded-lg hover:bg-base-200 text-sm text-base-content/70">
-                    <span class="mobile-theme-dark inline">{% icon 'moon' size=20 %}</span>
-                    <span class="mobile-theme-light hidden">{% icon 'sun' size=20 %}</span>
-                    <span>Theme</span>
-                </button>
+        {# Mobile dropdown menu #}
+        <div id="mobile-menu" class="hidden absolute right-4 top-full pt-2 z-50">
+            <div class="menu bg-base-100 rounded-box border border-base-300 shadow-xl p-2 w-56 animate-in fade-in slide-in-from-top-2 duration-200">
+                <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
+                <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
+                <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
+                <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
+                <div class="pt-2 mt-2 border-t border-base-300">
+                    <button id="mobile-theme-toggle" class="flex items-center gap-2 cursor-pointer p-2 w-full rounded-lg hover:bg-base-200 text-sm text-base-content/70">
+                        <span class="mobile-theme-dark inline">{% icon 'moon' size=20 %}</span>
+                        <span class="mobile-theme-light hidden">{% icon 'sun' size=20 %}</span>
+                        <span>Theme</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -194,9 +195,24 @@
       });
 
       // Mobile hamburger icon toggle
-      $("#mobile-menu-btn")?.addEventListener("click", () => {
-        const m = $(".menu-icon"), c = $(".close-icon"), open = !m?.classList.contains("hidden");
-        m?.classList.toggle("hidden", !open); c?.classList.toggle("hidden", open);
+      $("#mobile-menu-btn")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const menu = $("#mobile-menu");
+        const m = $(".menu-icon"), c = $(".close-icon");
+        const isOpen = !m?.classList.contains("hidden");
+        m?.classList.toggle("hidden", !isOpen);
+        c?.classList.toggle("hidden", isOpen);
+        menu?.classList.toggle("hidden");
+      });
+      // Close mobile menu when clicking outside
+      document.addEventListener("click", (e) => {
+        const menu = $("#mobile-menu");
+        const btn = $("#mobile-menu-btn");
+        if (menu && !menu.classList.contains("hidden") && !menu.contains(e.target) && !btn?.contains(e.target)) {
+          menu.classList.add("hidden");
+          $(".menu-icon")?.classList.remove("hidden");
+          $(".close-icon")?.classList.add("hidden");
+        }
       });
     </script>
 {% endwith %}

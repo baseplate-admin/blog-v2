@@ -21,10 +21,13 @@ from wagtailcodeblock.blocks import CodeBlock
 import readtime
 
 from apps.blog.blocks import (
+    AOSCardGridBlock,
+    AOSCalloutBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSImageBlock,
     AOSQuoteBlock,
+    AOSStatsGridBlock,
     AOSSeparatorBlock,
 )
 from apps.home.models import HomePage
@@ -125,6 +128,9 @@ class BlogPage(Page):
             ("aos_highlight", AOSHighlightBlock()),
             ("aos_separator", AOSSeparatorBlock()),
             ("aos_image", AOSImageBlock()),
+            ("aos_callout", AOSCalloutBlock()),
+            ("aos_stats_grid", AOSStatsGridBlock()),
+            ("aos_card_grid", AOSCardGridBlock()),
         ],
         use_json_field=True,
         help_text="Main content of the post. Use paragraphs, images, code blocks, and animated AOS blocks.",
@@ -183,3 +189,37 @@ class BlogPage(Page):
         text: str = "\n\n".join(parts)
         result = readtime.of_text(text)
         return result.text
+
+    def get_toc_headings(self) -> list[dict[str, str]]:
+        """Extract h2/h3 headings from StreamField body for server-side TOC."""
+        headings: list[dict[str, str]] = []
+
+        for block in self.body:
+            if block.block_type == "aos_heading":
+                level = block.value.level
+                if level in ("h2", "h3"):
+                    headings.append(
+                        {
+                            "id": f"heading-{block.id}",
+                            "text": block.value.text,
+                            "level": level,
+                        }
+                    )
+            elif block.block_type == "paragraph":
+                html = block.value.source
+                import re
+
+                matches = re.finditer(r"<(h[23])[^>]*>(.*?)</\1>", html, re.DOTALL)
+                for m in matches:
+                    tag = m.group(1)
+                    text = strip_tags(m.group(2)).strip()
+                    if text:
+                        headings.append(
+                            {
+                                "id": f"section-{len(headings)}",
+                                "text": text,
+                                "level": tag,
+                            }
+                        )
+
+        return headings

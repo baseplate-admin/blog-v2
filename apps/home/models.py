@@ -11,6 +11,17 @@ from wagtail.models import Page
 
 from .blocks import CTABlock
 
+from apps.blog.blocks import (
+    AOSCardGridBlock,
+    AOSCalloutBlock,
+    AOSHeadingBlock,
+    AOSHighlightBlock,
+    AOSImageBlock,
+    AOSQuoteBlock,
+    AOSStatsGridBlock,
+    AOSSeparatorBlock,
+)
+
 
 class HomePage(Page):
     max_count: int = 1
@@ -34,11 +45,29 @@ class HomePage(Page):
         default=3, help_text="Number of recent blog posts to display on the homepage.",
     )
 
+    # Editable body with AOS animated blocks
+    body: StreamField = StreamField(
+        [
+            ("aos_heading", AOSHeadingBlock()),
+            ("aos_quote", AOSQuoteBlock()),
+            ("aos_highlight", AOSHighlightBlock()),
+            ("aos_separator", AOSSeparatorBlock()),
+            ("aos_image", AOSImageBlock()),
+            ("aos_callout", AOSCalloutBlock()),
+            ("aos_stats_grid", AOSStatsGridBlock()),
+            ("aos_card_grid", AOSCardGridBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        help_text="Animated content blocks for the homepage.",
+    )
+
     content_panels: list[FieldPanel] = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("hero_ctas"),
         FieldPanel("latest_posts_count"),
+        FieldPanel("body"),
     ]
 
     def get_context(self, request: HttpRequest) -> dict[str, Any]:

@@ -106,3 +106,63 @@ class AOSImageBlock(AOSBlock):
         icon = "image"
         label = "Animated Image"
         template = "blog/blocks/aos_image.html"
+
+
+class AOSCalloutBlock(AOSBlock):
+    title = blocks.CharBlock(required=True)
+    body = blocks.TextBlock(required=True)
+    variant = blocks.ChoiceBlock(
+        choices=[
+            ("info", "Info"),
+            ("warning", "Warning"),
+            ("success", "Success"),
+            ("error", "Error"),
+        ],
+        default="info",
+        help_text="Callout style variant.",
+    )
+
+    class Meta:
+        icon = "info-circle"
+        label = "Callout"
+        template = "blog/blocks/aos_callout.html"
+
+
+class AOSStatItemBlock(blocks.StructBlock):
+    value = blocks.CharBlock(required=True, help_text="Number or short value.")
+    label = blocks.CharBlock(required=True, help_text="Label below the value.")
+
+
+class AOSStatsGridBlock(AOSBlock):
+    stats = blocks.ListBlock(AOSStatItemBlock(), min_num=1, max_num=6)
+
+    class Meta:
+        icon = "list"
+        label = "Stats Grid"
+        template = "blog/blocks/aos_stats_grid.html"
+
+
+class AOSCardItemBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    description = blocks.TextBlock(required=True)
+    icon = blocks.ChoiceBlock(
+        choices=[
+            ("code", "Code"),
+            ("lightning-bolt", "Lightning"),
+            ("shield", "Shield"),
+            ("chart-bar", "Chart"),
+            ("globe", "Globe"),
+            ("puzzle-piece", "Puzzle"),
+        ],
+        default="code",
+        help_text="Icon for this card.",
+    )
+
+
+class AOSCardGridBlock(AOSBlock):
+    cards = blocks.ListBlock(AOSCardItemBlock(), min_num=1, max_num=6)
+
+    class Meta:
+        icon = "table"
+        label = "Card Grid"
+        template = "blog/blocks/aos_card_grid.html"

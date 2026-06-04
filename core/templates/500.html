@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8" />
-        <title>Internal server error</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </head>
-    <body>
-        <h1>Internal server error</h1>
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags site_tags %}
 
-        <h2>Sorry, there seems to be an error. Please try again soon.</h2>
-    </body>
-</html>
+{% block inner_content %}
+
+<div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+    <div class="text-8xl md:text-9xl font-black text-error/20 mb-6" data-aos="fade-up">500</div>
+    <h1 class="text-3xl md:text-4xl font-bold text-base-content/85 mb-4" data-aos="fade-up" data-aos-delay="100">Internal server error</h1>
+    <p class="text-lg text-base-content/50 mb-8 max-w-md" data-aos="fade-up" data-aos-delay="200">
+        Something went wrong on our end. Please try again later.
+    </p>
+    <a href="/" class="btn btn-ghost rounded-box border border-base-content/10 hover:bg-base-200" data-aos="fade-up" data-aos-delay="300">
+        Go home
+    </a>
+</div>
+
+{% endblock %}

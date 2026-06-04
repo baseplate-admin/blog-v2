@@ -14,11 +14,16 @@ A hyper-modern personal blog powered by **Wagtail CMS** covering technology, per
 - **Backend-heavy** — use Python/Django to process everything. Reduce JS payload as much as possible. Server-side rendering for all logic.
 - **All deps through npm + Vite** — everything registered via `vite.config.ts` + `{% vite_asset %}`.
 - **Full type hints** — every Python file has `from __future__ import annotations` + type annotations on all functions, methods, and variables.
-- **No em dashes** — use colons, commas, or periods instead. Never use — in text.
+- **No em dashes** — use normal dash (-) instead. Never use — or &mdash; in text or templates.
 - **Prefer classes over IDs** — use CSS classes for styling and HTMX targeting. Only use IDs when strictly necessary.
 - **DRY principle** — reuse Wagtail/framework features instead of building custom endpoints. Use Wagtail API, not custom views.
 - **Zero web components** — no Svelte, no custom elements. Everything in Django templates + HTMX.
 - **StreamField wherever possible** — use Wagtail StreamField for editable content blocks instead of plain RichTextField.
+- **Update NEXT_PLANS.md after every step** — after completing any implementation step (code change, migration, template edit, etc.), update NEXT_PLANS.md to mark completed items, log what was done, and note any new findings.
+- **Update CLAUDE.md after each iteration** — after completing work, update CLAUDE.md with any new facts about the project (changed conventions, new files, new patterns, removed features) so the documentation stays current.
+- **NO jQuery** — never use the jQuery library. All DOM manipulation must use vanilla JS (`querySelector`, `addEventListener`, etc.). Using `$` as a shorthand variable for `querySelector` is fine.
+- **Always use `@apply` in Tailwind CSS** — when adding custom styles in `tailwind.css`, always use `@apply` with Tailwind utility classes instead of raw CSS properties.
+
 
 ## Project Structure
 
@@ -38,14 +43,14 @@ blog/
 │   └── urls.py              # Wagtail pages, admin, search, sitemap
 ├── apps/
 │   ├── blog/
-│   │   ├── models.py        # BlogIndexPage (pagination, tag filter), BlogPage (mood, StreamField, readtime)
+│   │   ├── models.py        # BlogIndexPage (pagination, tag filter), BlogPage (mood, StreamField, readtime, TOC headings)
 │   │   ├── blocks.py        # AOS StreamField blocks (heading, quote, highlight, separator, image)
 │   │   ├── templates/blog/
 │   │   │   ├── blog_index_page.html   # Full blog listing with sidebar, inline posts
 │   │   │   └── blog_page.html         # Article card, mood badge, TOC sidebar, prose content
 │   │   └── templates/blog/blocks/     # AOS block templates (aos_heading, aos_quote, etc.)
 │   ├── home/
-│   │   ├── models.py        # HomePage (max_count=1, hero, latest posts, featured projects)
+│   │   ├── models.py        # HomePage (max_count=1, hero, latest posts, featured projects, AOS body)
 │   │   ├── blocks.py        # CTABlock (StructBlock: text + url)
 │   │   └── templates/home/home_page.html
 │   ├── projects/
@@ -77,12 +82,12 @@ blog/
 ### Django/Wagtail (heavy backend)
 - **Custom user model:** `apps.users.User` (USERNAME_FIELD = "username")
 - **Page hierarchy:** Root → HomePage (max_count=1) → BlogIndexPage / ProjectIndexPage
-- **BlogPage:** `mood` field, StreamField body (paragraph/image/code + AOS blocks), tags, readtime, Libravatar avatar
+- **BlogPage:** `mood` field, StreamField body (paragraph/image/code + AOS blocks), tags, readtime, Libravatar avatar, reading progress bar
 - **Site settings:** `wagtail.contrib.settings` with `SiteConfigSettings`
 - **Templates:** `core/templates/` (base, components) + `apps/*/templates/*/` (pages)
 - **Template tags:** `wagtail_url_from_model_slug`, `mood_badge`
 - **Server-side logic:** search visibility, nav URLs, theme state all rendered server-side
-- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock` in `apps/blog/blocks.py`
+- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock`, `AOSCalloutBlock`, `AOSStatsGridBlock`, `AOSCardGridBlock` in `apps/blog/blocks.py`
 
 ### Frontend (Vite + Tailwind — minimal JS)
 - **django-vite** registers all assets: `{% vite_asset 'assets/...' %}`, HMR via `{% vite_hmr_client %}`
@@ -97,8 +102,8 @@ blog/
 - **Sidebar TOC:** Takumi docs style — left-border rail, scroll-spy, H2/H3 nesting
 - **Blog index:** MakerKit alternating rows, decorative lines, AOS fade-up on scroll
 - **Color palette:** deep dark (#080809), purple primary, amber accent
-- **Typography:** Plus Jakarta Sans (headings/body), Inter (fallback), Hind Siliguri (Bengali), JetBrains Mono (code)
-- **Fonts:** all via npm (@fontsource), bundled through Vite, zero CDN
+- **Typography:** Plus Jakarta Sans (headings/body), Inter (body), Hind Siliguri (Bengali), JetBrains Mono (code)
+- **Fonts:** all via npm (@fontsource), bundled through Vite, zero CDN, no fallback fonts
 
 ### Base Template
 - **Nav URLs** resolved once via `{% wagtail_url_from_model_slug %}`, passed through `{% with %}` to navbar, mobile menu, footer
@@ -106,6 +111,12 @@ blog/
 - **Search button** visibility controlled server-side with `{% if current_path == blog %}`
 - **HTMX boost** wraps `<main>` only, navbar/footer persist across swaps
 - **Tailwind loaded first** in head to prevent flash of unstyled content
+- **Mobile menu** uses vanilla JS dropdown (no popover API), click-outside to close, animate-in fade
+- **TOC** rendered server-side via `page.get_toc_headings()`, hybrid JS scroll-spy + smooth-scroll
+- **Reading progress bar** fixed at top of blog pages, updates on scroll
+- **Theme transition** via `@apply transition-colors` on all key elements
+- **Error pages** (404, 500) styled with AOS animations, centered layout
+- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with SVG path registry
 
 ## What to Do When...
 

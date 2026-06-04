@@ -3,6 +3,11 @@
 
 {% block inner_content %}
 
+{# Reading progress bar #}
+<div id="reading-progress" class="fixed top-0 left-0 w-full h-1 z-[60]">
+    <div class="h-full bg-primary/80 transition-all duration-150" style="width: 0%"></div>
+</div>
+
 <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     {# Back Link #}
@@ -75,7 +80,22 @@
                 <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3 flex items-center gap-2">
                     {% icon 'table-of-contents' size=12 %} On this page
                 </div>
-                <nav id="toc-nav" class="toc-rail"></nav>
+                {% with headings=page.get_toc_headings %}
+                    {% if headings|length >= 2 %}
+                        <nav id="toc-nav" class="toc-rail">
+                            <ul class="space-y-2 border-l border-base-300/50">
+                                {% for h in headings %}
+                                    <li>
+                                        <a href="#{{ h.id }}" class="toc-link block pl-4 py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l {% if h.level == 'h3' %}ml-4{% endif %}"
+                                           data-target="{{ h.id }}">
+                                            {{ h.text }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% endwith %}
             </div>
         </aside>
 
@@ -118,8 +138,8 @@
     </div>
 </article>
 
-{# TOC scroll-spy: inline script #}
-<script type="module">
+{# TOC scroll-spy + smooth-scroll: inline script #}
+<script type="module" data-toc-spy>
   const content = document.getElementById("article-content");
   const nav = document.getElementById("toc-nav");
   if (!content || !nav) throw new Error("TOC: missing elements");
@@ -127,42 +147,65 @@
   const headers = Array.from(content.querySelectorAll("h2,h3"));
   if (!headers.length) { nav.style.display = "none"; throw new Error("TOC: no headers"); }
 
-  const toc = document.createElement("ul");
-  toc.className = "space-y-2 border-l border-base-300/50";
+  // Assign IDs to headings that lack them (rich text headings)
+  let idx = 0;
+  headers.forEach(h => { if (!h.id) h.id = `section-${idx++}`; });
 
-  headers.forEach((h, i) => {
-    if (!h.id) h.id = `section-${i}`;
-    const a = document.createElement("a");
-    a.href = `#${h.id}`;
-    a.className = "toc-link block pl-4 py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l border-transparent";
-    if (h.tagName === "H3") a.classList.add("ml-4");
-    a.textContent = h.textContent;
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      h.scrollIntoView({ behavior: "smooth", block: "center" });
-      history.replaceState(null, "", `#${h.id}`);
-    });
-    const li = document.createElement("li");
-    li.appendChild(a);
-    toc.appendChild(li);
+  // Update TOC links to match actual heading IDs
+  const tocLinks = nav.querySelectorAll(".toc-link");
+  const headingById = new Map(headers.map(h => [h.id, h]));
+  // Match by text if ID not found (rich text headings got new IDs)
+  const headingByText = new Map(headers.map(h => [h.textContent.trim(), h]));
+  tocLinks.forEach(link => {
+    const targetId = link.getAttribute("data-target");
+    let target = headingById.get(targetId);
+    if (!target) target = headingByText.get(link.textContent.trim());
+    if (target) link.setAttribute("href", `#${target.id}`);
   });
 
-  nav.appendChild(toc);
+  // Smooth scroll on click
+  tocLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      const id = link.getAttribute("href").slice(1);
+      const target = headingById.get(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        history.replaceState(null, "", `#${id}`);
+      }
+    });
+  });
 
+  // Scroll-spy via IntersectionObserver
   const observer = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
-      const links = nav.querySelectorAll(".toc-link");
-      for (const link of links) {
+      tocLinks.forEach(link => {
         const match = link.getAttribute("href") === `#${entry.target.id}`;
         link.classList.toggle("text-primary", match);
         link.classList.toggle("border-primary", match);
         link.classList.toggle("border-transparent", !match);
-      }
+      });
     }
   }, { rootMargin: "0px 0px -65% 0px", threshold: [0, 0.2, 1] });
 
   headers.forEach(h => observer.observe(h));
+</script>
+
+{# Reading progress bar #}
+<script type="module">
+  const bar = document.querySelector("#reading-progress > div");
+  const article = document.querySelector("article");
+  if (!bar || !article) throw new Error("Progress: missing elements");
+
+  function updateProgress() {
+    const rect = article.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    const progress = Math.max(0, Math.min(1, -rect.top / total));
+    bar.style.width = `${Math.round(progress * 100)}%`;
+  }
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
 </script>
 
 {% endblock %}
