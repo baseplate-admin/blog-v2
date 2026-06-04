@@ -173,12 +173,12 @@
                     </form>
                 </dialog>
 
-        {# ── HTMX boost wrapper: swaps only <main> ──────────── #}
+        {# ── HTMX boost: swaps only <main>, navbar/footer persist ── #}
                 <div class="boost-root flex-1"
-                     hx-boost="true"
-                     hx-target="main"
-                     hx-select="main"
-                     hx-swap="innerHTML">
+                     hx-boost:inherited="true"
+                     hx-target:inherited="main"
+                     hx-select:inherited="main"
+                     hx-swap:inherited="innerHTML">
                     <main class="page-main">
                         {% block inner_content %}
                             {% block content %}{% endblock %}

@@ -1,42 +1,38 @@
 # Plans
 
-## HTMX 4 Migration — In Progress
+## HTMX 4 Migration — Fix Applied
 
-### Current State
-- HTMX 4.0.0-beta4 installed and configured
-- All event names migrated (`htmx:phase:action` format)
-- Config keys updated (`defaultTimeout`, `defaultSwap`, `history`)
-- `implicitInheritance: true` enabled for HTMX 2 compatibility
+### Root Cause
+HTMX 4 boosted navigation swaps into `<body>` by default. In HTMX 2, attribute inheritance was implicit, so `hx-target="main"` on the boost container cascaded to child links. HTMX 4 requires explicit `:inherited` modifiers.
 
-### Known Issue: Content flash after boosted navigation
-- **Symptom:** Blog index posts appear briefly then disappear after clicking a boosted link
-- **Root cause (suspected):** HTMX 4 settle phase + AOS interaction
-  - HTMX 4 `defaultSettleDelay` is 1ms (was 20ms in HTMX 2)
-  - AOS hides `data-aos` elements on DOM insert; refresh timing off after swap
-  - HTMX 4 OOB swaps now run AFTER primary swap (reversed from HTMX 2)
-- **Fixes attempted:**
-  - [x] Set `defaultSettleDelay: 10` in config
-  - [x] Added `noSwap: [204, 304, '4xx', '5xx']`
-  - [x] Added `hx-swap="innerHTML"` to boost wrapper
-  - [x] Forced `detail.swap = 'innerHTML'` in `htmx:before:swap` handler
-  - [x] AOS fix: pre-mark elements, force `aos-animate` for visible elements
-  - [x] Removed `hx-swap-oob` from title (OOB timing changed in HTMX 4)
-- **Next steps:**
-  - [ ] Test with `hx-swap="innerHTML:noSettle"` to fully disable settle
-  - [ ] If noSettle doesn't work, consider downgrading to HTMX 2 until beta stabilizes
-  - [ ] Alternative: use `hx-push-url` + manual fetch instead of boost
+### Applied Fix
+- Added `:inherited` modifiers to boost container attributes:
+  - `hx-boost:inherited="true"`
+  - `hx-target:inherited="main"`
+  - `hx-select:inherited="main"`
+  - `hx-swap:inherited="innerHTML"`
+- Added `hx-on::before:swap` safety net handler on container to force target to `<main>` if HTMX defaults to `<body>`
+- Added JS event handler in `htmx.ts` as backup
+- Removed `implicitInheritance: true` (explicit inheritance used instead)
+- AOS: force `aos-animate` on visible elements after swap
+- `noSwap: [204, 304, '4xx', '5xx']` to prevent error responses from swapping
 
-### Other Completed Fixes
-- [x] Duplicate back links on blog page (removed bottom link, kept top)
-- [x] Mood badge on blog page (already dynamic via template tag)
-- [x] Text readability on blog page (reduced spacing, fixed w-2/5 width issue)
+### Files Changed
+- `core/templates/base.html` — boost container attributes, hx-on handler
+- `assets/htmx/htmx.ts` — config, event handler
+- `assets/aos/aos.ts` — post-swap handler
+
+### Pending Verification
+- [ ] Test in browser to confirm content no longer disappears
+- [ ] Verify back/forward navigation works
+- [ ] Verify infinite scroll still works
+
+## Other Completed Fixes
+- [x] Duplicate back links on blog page (kept top "Back to blog" only)
+- [x] Text readability on blog page (reduced spacing)
+- [x] Mood badge on blog page (dynamic via template tag)
 
 ## Pending Work
-
-### Blog Index Page
-- [ ] Fix HTMX 4 content flash (see above)
-- [ ] Verify infinite scroll works after HTMX 4 changes
-- [ ] Verify tag/mood filters work after HTMX 4 changes
 
 ### Projects Page
 - [ ] Create project listing with GitHub API integration
@@ -46,4 +42,3 @@
 ### General
 - [ ] Add about/contact pages
 - [ ] Optimize font loading (subset Bengali fonts, preload critical)
-- [ ] Update CLAUDE.md with HTMX 4 changes

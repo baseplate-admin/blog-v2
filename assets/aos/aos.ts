@@ -23,7 +23,6 @@ if (document.readyState === 'loading') {
 // After HTMX swaps, handle AOS for new elements
 document.body.addEventListener('htmx:after:swap', () => {
     // Immediately show all data-aos elements that are in viewport
-    // (AOS may hide them during refresh)
     requestAnimationFrame(() => {
         AOS.refresh();
         // Force-show elements that are in viewport

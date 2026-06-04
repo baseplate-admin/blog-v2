@@ -14,7 +14,7 @@
 - [x] Fixed text readability on blog page (reduced spacing)
 
 ## Active Issues
-- [ ] HTMX 4 content flash after boosted navigation — content appears then disappears (see PLANS.md for details)
+- [x] HTMX 4 content flash — applied fix with `:inherited` modifiers + safety net handler (verify in browser)
 
 ## What to Do Next
 

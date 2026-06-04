@@ -122,6 +122,8 @@ blog/
 - **Infinite scroll** blog index uses HTMX `hx-trigger="intersect"` + `hx-swap="outerHTML"` partial view endpoint
 - **Lazy-load** tag cloud uses HTMX 4.x `hx-trigger="load"` pattern
 - **HTMX 4.0.0-beta4** all event names use `htmx:phase:action` format (e.g., `htmx:before:request`)
+- **Boost container** uses `:inherited` modifiers (`hx-boost:inherited`, `hx-target:inherited="main"`, etc.) + `hx-on::before:swap` safety net to force swaps into `<main>` instead of `<body>`
+- **HTMX config**: `noSwap: [204, 304, '4xx', '5xx']` prevents error responses from replacing UI
 - **Image colors** via `modern_colorthief` template tags: `get_dominant_color`, `get_palette_colors`
 
 ## What to Do When...

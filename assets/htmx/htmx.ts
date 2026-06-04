@@ -5,37 +5,26 @@ import htmx from 'htmx.org';
 Object.assign((htmx as any).config, {
     history: true,
     defaultTimeout: 10000,
-    implicitInheritance: true,
-    defaultSettleDelay: 10,
     noSwap: [204, 304, '4xx', '5xx'],
 });
 
-// Debug: observe HTMX swaps to find content disappearance cause
-document.body.addEventListener('htmx:before:swap', ((evt: Event) => {
+// After swap: re-init AOS for new elements
+document.body.addEventListener('htmx:after:swap', ((evt: Event) => {
     const detail = (evt as CustomEvent).detail;
-    if (detail && detail.boosted) {
-        // Force innerHTML swap into main, no settle interference
-        detail.swap = 'innerHTML';
-    }
+    if (!detail?.boosted) return;
+    requestAnimationFrame(() => {
+        const aos = (window as any).AOS;
+        if (aos) {
+            aos.refresh();
+            document.querySelectorAll('[data-aos]').forEach((el: Element) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    el.classList.add('aos-animate');
+                }
+            });
+        }
+    });
 }) as EventListener);
-
-// After swap: re-init AOS + Lucide for new content
-document.body.addEventListener('htmx:after:swap', () => {
-    // Remove htmx-requesting class to unhide content
-    document.body.classList.remove('htmx-requesting');
-});
-
-
-// Inject HTMX transition styles via StyleSheet API (no <style> elements)
-if (document.adoptedStylesheets) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(`
-      [hx-swap-oob] { opacity: 0; transition: opacity 0.2s ease-in-out; }
-      .htmx-indicator { opacity: 0; transition: opacity 0.2s ease; }
-      .htmx-requesting .htmx-indicator { opacity: 1 !important; }
-    `).catch(() => {});
-    document.adoptedStylesheets = [sheet];
-}
 
 // Loading state on body during HTMX requests
 document.body.addEventListener('htmx:before:request', () => {
