@@ -1,133 +1,170 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags django_vite %}
+{% load wagtailcore_tags wagtailimages_tags site_tags %}
 
 {% block inner_content %}
 
-            <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-                {# Back Link #}
-                <div class="mb-8" data-aos="fade-in" data-aos-delay="50">
-                    <a href="{% pageurl page.get_parent %}" class="group inline-flex items-center gap-2 text-sm font-medium text-base-content/40 hover:text-primary transition-colors">
-                        <right-arrow-icon class="w-4 h-4 transition-transform group-hover:-translate-x-1"></right-arrow-icon>
-                        <span>Back to blog</span>
-                    </a>
+    {# Back Link #}
+    <div class="mb-8" data-aos="fade-in" data-aos-delay="50">
+        <a href="{% pageurl page.get_parent %}" class="group inline-flex items-center gap-2 text-sm font-medium text-base-content/40 hover:text-primary transition-colors">
+            {% icon 'arrow-left' size=16 %}
+            <span>Back to blog</span>
+        </a>
+    </div>
+
+    {# Header #}
+    <header class="mb-12">
+        <div class="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="100">
+            {% mood_badge page.mood %}
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold tracking-tight text-center text-base-content/90 mb-8 leading-snug"
+            data-aos="fade-up" data-aos-delay="150">
+            {{ page.title }}
+        </h1>
+
+        {% if page.tags.all %}
+            <div class="flex flex-wrap justify-center gap-2 mb-8" data-aos="fade-up" data-aos-delay="200">
+                {% for tag in page.tags.all %}
+                    <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-ghost badge-sm text-base-content/60 hover:text-primary">#{{ tag }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Author + Meta #}
+        <div class="flex flex-col sm:flex-row items-center gap-4 text-base-content/50 text-sm"
+             data-aos="fade-up" data-aos-delay="250">
+            <div class="flex items-center gap-3">
+                <div class="avatar online">
+                    <div class="w-10 rounded-full">
+                        <img src="{{ page.author_avatar_url }}" alt="Author" class="w-full h-full object-cover">
+                    </div>
                 </div>
-
-                {# Header #}
-                <header class="mb-12">
-
-                    {# Mood Badge #}
-                    <div class="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="100">
-                        <mood-badge data-mood="{{ page.mood }}"></mood-badge>
-                    </div>
-
-                    {# Title #}
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold tracking-tight text-center text-base-content/90 mb-8 leading-snug"
-                        data-aos="fade-up" data-aos-delay="150">
-                        {{ page.title }}
-                    </h1>
-
-                    {# Tags #}
-                    {% if page.tags.all %}
-                        <div class="flex flex-wrap justify-center gap-2 mb-8" data-aos="fade-up" data-aos-delay="200">
-                            {% for tag in page.tags.all %}
-                                <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-ghost badge-sm text-base-content/60 hover:text-primary">#{{ tag }}</a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {# Author + Meta #}
-                    <div class="flex flex-col sm:flex-row items-center gap-4 text-base-content/50 text-sm"
-                         data-aos="fade-up" data-aos-delay="250">
-
-                        <div class="flex items-center gap-3">
-                            <div class="avatar online">
-                                <div class="w-10 rounded-full">
-                                    <img src="{{ page.author_avatar_url }}" alt="Author" class="w-full h-full object-cover">
-                                </div>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-medium text-base-content/70">
-                                    {% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username }}{% else %}Author{% endif %}
-                                </span>
-                                <span class="text-xs text-base-content/40">Author</span>
-                            </div>
-                        </div>
-
-                        <span class="hidden sm:block w-px h-4 bg-base-300"></span>
-
-                        <time datetime="{{ page.date|date:'Y-m-d' }}" class="text-sm text-base-content/40 font-mono"
-                              data-aos="fade-up" data-aos-delay="300">
-                            {{ page.date|date:"F j, Y" }}
-                        </time>
-
-                        <span class="text-base-content/30 text-xs">·</span>
-                        <span class="text-sm text-base-content/40 font-mono">{{ page.reading_time }}</span>
-                    </div>
-                </header>
-
-                {# Cover Image #}
-                {% if page.feed_image %}
-                    <figure class="w-full aspect-video overflow-hidden bg-base-200 mb-16 rounded-2xl border border-base-300/50"
-                            data-aos="fade-up" data-aos-delay="300">
-                        {% image page.feed_image fill-1400x788 class="w-full h-full object-cover" %}
-                    </figure>
-                {% endif %}
-
-                {# Content Area #}
-                <div class="flex gap-12">
-
-                    {# TOC Sidebar (desktop) #}
-                    <aside class="hidden lg:block w-56 shrink-0" data-aos="fade-right" data-aos-delay="350">
-                        <div class="sticky top-8">
-                            <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3">On this page</div>
-                            <table-of-contents></table-of-contents>
-                        </div>
-                    </aside>
-
-                    {# Article Body #}
-                    <div class="flex-1 min-w-0">
-
-                        {% if page.intro %}
-                            <p class="text-lg text-base-content/60 font-normal leading-relaxed mb-10 border-l-2 border-primary/30 pl-6 italic"
-                               data-aos="fade-up" data-aos-delay="400">
-                                {{ page.intro }}
-                            </p>
-                        {% endif %}
-
-                        <div id="article-content" class="prose prose-invert prose-md max-w-none
-                            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content/85
-                            prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-4
-                            prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-3
-                            prose-p:text-base prose-p:leading-relaxed prose-p:text-base-content/70
-                            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                            prose-strong:text-base-content/80 prose-strong:font-semibold
-                            prose-code:text-primary/80 prose-code:bg-base-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:border prose-code:border-base-300/50 prose-code:text-sm
-                            prose-pre:bg-base-200/80 prose-pre:border prose-pre:border-base-300/50 prose-pre:rounded-xl prose-pre:p-4
-                            prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-300/50
-                            prose-blockquote:border-l-primary/50 prose-blockquote:bg-base-200/30 prose-blockquote:py-3 prose-blockquote:px-4 prose-blockquote:text-base-content/60
-                            prose-li:text-base-content/70
-                            prose-hr:border-base-300/50 prose-hr:my-10"
-                             data-aos="fade-up" data-aos-delay="450">
-
-                            {% for block in page.body %}
-                                {% include_block block %}
-                            {% endfor %}
-                        </div>
-
-                        {# Bottom #}
-                        <div class="mt-16 pt-8 border-t border-base-300/50" data-aos="fade-in">
-                            <a href="{% pageurl page.get_parent %}" class="text-sm text-base-content/40 hover:text-primary transition-colors inline-flex items-center gap-2">
-                                <right-arrow-icon class="w-4 h-4"></right-arrow-icon>
-                                <span>Back to all articles</span>
-                            </a>
-                        </div>
-                    </div>
-
+                <div class="flex flex-col">
+                    <span class="font-medium text-base-content/70">
+                        {% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username }}{% else %}Author{% endif %}
+                    </span>
+                    <span class="text-xs text-base-content/40">Author</span>
                 </div>
+            </div>
+            <span class="hidden sm:block w-px h-4 bg-base-300"></span>
+            <time datetime="{{ page.date|date:'Y-m-d' }}" class="text-sm text-base-content/40 font-mono"
+                  data-aos="fade-up" data-aos-delay="300">
+                {{ page.date|date:"F j, Y" }}
+            </time>
+            <span class="text-base-content/30 text-xs">&#8226;</span>
+            <span class="text-sm text-base-content/40 font-mono">{{ page.reading_time }}</span>
+        </div>
+    </header>
 
-            </article>
+    {# Cover Image #}
+    {% if page.feed_image %}
+        <figure class="w-full aspect-video overflow-hidden bg-base-200 mb-16 rounded-2xl border border-base-300/50"
+                data-aos="fade-up" data-aos-delay="300">
+            {% image page.feed_image fill-1400x788 class="w-full h-full object-cover" %}
+        </figure>
+    {% endif %}
 
-            {% include "components/footer.html" %}
+    {# Content Area #}
+    <div class="flex gap-12">
+
+        {# TOC Sidebar (desktop) #}
+        <aside class="hidden lg:block w-56 shrink-0" data-aos="fade-right" data-aos-delay="350">
+            <div class="sticky top-8">
+                <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    {% icon 'table-of-contents' size=12 %} On this page
+                </div>
+                <nav id="toc-nav" class="toc-rail"></nav>
+            </div>
+        </aside>
+
+        {# Article Body #}
+        <div class="flex-1 min-w-0">
+            {% if page.intro %}
+                <p class="text-lg text-base-content/60 font-normal leading-relaxed mb-10 border-l-2 border-primary/30 pl-6 italic"
+                   data-aos="fade-up" data-aos-delay="400">
+                    {{ page.intro }}
+                </p>
+            {% endif %}
+
+            <div id="article-content" class="prose prose-invert prose-md max-w-none
+                prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content/85
+                prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-4
+                prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-3
+                prose-p:text-base prose-p:leading-relaxed prose-p:text-base-content/70
+                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-base-content/80 prose-strong:font-semibold
+                prose-code:text-primary/80 prose-code:bg-base-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:border prose-code:border-base-300/50 prose-code:text-sm
+                prose-pre:bg-base-200/80 prose-pre:border prose-pre:border-base-300/50 prose-pre:rounded-xl prose-pre:p-4
+                prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-300/50
+                prose-blockquote:border-l-primary/50 prose-blockquote:bg-base-200/30 prose-blockquote:py-3 prose-blockquote:px-4 prose-blockquote:text-base-content/60
+                prose-li:text-base-content/70
+                prose-hr:border-base-300/50 prose-hr:my-10"
+                 data-aos="fade-up" data-aos-delay="450">
+                {% for block in page.body %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
+
+            {# Bottom #}
+            <div class="mt-16 pt-8 border-t border-base-300/50" data-aos="fade-in">
+                <a href="{% pageurl page.get_parent %}" class="text-sm text-base-content/40 hover:text-primary transition-colors inline-flex items-center gap-2">
+                    {% icon 'arrow-left' size=16 %}
+                    <span>Back to all articles</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</article>
+
+{# TOC scroll-spy — inline script #}
+<script type="module">
+  const content = document.getElementById("article-content");
+  const nav = document.getElementById("toc-nav");
+  if (!content || !nav) throw new Error("TOC: missing elements");
+
+  const headers = Array.from(content.querySelectorAll("h2,h3"));
+  if (!headers.length) { nav.style.display = "none"; throw new Error("TOC: no headers"); }
+
+  const toc = document.createElement("ul");
+  toc.className = "space-y-2 border-l border-base-300/50";
+
+  headers.forEach((h, i) => {
+    if (!h.id) h.id = `section-${i}`;
+    const a = document.createElement("a");
+    a.href = `#${h.id}`;
+    a.className = "toc-link block pl-4 py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l border-transparent";
+    if (h.tagName === "H3") a.classList.add("ml-4");
+    a.textContent = h.textContent;
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      h.scrollIntoView({ behavior: "smooth", block: "center" });
+      history.replaceState(null, "", `#${h.id}`);
+    });
+    const li = document.createElement("li");
+    li.appendChild(a);
+    toc.appendChild(li);
+  });
+
+  nav.appendChild(toc);
+
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const links = nav.querySelectorAll(".toc-link");
+      for (const link of links) {
+        const match = link.getAttribute("href") === `#${entry.target.id}`;
+        link.classList.toggle("text-primary", match);
+        link.classList.toggle("border-primary", match);
+        link.classList.toggle("border-transparent", !match);
+      }
+    }
+  }, { rootMargin: "0px 0px -65% 0px", threshold: [0, 0.2, 1] });
+
+  headers.forEach(h => observer.observe(h));
+</script>
+
+{% include "components/footer.html" %}
 
 {% endblock %}

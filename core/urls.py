@@ -20,6 +20,7 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("api/", api_router.urls),
+    path("search/", include("apps.search.urls")),
 ]
 
 if settings.DEBUG:

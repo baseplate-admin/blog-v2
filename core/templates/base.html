@@ -1,70 +1,185 @@
-{% load static wagtailcore_tags wagtailuserbar django_vite %}
-{% load wagtail_tags %}
+{% load django_vite wagtailcore_tags wagtailuserbar wagtail_tags site_tags %}
+
+{# Resolve nav URLs once #}
+{% wagtail_url_from_model_slug 'blog.BlogIndexPage' as blog_url %}
+{% wagtail_url_from_model_slug 'projects.ProjectIndexPage' as projects_url %}
 
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        {% vite_hmr_client %}
-        <meta charset="utf-8" />
-        <title>
-            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-        </title>
-        {% if page.search_description %}
-            <meta name="description" content="{{ page.search_description }}" />
-        {% endif %}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="en" data-theme="tanstack-dark">
+<head>
+    {% vite_hmr_client %}
+    <meta charset="utf-8">
+    <title>
+        {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
+        {% wagtail_site as current_site %}
+        {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
+    </title>
+    {% if page.search_description %}
+        <meta name="description" content="{{ page.search_description }}">
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {% if request.in_preview_panel %}
-            <base target="_blank">
-        {% endif %}
+    {% if request.in_preview_panel %}
+        <base target="_blank">
+    {% endif %}
 
-        {# Vite assets (loaded once, persist across HTMX swaps) #}
-        {% vite_asset 'assets/vite.ts' %}
-        {% vite_asset 'assets/htmx/htmx.ts' %}
-        {% vite_asset 'assets/aos/aos.ts' %}
-        {% vite_asset 'assets/tailwind/tailwind.ts' %}
-        {% vite_asset 'assets/twemoji/index.ts' %}
+    {# Vite: HTMX, AOS, Tailwind, Fonts #}
+    {% vite_asset 'assets/htmx/htmx.ts' %}
+    {% vite_asset 'assets/aos/aos.ts' %}
+    {% vite_asset 'assets/tailwind/tailwind.ts' %}
+    {% vite_asset 'assets/fonts/inter/inter.ts' %}
 
-        {# Svelte components #}
-        {% vite_asset 'assets/components/Navbar.svelte' %}
-        {% vite_asset 'assets/components/TableOfContents.svelte' %}
-        {% vite_asset 'assets/components/MoodBadge.svelte' %}
+    {% block head %}{% endblock %}
 
-        {# Svelte icon components #}
-        {% vite_asset 'assets/icons/X.svelte' %}
-        {% vite_asset 'assets/icons/RightArrow.svelte' %}
-        {% vite_asset 'assets/icons/Calendar.svelte' %}
-        {% vite_asset 'assets/icons/Eye.svelte' %}
-        {% vite_asset 'assets/icons/Circle.svelte' %}
-        {% vite_asset 'assets/icons/TOC.svelte' %}
+    {# Theme init — runs before paint #}
+    <script>
+      (function(){
+        var t=localStorage.getItem("theme");
+        if(t)document.documentElement.setAttribute("data-theme",t);
+        else if(matchMedia("(prefers-color-scheme:light)").matches)
+          document.documentElement.setAttribute("data-theme","tanstack-light");
+      })();
+    </script>
+</head>
 
-        {% block head %}{% endblock %}
-    </head>
+<body class="bg-base-100 font-sans text-base-content antialiased">
+    {% wagtailuserbar %}
 
-    <body>
-        {% wagtailuserbar %}
+    <div class="page-shell min-h-screen flex flex-col">
 
-        {# HTMX boost: swaps <main> content, preserves this shell #}
-        <div class="boost-root" hx-boost="true" hx-select-oob="title" hx-history="true">
-
-            <div class="page-shell min-h-screen bg-base-100 font-sans text-base-content">
-
-                {# Navbar: persists across swaps #}
-                <nav class="site-navbar">
-                    <custom-navbar blog-url="{% wagtail_url_from_model_slug 'blog.BlogIndexPage' %}" project-url="{% wagtail_url_from_model_slug 'projects.ProjectIndexPage' %}"></custom-navbar>
-                </nav>
-
-                {# Swappable content: HTMX boost swaps <main> automatically #}
-                <main class="page-main">
-                    {% block inner_content %}
-                    {% block content %}{% endblock %}
-                    {% endblock %}
-                </main>
-
+        {# ── Navbar (persists across HTMX swaps) ────────────── #}
+        <header class="navbar bg-base-100/80 backdrop-blur-lg sticky top-0 z-50 border-b border-base-300/50 px-4 md:px-8">
+            <div class="flex-1">
+                <a href="/" class="text-xl font-bold tracking-tight hover:text-primary transition-colors">The Tinkerer</a>
+                <div class="flex gap-6 ml-8 items-center">
+                    <a href="/about/" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">About</a>
+                    <a href="{{ blog_url }}" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">Blog</a>
+                    <a href="{{ projects_url }}" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">Projects</a>
+                    <a href="/contact/" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">Contact</a>
+                </div>
             </div>
+            <div class="flex items-center gap-2">
+                <button onclick="var d=document.getElementById('search-dialog');if(d)d.showModal()"
+                        class="btn btn-ghost btn-sm btn-circle gap-2"
+                        aria-label="Search">
+                    {% icon 'search' size=18 %}
+                    <kbd class="kbd kbd-sm kbd-xs hidden sm:inline text-[10px]">
+                        <span class="hidden md:inline">Ctrl+</span>K
+                    </kbd>
+                </button>
+                <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Toggle theme">
+                    <span class="theme-icon-dark">{% icon 'moon' size=18 %}</span>
+                    <span class="theme-icon-light hidden">{% icon 'sun' size=18 %}</span>
+                </button>
+                <button popovertarget="mobile-menu" class="btn btn-ghost btn-sm btn-circle md:hidden" aria-label="Menu">
+                    {% icon 'menu' size=20 %}
+                </button>
+            </div>
+        </header>
 
+        {# Mobile popover #}
+        <div id="mobile-menu" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-300 w-56 p-4 space-y-1 absolute right-4 mt-12 z-50 hidden" popovertargetignore="all">
+            <a href="/about/" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
+            <a href="{{ blog_url }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
+            <a href="{{ projects_url }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
+            <a href="/contact/" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
         </div>
-    </body>
+
+        {% block page_tools %}{% endblock %}
+
+        {# Search dialog — persists across swaps, works site-wide #}
+        <dialog id="search-dialog" class="modal modal-bottom sm:modal-middle backdrop:bg-black/60">
+            <div class="modal-box w-full max-w-xl border border-base-300 bg-base-100 p-0 overflow-hidden">
+                <div class="flex items-center gap-3 px-4 py-3 border-b border-base-300">
+                    <span class="text-base-content/40">{% icon 'search' size=18 %}</span>
+                    <input id="search-input"
+                           type="search"
+                           placeholder="Search articles..."
+                           class="input input-ghost flex-1 bg-transparent text-sm focus:outline-none"
+                           autocomplete="off"
+                           hx-get="{% url 'search:search' %}"
+                           hx-target="#search-results"
+                           hx-trigger="input changed delay:250ms, search"
+                           hx-indicator=".search-spinner">
+                    <button onclick="document.getElementById('search-dialog').close()"
+                            class="btn btn-ghost btn-xs btn-circle">{% icon 'x' size=16 %}</button>
+                </div>
+                <div id="search-results" class="px-2 pb-2">
+                    <div class="py-6 text-center text-xs text-base-content/30 font-mono">Start typing to search...</div>
+                </div>
+                <div class="search-spinner htmx-indicator flex justify-center py-4">
+                    <span class="loading loading-spinner loading-sm text-primary"></span>
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button class="text-transparent fixed inset-0 cursor-close"></button>
+            </form>
+        </dialog>
+
+        {# ── HTMX boost wrapper: swaps only <main> ──────────── #}
+        <div class="boost-root flex-1"
+             hx-boost="true"
+             hx-target="main"
+             hx-select="main"
+             hx-select-oob="title"
+             hx-history="true">
+            <main class="page-main">
+                {% block inner_content %}
+                {% block content %}{% endblock %}
+                {% endblock %}
+            </main>
+        </div>
+
+    </div>
+
+    {# ── Inline Scripts ─────────────────────────────────────── #}
+
+    <script type="module">
+      // Theme toggle
+      const btn = document.getElementById("theme-toggle");
+      if (btn) {
+        const darkIcons = document.querySelectorAll(".theme-icon-dark");
+        const lightIcons = document.querySelectorAll(".theme-icon-light");
+
+        const sync = () => {
+          const theme = document.documentElement.dataset.theme;
+          const isDark = theme === "tanstack-dark";
+          darkIcons.forEach(el => el.style.display = isDark ? "" : "none");
+          lightIcons.forEach(el => el.style.display = isDark ? "none" : "");
+        };
+
+        sync();
+        btn.addEventListener("click", () => {
+          const next = document.documentElement.dataset.theme === "tanstack-dark"
+            ? "tanstack-light" : "tanstack-dark";
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem("theme", next);
+          sync();
+        });
+      }
+
+      // Ctrl+K → open search
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+          e.preventDefault();
+          const dialog = document.getElementById("search-dialog");
+          dialog?.showModal();
+          setTimeout(() => document.getElementById("search-input")?.focus(), 100);
+        }
+      });
+
+      // Mobile popover close on outside click
+      const menu = document.getElementById("mobile-menu");
+      menu?.addEventListener("toggle", (e) => {
+        if (!e.newState) return;
+        const close = (target) => {
+          if (!menu.contains(target) && target !== menu.popoverToggle) {
+            menu.hidePopover();
+            document.removeEventListener("click", close);
+          }
+        };
+        document.addEventListener("click", close);
+      });
+    </script>
+</body>
 </html>

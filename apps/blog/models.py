@@ -65,6 +65,7 @@ class BlogIndexPage(Page):
 
         context["blogpages"] = blogpages
         context["request_tag"] = tag
+        context["is_htmx"] = request.headers.get("HX-Request") == "true"
 
         # Sidebar data: all tags with post counts
         all_pages: object = self.get_children().live().specific()

@@ -1,138 +1,131 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags django_vite %}
+{% load wagtailcore_tags site_tags %}
 
 {% block inner_content %}
 
-    {# ── Header / Intro ───────────────────────────────────────── #}
-    <div class="relative w-full border-b border-base-300 overflow-hidden">
-        <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+{# ── Header / Intro ──────────────────────────────────────── #}
+<div class="relative w-full border-b border-base-300 overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
+        <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+        <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+        <div class="max-w-3xl pl-0 md:pl-12">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-aos="fade-up">
+                <span class="bg-linear-to-r from-secondary to-accent bg-clip-text text-transparent">{{ page.title }}</span>
+            </h1>
+            {% if page.intro %}
+                <div class="text-xl md:text-2xl text-base-content/80 leading-relaxed max-w-2xl mb-8" data-aos="fade-up" data-aos-delay="100">
+                    {{ page.intro|richtext }}
+                </div>
+            {% endif %}
+            {% if request_tag %}
+                <div class="flex items-center gap-3 mt-4" data-aos="fade-in">
+                    <span class="text-sm font-medium text-base-content/60 uppercase tracking-wider">Filtered by</span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium border border-secondary/20">
+                        #{{ request_tag }}
+                        <a href="{% pageurl page %}"
+                           class="hover:text-secondary/70 ml-1 transition-colors cursor-pointer"
+                           aria-label="Clear filter">
+                            {% icon 'x' size=16 %}
+                        </a>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-secondary to-transparent opacity-50"></div>
+</div>
 
-        <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
-            <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
-            <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+{# ── Blog List + Sidebar ─────────────────────────────────── #}
+<div class="relative">
+    <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block opacity-50"></div>
+    <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block opacity-50"></div>
+    <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
+        <div class="flex flex-col lg:flex-row gap-12">
 
-            <div class="max-w-3xl pl-0 md:pl-12">
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-aos="fade-up">
-                    <span class="bg-linear-to-r from-secondary to-accent bg-clip-text text-transparent">{{ page.title }}</span>
-                </h1>
-                {% if page.intro %}
-                    <div class="text-xl md:text-2xl text-base-content/80 leading-relaxed max-w-2xl mb-8" data-aos="fade-up" data-aos-delay="100">
-                        {{ page.intro|richtext }}
-                    </div>
-                {% endif %}
-
-                {% if request_tag %}
-                    <div class="flex items-center gap-3 mt-4" data-aos="fade-in">
-                        <span class="text-sm font-medium text-base-content/60 uppercase tracking-wider">Filtered by</span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium border border-secondary/20">
-                            #{{ request_tag }}
-                            <a href="{% pageurl page %}" class="hover:text-secondary/70 ml-1 transition-colors" aria-label="Clear filter"
-                               hx-get="{% pageurl page %}"
-                               hx-target="closest .post-list"
-                               hx-push-url="true"
-                               hx-swap="innerHTML settle:200ms">
-                                <x-icon class='size-4'></x-icon>
-                            </a>
-                        </span>
+            {# Main Content — HTMX target #}
+            <div class="flex-1 min-w-0 post-list">
+                {% if blogpages %}
+                    {% include "blog/_partial_blog_posts.html" with blog_posts=blogpages blog_page=page request_tag=request_tag %}
+                {% else %}
+                    <div class="py-20 text-center">
+                        <div class="inline-block p-6 rounded-full bg-base-200 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 opacity-50"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">No Posts Found</h3>
+                        <p class="text-base-content/60">Try adjusting your search or filter.</p>
                     </div>
                 {% endif %}
             </div>
-        </div>
-        <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-secondary to-transparent opacity-50"></div>
-    </div>
 
-    {# ── Blog List + Sidebar ──────────────────────────────────── #}
-    <div class="relative">
-        <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block opacity-50"></div>
-        <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block opacity-50"></div>
+            {# Right Sidebar #}
+            <aside class="lg:w-72 xl:w-80 shrink-0 space-y-8">
+                <div class="sticky top-8 space-y-8">
 
-        <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
-            <div class="flex flex-col lg:flex-row gap-12">
-
-                {# Main Content #}
-                <div class="flex-1 min-w-0">
-                    {% if blogpages %}
-                        {% include 'blog/_blog_posts.html' with blog_posts=blogpages page=page request_tag=request_tag %}
-                    {% else %}
-                    {% else %}
-                        <div class="py-20 text-center">
-                            <div class="inline-block p-6 rounded-full bg-base-200 mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 opacity-50"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" /></svg>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-2">No Posts Found</h3>
-                            <p class="text-base-content/60">Try adjusting your search or filter to find what you're looking for.</p>
+                    {# About #}
+                    <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="100">
+                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">About</h3>
+                        <div class="space-y-3 text-sm text-base-content/70 leading-relaxed">
+                            {% if page.about %}
+                                <p>{{ page.about|richtext }}</p>
+                            {% else %}
+                                <p class="italic text-base-content/50">No description set yet.</p>
+                            {% endif %}
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
 
-                {# Right Sidebar #}
-                <aside class="lg:w-72 xl:w-80 shrink-0 space-y-8">
-                    <div class="sticky top-8 space-y-8">
-
-                        {# About #}
-                        <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="100">
-                            <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">About</h3>
-                            <div class="space-y-3 text-sm text-base-content/70 leading-relaxed">
-                                {% if page.about %}
-                                    <p>{{ page.about|richtext }}</p>
-                                {% else %}
-                                    <p class="italic text-base-content/50">No description set yet.</p>
-                                {% endif %}
-                            </div>
+                    {# Browse by Mood #}
+                    <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="200">
+                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Browse by Mood</h3>
+                        <div class="space-y-2">
+                            {% for mood_key, mood_label in mood_choices %}
+                                <a href="{% pageurl page %}?mood={{ mood_key }}"
+                                   class="flex items-center gap-3 group px-3 py-2 rounded-lg hover:bg-base-300/50 transition-colors">
+                                    {% mood_badge mood_key %}
+                                    <span class="text-sm text-base-content/70 group-hover:text-base-content transition-colors">{{ mood_label }}</span>
+                                </a>
+                            {% endfor %}
                         </div>
+                    </div>
 
-                        {# Browse by Mood #}
-                        <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="200">
-                            <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Browse by Mood</h3>
-                            <div class="space-y-2">
-                                {% for mood_key, mood_label in mood_choices %}
-                                    <a href="{% pageurl page %}?mood={{ mood_key }}"
-                                       class="flex items-center gap-3 group px-3 py-2 rounded-lg hover:bg-base-300/50 transition-colors">
-                                        <mood-badge data-mood="{{ mood_key }}" class="scale-90 origin-left"></mood-badge>
-                                        <span class="text-sm text-base-content/70 group-hover:text-base-content transition-colors">{{ mood_label }}</span>
+                    {# Tag Cloud #}
+                    {% if tag_cloud %}
+                        <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="300">
+                            <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Tags</h3>
+                            <div class="flex flex-wrap gap-2">
+                                {% for tc in tag_cloud %}
+                                    <a href="{% pageurl page %}?tag={{ tc.tag__name }}"
+                                       class="badge badge-outline hover:badge-secondary transition-colors gap-1 text-xs">
+                                        #{{ tc.tag__name }}
+                                        <span class="text-[10px] opacity-60">{{ tc.count }}</span>
                                     </a>
                                 {% endfor %}
                             </div>
                         </div>
+                    {% endif %}
 
-                        {# Tag Cloud #}
-                        {% if tag_cloud %}
-                            <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="300">
-                                <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Tags</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    {% for tc in tag_cloud %}
-                                        <a href="{% pageurl page %}?tag={{ tc.tag__name }}"
-                                           class="badge badge-outline hover:badge-secondary transition-colors gap-1 text-xs">
-                                            #{{ tc.tag__name }}
-                                            <span class="text-[10px] opacity-60">{{ tc.count }}</span>
-                                        </a>
-                                    {% endfor %}
-                                </div>
+                    {# Quick Stats #}
+                    <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="400">
+                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Stats</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-secondary">{{ blogpages.paginator.count }}</div>
+                                <div class="text-xs text-base-content/50 uppercase tracking-wider">Posts</div>
                             </div>
-                        {% endif %}
-
-                        {# Quick Stats #}
-                        <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="400">
-                            <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Stats</h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-secondary">{{ blogpages.paginator.count }}</div>
-                                    <div class="text-xs text-base-content/50 uppercase tracking-wider">Posts</div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-accent">{{ tag_cloud|length }}</div>
-                                    <div class="text-xs text-base-content/50 uppercase tracking-wider">Tags</div>
-                                </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-accent">{{ tag_cloud|length }}</div>
+                                <div class="text-xs text-base-content/50 uppercase tracking-wider">Tags</div>
                             </div>
                         </div>
-
                     </div>
-                </aside>
 
-            </div>
+                </div>
+            </aside>
+
         </div>
     </div>
+</div>
 
-    {% include "components/footer.html" %}
+{% include "components/footer.html" %}
 
 {% endblock %}

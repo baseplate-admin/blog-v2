@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags django_vite %}
+{% load wagtailcore_tags wagtailimages_tags site_tags %}
 
 <div class="space-y-32">
     {% for post in blog_posts %}
@@ -26,26 +26,18 @@
             {# Content Side #}
             <div class="w-full lg:w-2/5 space-y-6 relative z-10 pt-4">
                 <div class="space-y-4">
-
-                    {# Mood Badge #}
-                    <mood-badge data-mood="{{ post.mood }}"></mood-badge>
-
-                    {# Meta #}
+                    {% mood_badge post.mood %}
                     <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-base-content/60 font-mono tracking-wider uppercase">
                         <span>{{ post.date|date:"M j, Y" }}</span>
-                        <span><circle-icon class='size-1.5 fill-base-content/40'></circle-icon></span>
+                        <span class="text-base-content/40">{% icon 'calendar' size=12 %}</span>
                         <span>{{ post.reading_time|default:"4 min read" }}</span>
                     </div>
-
                     <h2 class="text-3xl md:text-4xl font-bold leading-tight group-hover:text-secondary transition-colors duration-300">
                         <a href="{% pageurl post %}">{{ post.title }}</a>
                     </h2>
                     <div class="w-12 h-1 bg-secondary rounded-full"></div>
                 </div>
-
-                <div class="text-lg text-base-content/80 leading-relaxed">
-                    {{ post.intro }}
-                </div>
+                <div class="text-lg text-base-content/80 leading-relaxed">{{ post.intro }}</div>
 
                 {% if post.tags.all %}
                     <div class="flex flex-wrap gap-2">
@@ -53,7 +45,7 @@
                             {% if request_tag == tag.slug %}
                                 <span class="badge badge-secondary badge-outline px-3 py-3">#{{ tag }}</span>
                             {% else %}
-                                <a href="{% pageurl page %}?tag={{ tag }}"
+                                <a href="{% pageurl blog_page %}?tag={{ tag }}"
                                    class="badge badge-outline hover:badge-secondary transition-colors px-3 py-3">
                                     #{{ tag }}
                                 </a>
@@ -65,7 +57,7 @@
                 <div class="pt-2">
                     <a href="{% pageurl post %}" class="btn btn-outline gap-2 group/btn">
                         Read Article
-                        <right-arrow-icon class="rotate-90 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                        <span class="rotate-90 transition-transform group-hover/btn:translate-x-1">{% icon 'arrow-right' size=16 %}</span>
                     </a>
                 </div>
             </div>
@@ -80,7 +72,7 @@
     {% endfor %}
 </div>
 
-{# Pagination #}
+{# Pagination — handled by HTMX boost on parent #}
 {% if blog_posts.has_other_pages %}
     <div class="join grid grid-cols-2 max-w-xs mx-auto mt-32 relative z-20">
         {% if blog_posts.has_previous %}
@@ -101,7 +93,6 @@
             <button class="join-item btn btn-outline btn-disabled">Next</button>
         {% endif %}
     </div>
-
     <div class="text-center mt-4 text-sm text-base-content/50 font-mono">
         Page {{ blog_posts.number }} of {{ blog_posts.paginator.num_pages }}
     </div>

@@ -9,17 +9,14 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
-        "noEmit": true,
         "isolatedModules": true,
         "allowJs": true,
         "baseUrl": ".",
-        "types": ["vite/client", "node", "svelte"]
+        "types": ["vite/client", "node"]
     },
     "include": [
         "assets/**/*",
-        "vite.config.ts",
-        "vite-env.d.ts",
-        "**/*.svelte"
+        "vite.config.ts"
     ],
     "exclude": ["node_modules", "static", "dist"]
 }

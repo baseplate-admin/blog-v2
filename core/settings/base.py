@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "apps.home",
     "apps.blog",
     "apps.projects",
+    "apps.search",
     "apps.tags",
     "apps.site_settings",
     "apps.users",
