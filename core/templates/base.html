@@ -4,6 +4,9 @@
 {% wagtail_url_from_model_slug 'blog.BlogIndexPage' as blog_url %}
 {% wagtail_url_from_model_slug 'projects.ProjectIndexPage' as projects_url %}
 
+{# Nav items + current path — used in navbar, mobile menu, footer #}
+{% with about="/about/" blog=blog_url projects=projects_url contact="/contact/" current_path=request.path %}
+
 <!DOCTYPE html>
 <html lang="en" data-theme="tanstack-dark">
 <head>
@@ -23,88 +26,108 @@
         <base target="_blank">
     {% endif %}
 
-    {# Vite: HTMX, AOS, Tailwind, Fonts #}
+    {# Vite: Tailwind first (styles), then HTMX, AOS #}
+    {% vite_asset 'assets/tailwind/tailwind.ts' %}
     {% vite_asset 'assets/htmx/htmx.ts' %}
     {% vite_asset 'assets/aos/aos.ts' %}
-    {% vite_asset 'assets/tailwind/tailwind.ts' %}
-    {% vite_asset 'assets/fonts/inter/inter.ts' %}
 
     {% block head %}{% endblock %}
-
-    {# Theme init — runs before paint #}
-    <script>
-      (function(){
-        var t=localStorage.getItem("theme");
-        if(t)document.documentElement.setAttribute("data-theme",t);
-        else if(matchMedia("(prefers-color-scheme:light)").matches)
-          document.documentElement.setAttribute("data-theme","tanstack-light");
-      })();
-    </script>
 </head>
 
-<body class="bg-base-100 font-sans text-base-content antialiased">
+<body class="bg-base-100 font-sans text-base-content antialiased transition-colors duration-300 min-h-screen">
     {% wagtailuserbar %}
 
     <div class="page-shell min-h-screen flex flex-col">
 
-        {# ── Navbar (persists across HTMX swaps) ────────────── #}
-        <header class="navbar bg-base-100/80 backdrop-blur-lg sticky top-0 z-50 border-b border-base-300/50 px-4 md:px-8">
-            <div class="flex-1">
-                <a href="/" class="text-xl font-bold tracking-tight hover:text-primary transition-colors">The Tinkerer</a>
-                <div class="flex gap-6 ml-8 items-center">
-                    <a href="/about/" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">About</a>
-                    <a href="{{ blog_url }}" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">Blog</a>
-                    <a href="{{ projects_url }}" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">Projects</a>
-                    <a href="/contact/" class="text-sm text-base-content/60 hover:text-primary transition-colors hidden md:inline">Contact</a>
+        {# ── Navbar (centered, max-w-7xl, persists across swaps) ── #}
+        <nav class="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300">
+            <div class="flex justify-between items-center">
+
+                {# Logo #}
+                <a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
+                    The Tinkerer
+                </a>
+
+                {# Desktop right side #}
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="{{ about }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">About</a>
+                    <a href="{{ blog }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Blog</a>
+                    <a href="{{ projects }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Projects</a>
+                    <a href="{{ contact }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</a>
+
+                    {# Search button — server-side visibility #}
+                    {% if current_path == blog or current_path == "/" %}
+                    <button id="search-btn" class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
+                        {% icon 'search' size=18 %}
+                        <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300">
+                            <span class="text-base-content/50">Ctrl</span>
+                            <span class="text-base-content/60">K</span>
+                        </kbd>
+                    </button>
+                    {% endif %}
+
+                    {# Theme toggle — dark icon shown by default (site default) #}
+                    <button id="theme-toggle" class="cursor-pointer text-base-content/70 hover:text-base-content transition-colors p-1"
+                            aria-label="Toggle theme">
+                        <span class="theme-icon-dark inline">{% icon 'moon' size=20 %}</span>
+                        <span class="theme-icon-light hidden">{% icon 'sun' size=20 %}</span>
+                    </button>
                 </div>
+
+                {# Mobile right side #}
+                <div class="md:hidden flex items-center gap-2">
+                    {% if current_path == blog or current_path == "/" %}
+                    <button class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
+                        {% icon 'search' size=18 %}
+                    </button>
+                    {% endif %}
+
+                    <button id="mobile-menu-btn"
+                            popovertarget="mobile-menu"
+                            class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all">
+                        <span class="relative inline-block w-5 h-5">
+                            <span class="menu-icon absolute inset-0">{% icon 'menu' size=20 %}</span>
+                            <span class="close-icon absolute inset-0 hidden">{% icon 'x' size=20 %}</span>
+                        </span>
+                    </button>
+                </div>
+
             </div>
-            <div class="flex items-center gap-2">
-                <button onclick="var d=document.getElementById('search-dialog');if(d)d.showModal()"
-                        class="btn btn-ghost btn-sm btn-circle gap-2"
-                        aria-label="Search">
-                    {% icon 'search' size=18 %}
-                    <kbd class="kbd kbd-sm kbd-xs hidden sm:inline text-[10px]">
-                        <span class="hidden md:inline">Ctrl+</span>K
-                    </kbd>
-                </button>
-                <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Toggle theme">
-                    <span class="theme-icon-dark">{% icon 'moon' size=18 %}</span>
-                    <span class="theme-icon-light hidden">{% icon 'sun' size=18 %}</span>
-                </button>
-                <button popovertarget="mobile-menu" class="btn btn-ghost btn-sm btn-circle md:hidden" aria-label="Menu">
-                    {% icon 'menu' size=20 %}
-                </button>
-            </div>
-        </header>
+        </nav>
 
         {# Mobile popover #}
-        <div id="mobile-menu" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-300 w-56 p-4 space-y-1 absolute right-4 mt-12 z-50 hidden" popovertargetignore="all">
-            <a href="/about/" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
-            <a href="{{ blog_url }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
-            <a href="{{ projects_url }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
-            <a href="/contact/" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
+        <div id="mobile-menu" class="menu bg-base-100 rounded-box border border-base-300 shadow-lg z-50 p-2 absolute right-4 mt-2 w-56">
+            <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
+            <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
+            <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
+            <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
+            <div class="pt-2 mt-2 border-t border-base-300">
+                <button id="mobile-theme-toggle" class="flex items-center gap-2 cursor-pointer p-2 w-full rounded-lg hover:bg-base-200 text-sm text-base-content/70">
+                    <span class="mobile-theme-dark inline">{% icon 'moon' size=20 %}</span>
+                    <span class="mobile-theme-light hidden">{% icon 'sun' size=20 %}</span>
+                    <span>Theme</span>
+                </button>
+            </div>
         </div>
 
-        {% block page_tools %}{% endblock %}
-
-        {# Search dialog — persists across swaps, works site-wide #}
+        {# Search dialog #}
         <dialog id="search-dialog" class="modal modal-bottom sm:modal-middle backdrop:bg-black/60">
-            <div class="modal-box w-full max-w-xl border border-base-300 bg-base-100 p-0 overflow-hidden">
+            <div class="modal-box w-full max-w-2xl p-0 overflow-hidden shadow-2xl">
                 <div class="flex items-center gap-3 px-4 py-3 border-b border-base-300">
-                    <span class="text-base-content/40">{% icon 'search' size=18 %}</span>
+                    <span class="text-base-content/50 shrink-0">{% icon 'search' size=20 %}</span>
                     <input id="search-input"
                            type="search"
                            placeholder="Search articles..."
-                           class="input input-ghost flex-1 bg-transparent text-sm focus:outline-none"
+                           class="input input-ghost flex-1 bg-transparent text-base focus:outline-none"
                            autocomplete="off"
                            hx-get="{% url 'search:search' %}"
                            hx-target="#search-results"
-                           hx-trigger="input changed delay:250ms, search"
+                           hx-trigger="input changed delay:300ms, search"
                            hx-indicator=".search-spinner">
-                    <button onclick="document.getElementById('search-dialog').close()"
-                            class="btn btn-ghost btn-xs btn-circle">{% icon 'x' size=16 %}</button>
+                    <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300 hidden sm:inline-flex">ESC</kbd>
+                    <button onclick="closeSearch()" class="btn btn-ghost btn-xs">Close</button>
                 </div>
-                <div id="search-results" class="px-2 pb-2">
+                <div id="search-results" class="max-h-[60vh] overflow-y-auto px-4 pb-4">
                     <div class="py-6 text-center text-xs text-base-content/30 font-mono">Start typing to search...</div>
                 </div>
                 <div class="search-spinner htmx-indicator flex justify-center py-4">
@@ -112,7 +135,7 @@
                 </div>
             </div>
             <form method="dialog" class="modal-backdrop">
-                <button class="text-transparent fixed inset-0 cursor-close"></button>
+                <button onclick="closeSearch()"></button>
             </form>
         </dialog>
 
@@ -130,56 +153,52 @@
             </main>
         </div>
 
+        {# ── Footer (sticks to bottom via flexbox) ─────────── #}
+        {% include "components/footer.html" with about=about blog=blog projects=projects contact=contact %}
+
     </div>
 
-    {# ── Inline Scripts ─────────────────────────────────────── #}
-
+    {# ── Minimal inline scripts — theme toggle, keyboard, mobile menu ── #}
     <script type="module">
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => document.querySelectorAll(sel);
+
       // Theme toggle
-      const btn = document.getElementById("theme-toggle");
-      if (btn) {
-        const darkIcons = document.querySelectorAll(".theme-icon-dark");
-        const lightIcons = document.querySelectorAll(".theme-icon-light");
-
-        const sync = () => {
-          const theme = document.documentElement.dataset.theme;
-          const isDark = theme === "tanstack-dark";
-          darkIcons.forEach(el => el.style.display = isDark ? "" : "none");
-          lightIcons.forEach(el => el.style.display = isDark ? "none" : "");
-        };
-
-        sync();
-        btn.addEventListener("click", () => {
-          const next = document.documentElement.dataset.theme === "tanstack-dark"
-            ? "tanstack-light" : "tanstack-dark";
-          document.documentElement.dataset.theme = next;
-          localStorage.setItem("theme", next);
-          sync();
-        });
+      function syncTheme() {
+        const isDark = document.documentElement.dataset.theme === "tanstack-dark";
+        const show = isDark ? "" : "none";
+        const hide = isDark ? "none" : "";
+        $$(".theme-icon-dark").forEach(el => el.style.display = show);
+        $$(".theme-icon-light").forEach(el => el.style.display = hide);
+        $$(".mobile-theme-dark").forEach(el => el.style.display = show);
+        $$(".mobile-theme-light").forEach(el => el.style.display = hide);
       }
+      function toggleTheme() {
+        const next = document.documentElement.dataset.theme === "tanstack-dark" ? "tanstack-light" : "tanstack-dark";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("theme", next);
+        syncTheme();
+      }
+      syncTheme();
+      $("#theme-toggle")?.addEventListener("click", toggleTheme);
+      $("#mobile-theme-toggle")?.addEventListener("click", toggleTheme);
 
-      // Ctrl+K → open search
+      // Search open/close
+      window.openSearch = () => { $("#search-dialog")?.showModal(); setTimeout(() => $("#search-input")?.focus(), 100); };
+      window.closeSearch = () => { $("#search-dialog")?.close(); };
+
+      // Keyboard shortcuts
       document.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-          e.preventDefault();
-          const dialog = document.getElementById("search-dialog");
-          dialog?.showModal();
-          setTimeout(() => document.getElementById("search-input")?.focus(), 100);
-        }
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") { e.preventDefault(); window.openSearch?.(); }
+        if (e.key === "Escape") window.closeSearch?.();
       });
 
-      // Mobile popover close on outside click
-      const menu = document.getElementById("mobile-menu");
-      menu?.addEventListener("toggle", (e) => {
-        if (!e.newState) return;
-        const close = (target) => {
-          if (!menu.contains(target) && target !== menu.popoverToggle) {
-            menu.hidePopover();
-            document.removeEventListener("click", close);
-          }
-        };
-        document.addEventListener("click", close);
+      // Mobile hamburger icon toggle
+      $("#mobile-menu-btn")?.addEventListener("click", () => {
+        const m = $(".menu-icon"), c = $(".close-icon"), open = !m?.classList.contains("hidden");
+        m?.classList.toggle("hidden", !open); c?.classList.toggle("hidden", open);
       });
     </script>
+{% endwith %}
 </body>
 </html>

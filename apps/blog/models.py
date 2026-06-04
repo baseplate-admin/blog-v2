@@ -20,6 +20,13 @@ from wagtailcodeblock.blocks import CodeBlock
 
 import readtime
 
+from apps.blog.blocks import (
+    AOSHeadingBlock,
+    AOSHighlightBlock,
+    AOSImageBlock,
+    AOSQuoteBlock,
+    AOSSeparatorBlock,
+)
 from apps.home.models import HomePage
 
 
@@ -113,9 +120,14 @@ class BlogPage(Page):
             ("paragraph", RichTextBlock()),
             ("image", ImageChooserBlock()),
             ("code", CodeBlock(label="Code")),
+            ("aos_heading", AOSHeadingBlock()),
+            ("aos_quote", AOSQuoteBlock()),
+            ("aos_highlight", AOSHighlightBlock()),
+            ("aos_separator", AOSSeparatorBlock()),
+            ("aos_image", AOSImageBlock()),
         ],
         use_json_field=True,
-        help_text="Main content of the post. Use paragraphs, images, and code blocks.",
+        help_text="Main content of the post. Use paragraphs, images, code blocks, and animated AOS blocks.",
     )
     tags: ClusterTaggableManager = ClusterTaggableManager(through=BlogPageTag, blank=True, help_text="Tags for categorizing this post.")
 

@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource-variable/plus-jakarta-sans/index.css";
+@import "@fontsource-variable/jetbrains-mono/index.css";
+@import "@fontsource/hind-siliguri/index.css";
 
 @plugin "@tailwindcss/typography";
 
@@ -105,14 +109,15 @@
 }
 
 @layer theme {
-  /* Inter font family */
   html {
     @apply antialiased;
   }
   body {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Plus Jakarta Sans", "Inter", "Hind Siliguri";
   }
-
+  code, pre, kbd, [class*="font-mono"] {
+    font-family: "JetBrains Mono";
+  }
 }
 
 @utility grid-bg {

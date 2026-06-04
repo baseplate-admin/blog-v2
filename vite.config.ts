@@ -13,7 +13,6 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 tailwindcss: resolve('./assets/tailwind/tailwind.ts'),
-                inter: resolve('./assets/fonts/inter/inter.ts'),
                 htmx: resolve('./assets/htmx/htmx.ts'),
                 aos: resolve('./assets/aos/aos.ts'),
             },

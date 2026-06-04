@@ -1,0 +1,8 @@
+{% load wagtailimages_tags %}
+<figure data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
+  class="my-8">
+  {% image self.block.value.image fill-1200x600 class="w-full rounded-xl border border-base-300/50 shadow-lg" %}
+  {% if self.block.value.caption %}
+    <figcaption class="text-center text-sm text-base-content/40 mt-3">{{ self.block.value.caption }}</figcaption>
+  {% endif %}
+</figure>
