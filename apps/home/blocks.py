@@ -7,5 +7,5 @@ class CTABlock(blocks.StructBlock):
     url: blocks.URLBlock = blocks.URLBlock(required=True, help_text="Destination URL for this button.")
 
     class Meta:
-        icon: str = "link"
-        label: str = "CTA"
+        icon = "link"
+        label = "CTA"

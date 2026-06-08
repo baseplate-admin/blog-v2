@@ -73,24 +73,30 @@
             <div class="page-shell min-h-screen flex flex-col">
 
         {# ── Navbar (centered, max-w-7xl, persists across swaps) ── #}
-                <nav class="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300">
-                    <div class="flex justify-between items-center">
+                <nav class="relative z-50 navbar w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300">
 
                 {# Logo #}
+                    <div class="navbar-start">
                         <a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
                             The Tinkerer
                         </a>
+                    </div>
 
-                {# Desktop right side #}
-                        <div class="hidden md:flex items-center gap-6">
+                {# Desktop nav links #}
+                    <div class="navbar-center hidden md:flex">
+                        <div class="flex items-center gap-6">
                             <a href="{{ about }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">About</a>
                             <a href="{{ blog }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Blog</a>
                             <a href="{{ projects }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Projects</a>
                             <a href="{{ contact }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</a>
+                        </div>
+                    </div>
 
-                    {# Search button — server-side visibility #}
+                {# Right side: search, theme toggle, mobile menu #}
+                    <div class="navbar-end">
+                        <div class="flex items-center gap-2">
                             {% if current_path == blog %}
-                                <button id="search-btn" class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
+                                <button id="search-btn" class="btn btn-ghost btn-sm gap-2 hidden lg:flex" onclick="openSearch()">
                                     {% icon "search" size=18 %}
                                     <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-base-200 rounded border border-base-300">
                                         <span class="text-base-content/50">Ctrl</span>
@@ -99,32 +105,30 @@
                                 </button>
                             {% endif %}
 
-                    {# Theme toggle — dark icon shown by default (site default) #}
                             <button id="theme-toggle" class="cursor-pointer text-base-content/70 hover:text-base-content transition-colors p-1"
                                     aria-label="Toggle theme">
                                 <span class="theme-icon-dark inline">{% icon "moon" %}</span>
                                 <span class="theme-icon-light hidden">{% icon "sun" %}</span>
                             </button>
-                        </div>
 
-                {# Mobile right side #}
-                        <div class="md:hidden flex items-center gap-2">
-                            {% if current_path == blog %}
-                                <button class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
-                                    {% icon "search" size=18 %}
+                            <div class="md:hidden flex items-center gap-2">
+                                {% if current_path == blog %}
+                                    <button class="btn btn-ghost btn-sm gap-2" onclick="openSearch()">
+                                        {% icon "search" size=18 %}
+                                    </button>
+                                {% endif %}
+
+                                <button id="mobile-menu-btn"
+                                        class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all">
+                                    <span class="relative inline-block w-5 h-5">
+                                        <span class="menu-icon absolute inset-0">{% icon "menu" %}</span>
+                                        <span class="close-icon absolute inset-0 hidden">{% icon "x" %}</span>
+                                    </span>
                                 </button>
-                            {% endif %}
-
-                            <button id="mobile-menu-btn"
-                                    class="btn btn-ghost p-2 rounded hover:bg-base-200 transition-all">
-                                <span class="relative inline-block w-5 h-5">
-                                    <span class="menu-icon absolute inset-0">{% icon "menu" %}</span>
-                                    <span class="close-icon absolute inset-0 hidden">{% icon "x" %}</span>
-                                </span>
-                            </button>
+                            </div>
                         </div>
-
                     </div>
+
                 </nav>
 
         {# Mobile dropdown menu #}

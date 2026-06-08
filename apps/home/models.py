@@ -4,21 +4,27 @@ from typing import Any
 from django.db import models
 from django.http import HttpRequest
 
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, ObjectList
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
+from wagtail.search import index
 
 from .blocks import CTABlock
 
 from apps.blog.blocks import (
+    AOSAlertBlock,
     AOSCardGridBlock,
     AOSCalloutBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSImageBlock,
     AOSQuoteBlock,
+    AOSStepsBlock,
     AOSStatsGridBlock,
     AOSSeparatorBlock,
+    AOSTabBlock,
+    AOSTimelineBlock,
+    AOSTooltipWrapperBlock,
 )
 
 
@@ -26,12 +32,21 @@ class HomePage(Page):
     max_count: int = 1
     parent_page_types: list[str] = ["wagtailcore.Page"]
 
+    search_fields: list[index.SearchField] = Page.search_fields + [
+        index.SearchField("hero_title"),
+        index.SearchField("hero_subtitle"),
+    ]
+
     # Editable hero fields
     hero_title: models.CharField = models.CharField(
         max_length=255, blank=False, default="Building things with Code & Passion",
         help_text="Main heading displayed in the hero section.",
     )
-    hero_subtitle: RichTextField = RichTextField(blank=True, help_text="Supporting text below the hero title.")
+    hero_subtitle: RichTextField = RichTextField(
+        blank=True,
+        features=["bold", "italic", "link"],
+        help_text="Supporting text below the hero title.",
+    )
 
     hero_ctas: StreamField = StreamField(
         [("cta", CTABlock())],
@@ -55,9 +70,13 @@ class HomePage(Page):
             ("aos_callout", AOSCalloutBlock()),
             ("aos_stats_grid", AOSStatsGridBlock()),
             ("aos_card_grid", AOSCardGridBlock()),
+            ("aos_tab", AOSTabBlock()),
+            ("aos_timeline", AOSTimelineBlock()),
+            ("aos_steps", AOSStepsBlock()),
+            ("aos_alert", AOSAlertBlock()),
+            ("aos_tooltip", AOSTooltipWrapperBlock()),
         ],
         blank=True,
-        use_json_field=True,
         help_text="Animated content blocks for the homepage.",
     )
 
@@ -67,6 +86,11 @@ class HomePage(Page):
         FieldPanel("hero_ctas"),
         FieldPanel("latest_posts_count"),
         FieldPanel("body"),
+    ]
+    editor_panels: list[ObjectList] = [
+        ObjectList(content_panels, heading="Content"),
+        ObjectList(Page.promote_panels, heading="Promote"),
+        ObjectList(Page.settings_panels, heading="Settings"),
     ]
 
     def get_context(self, request: HttpRequest) -> dict[str, Any]:

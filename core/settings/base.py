@@ -63,13 +63,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
@@ -124,8 +123,6 @@ LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
 
-USE_I18N = True
-
 USE_TZ = True
 
 
@@ -168,7 +165,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 
 WAGTAIL_SITE_NAME = "core"
 
-# Search
+# Search backend - database backend sufficient for personal blog
 # https://docs.wagtail.org/en/stable/topics/search/backends.html
 WAGTAILSEARCH_BACKENDS = {
     "default": {
@@ -198,6 +195,14 @@ WAGTAILDOCS_EXTENSIONS = [
 ]
 
 AUTH_USER_MODEL = "users.User"
+
+# Image security: limit max image size to prevent DoS
+# https://docs.wagtail.org/en/stable/topics/images.html#security
+WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000  # ~12MP default
+
+# Rich text editor features - global control
+# https://docs.wagtail.org/en/stable/topics/rich_text.html#feature-configuration
+WAGTAILADMIN_RICH_TEXT_FEATURES = ["h2", "h3", "bold", "italic", "link", "document-link", "image"]
 
 WAGTAIL_CODE_BLOCK_LANGUAGES = (
     ("abap", "ABAP"),

@@ -7,7 +7,11 @@ DEBUG = True
 SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
 
 # SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "*.localhost",
+]
 
 INSTALLED_APPS += [
     "debug_toolbar",
@@ -33,6 +37,8 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 
 
 try:

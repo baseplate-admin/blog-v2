@@ -9,7 +9,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from taggit.models import TaggedItemBase
 
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList
 from wagtail.blocks import RichTextBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
@@ -20,14 +20,19 @@ from wagtailcodeblock.blocks import CodeBlock
 import readtime
 
 from apps.blog.blocks import (
+    AOSAlertBlock,
     AOSCardGridBlock,
     AOSCalloutBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSImageBlock,
     AOSQuoteBlock,
+    AOSStepsBlock,
     AOSStatsGridBlock,
     AOSSeparatorBlock,
+    AOSTabBlock,
+    AOSTimelineBlock,
+    AOSTooltipWrapperBlock,
 )
 from apps.home.models import HomePage
 
@@ -39,8 +44,22 @@ class BlogPageTag(TaggedItemBase):
 
 
 class BlogIndexPage(Page):
-    intro = RichTextField(blank=True, help_text="Introductory text shown at the top of the blog index page.")
-    about = RichTextField(blank=True, help_text="Shown in the sidebar about section.")
+    intro = RichTextField(
+        blank=True,
+        features=["bold", "italic", "link"],
+        help_text="Introductory text shown at the top of the blog index page.",
+    )
+    about = RichTextField(
+        blank=True,
+        features=["bold", "italic", "link"],
+        help_text="Shown in the sidebar about section.",
+    )
+
+    search_fields: list[index.SearchField] = Page.search_fields + [
+        index.SearchField("intro"),
+        index.SearchField("about"),
+    ]
+
     subpage_types: list[str] = ["BlogPage"]
     parent_page_types: list[type[Page]] = [HomePage]
     max_count: int = 1
@@ -48,6 +67,11 @@ class BlogIndexPage(Page):
     content_panels: list[FieldPanel] = Page.content_panels + [
         FieldPanel("intro"),
         FieldPanel("about"),
+    ]
+    editor_panels: list[ObjectList] = [
+        ObjectList(content_panels, heading="Content"),
+        ObjectList(Page.promote_panels, heading="Promote"),
+        ObjectList(Page.settings_panels, heading="Settings"),
     ]
 
     def get_context(self, request: HttpRequest) -> dict[str, object]:
@@ -121,8 +145,8 @@ class BlogPage(Page):
     intro: models.CharField = models.CharField(max_length=250, help_text="Brief summary shown in listings and previews.")
     body: StreamField = StreamField(
         [
-            ("paragraph", RichTextBlock()),
-            ("image", ImageChooserBlock()),
+            ("paragraph", RichTextBlock(label="Paragraph")),
+            ("image", ImageChooserBlock(label="Image")),
             ("code", CodeBlock(label="Code")),
             ("aos_heading", AOSHeadingBlock()),
             ("aos_quote", AOSQuoteBlock()),
@@ -132,8 +156,12 @@ class BlogPage(Page):
             ("aos_callout", AOSCalloutBlock()),
             ("aos_stats_grid", AOSStatsGridBlock()),
             ("aos_card_grid", AOSCardGridBlock()),
+            ("aos_tab", AOSTabBlock()),
+            ("aos_timeline", AOSTimelineBlock()),
+            ("aos_steps", AOSStepsBlock()),
+            ("aos_alert", AOSAlertBlock()),
+            ("aos_tooltip", AOSTooltipWrapperBlock()),
         ],
-        use_json_field=True,
         help_text="Main content of the post. Use paragraphs, images, code blocks, and animated AOS blocks.",
     )
     tags: ClusterTaggableManager = ClusterTaggableManager(through=BlogPageTag, blank=True, help_text="Tags for categorizing this post.")
@@ -164,6 +192,11 @@ class BlogPage(Page):
         FieldPanel("intro"),
         FieldPanel("body"),
         FieldPanel("feed_image"),
+    ]
+    editor_panels: list[ObjectList] = [
+        ObjectList(content_panels, heading="Content"),
+        ObjectList(Page.promote_panels, heading="Promote"),
+        ObjectList(Page.settings_panels, heading="Settings"),
     ]
 
     subpage_types: list[str] = []

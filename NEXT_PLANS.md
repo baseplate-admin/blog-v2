@@ -18,6 +18,34 @@
 ## Active Issues
 - [x] HTMX 4 content flash — applied fix with `:inherited` modifiers + safety net handler (verify in browser)
 
+## Completed (2026-06-06) — Wagtail 7.3 Best Practices
+- [x] Removed deprecated `XFrameOptionsMiddleware` (unused since Wagtail 4.0)
+- [x] Removed `USE_I18N = True` (always True since Django 5.1)
+- [x] Added `WAGTAILIMAGES_MAX_IMAGE_PIXELS` for image upload security
+- [x] Added `editor_panels` with Content/Promote/Settings tabs to all Page models (BlogIndexPage, BlogPage, HomePage, ProjectIndexPage, ProjectPage)
+- [x] Removed redundant `use_json_field=True` from StreamField (default since Wagtail 5.x)
+- [x] Added `group` to all AOS blocks (Content, Media, Layout, Interactive) for admin auto-grouping
+- [x] Added `search_fields` to all Page models (HomePage, BlogIndexPage, ProjectIndexPage, ProjectPage)
+- [x] Fixed `parent_page_types` to use class references where possible
+- [x] Optimized RSS feed to cache `Site.find_for_request` lookup
+- [x] Tightened `ALLOWED_HOSTS` in dev settings
+- [x] Set `WAGTAILADMIN_BASE_URL` in dev settings
+- [x] Added labels to basic blocks (Paragraph, Image)
+
+## Completed (2026-06-07) — Wagtail Best Practices + DaisyUI Components
+- [x] Removed duplicate `WAGTAILSEARCH_BACKENDS` from base.py
+- [x] Added `WAGTAILADMIN_RICH_TEXT_FEATURES` global feature config
+- [x] Added `feature_names` restriction to all RichTextField instances (BlogIndexPage, HomePage, ProjectIndexPage, ProjectPage)
+- [x] Removed type hints from CTABlock Meta class attributes
+- [x] Added 5 new DaisyUI StreamField blocks: Tab Panel, Timeline, Steps, Alert, Tooltip
+- [x] Created 5 block templates: aos_tab.html, aos_timeline.html, aos_steps.html, aos_alert.html, aos_tooltip.html
+- [x] Rewrote navbar with DaisyUI navbar component (navbar-start, navbar-center, navbar-end)
+- [x] Applied DaisyUI mask (mask-circle) to author avatar image
+- [x] Added DaisyUI filter component to blog sidebar mood filter
+- [x] Added missing icons to registry: circle, bookmark, history, message-circle, alert-circle
+- [x] Wired all new blocks to BlogPage.body and HomePage.body StreamFields
+- [x] Verified with `manage.py check` — zero model/import issues
+
 ## What to Do Next
 
 ### High Priority

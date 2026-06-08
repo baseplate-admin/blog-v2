@@ -158,6 +158,15 @@
                     </div>
                     <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="200">
                         <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Browse by Mood</h3>
+                        <form class="filter mb-3" action="{% pageurl page %}" method="get">
+                            <input class="btn btn-ghost btn-sm filter-reset" type="reset" aria-label="Reset" />
+                            {% for mood_key, mood_label in mood_choices %}
+                                <input class="btn btn-ghost btn-sm" type="radio" name="mood" value="{{ mood_key }}" aria-label="{{ mood_label }}" {% if request_mood == mood_key %}checked{% endif %} />
+                            {% endfor %}
+                            {% if request_tag %}
+                                <input type="hidden" name="tag" value="{{ request_tag }}" />
+                            {% endif %}
+                        </form>
                         <div class="space-y-2">
                             {% for mood_key, mood_label in mood_choices %}
                                 {% if request_mood == mood_key %}
@@ -166,7 +175,7 @@
                                         <span class="text-sm font-bold text-base-content">{{ mood_label }}</span>
                                     </div>
                                 {% else %}
-                                    <a href="{% pageurl page %}?mood={{ mood_key }}"
+                                    <a href="{% pageurl page %}?mood={{ mood_key }}{% if request_tag %}&tag={{ request_tag }}{% endif %}"
                                        class="flex items-center gap-3 group px-3 py-2 rounded-lg hover:bg-base-300/50 transition-colors">
                                         {% mood_badge mood_key %}
                                         <span class="text-sm text-base-content/70 group-hover:text-base-content transition-colors">{{ mood_label }}</span>

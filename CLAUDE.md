@@ -83,12 +83,24 @@ blog/
 ### Django/Wagtail (heavy backend)
 - **Custom user model:** `apps.users.User` (USERNAME_FIELD = "username")
 - **Page hierarchy:** Root → HomePage (max_count=1) → BlogIndexPage / ProjectIndexPage
+- **All Page models have `editor_panels`** with Content/Promote/Settings tabs (Wagtail 7.x best practice)
+- **All Page models have `search_fields`** for Wagtail search index coverage
 - **BlogPage:** `mood` field, StreamField body (paragraph/image/code + AOS blocks), tags, readtime, Libravatar avatar, reading progress bar
+- **AOS blocks have `group`** metadata (Content, Media, Layout, Interactive) - auto-groups in admin
 - **Site settings:** `wagtail.contrib.settings` with `SiteConfigSettings`
 - **Templates:** `core/templates/` (base, components) + `apps/*/templates/*/` (pages)
 - **Template tags:** `wagtail_url_from_model_slug`, `mood_badge`
 - **Server-side logic:** search visibility, nav URLs, theme state all rendered server-side
-- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock`, `AOSCalloutBlock`, `AOSStatsGridBlock`, `AOSCardGridBlock` in `apps/blog/blocks.py`
+- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock`, `AOSCalloutBlock`, `AOSStatsGridBlock`, `AOSCardGridBlock`, `AOSTabBlock`, `AOSTimelineBlock`, `AOSStepsBlock`, `AOSAlertBlock`, `AOSTooltipWrapperBlock` in `apps/blog/blocks.py`
+- **DaisyUI components:** Tab Panel (tabs-box), Timeline (timeline-vertical), Steps (steps-vertical), Alert (rounded-2xl), Tooltip (tooltip wrapper)
+- **Navbar:** uses DaisyUI `navbar` with `navbar-start`/`navbar-center`/`navbar-end`
+- **Blog filter:** uses DaisyUI `filter` component with radio inputs + form submission
+- **Author image:** uses DaisyUI `mask mask-circle`
+- **Homepage hero:** uses DaisyUI `hero` + `hero-content`
+- **RichTextField:** all have explicit `feature_names` restriction
+- **WAGTAILADMIN_RICH_TEXT_FEATURES:** global feature config set
+- **Image security:** `WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000` (~12MP)
+- **No `XFrameOptionsMiddleware`** — removed since Wagtail 4.0+ doesn't need it
 
 ### Frontend (Vite + Tailwind — minimal JS)
 - **django-vite** registers all assets: `{% vite_asset 'assets/...' %}`, HMR via `{% vite_hmr_client %}`
@@ -117,7 +129,7 @@ blog/
 - **Reading progress bar** fixed at top of blog pages, updates on scroll
 - **Theme transition** via `@apply transition-colors` on all key elements
 - **Error pages** (404, 500) styled with AOS animations, centered layout
-- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with Lucide SVG path registry. No Lucide JS — all icons rendered server-side as inline SVGs. Icon names: `arrow-right`, `arrow-left`, `search`, `moon`, `sun`, `menu`, `x`, `github`, `external-link`, `chevron-up`, `calendar`, `list`, `lightning-bolt`, `shield`, `info`, `code`, `chart-bar`, `globe`, `puzzle-piece`
+- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with Lucide SVG path registry. No Lucide JS — all icons rendered server-side as inline SVGs. Icon names: `arrow-right`, `arrow-left`, `search`, `moon`, `sun`, `menu`, `x`, `github`, `external-link`, `chevron-up`, `calendar`, `list`, `lightning-bolt`, `shield`, `info`, `code`, `chart-bar`, `globe`, `puzzle-piece`, `circle`, `bookmark`, `history`, `message-circle`, `alert-circle`
 - **Nav progress bar** nprogress-style bar at top shows during HTMX boost requests
 - **Infinite scroll** blog index uses HTMX `hx-trigger="intersect"` + `hx-swap="outerHTML"` partial view endpoint
 - **Lazy-load** tag cloud uses HTMX 4.x `hx-trigger="load"` pattern
@@ -130,14 +142,16 @@ blog/
 
 ### Adding a new page type
 1. Model in `apps/*/models.py` inheriting `wagtail.models.Page`, type-hint everything
-2. Define `parent_page_types`, `subpage_types`, `content_panels`
-3. Template in `apps/*/templates/*/` extending `base.html`
-4. All logic server-side via Django template tags
+2. Define `parent_page_types` (class refs preferred), `subpage_types`, `search_fields`
+3. Define `content_panels` + `editor_panels` with Content/Promote/Settings ObjectLists
+4. Template in `apps/*/templates/*/` extending `base.html`
+5. All logic server-side via Django template tags
 
 ### Adding a new StreamField block
 1. Create in `apps/*/blocks.py` with `AOSBlock` base for animations
-2. Template in `apps/*/templates/*/blocks/` with `data-aos` attributes
-3. Register in model's StreamField choices
+2. Set `group` in Meta (Content, Media, Layout, or Interactive)
+3. Template in `apps/*/templates/*/blocks/` with `data-aos` attributes
+4. Register in model's StreamField choices
 
 ### Adding a new Vite entry (library, animation, etc.)
 1. Create entry `.ts` file in `assets/`

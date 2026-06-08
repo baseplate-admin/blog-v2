@@ -1,0 +1,24 @@
+{% load wagtailcore_tags site_tags %}
+<div data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
+  class="my-8">
+  {% with variant=self.block.value.variant %}
+  <div role="tablist" class="tabs tabs-{{ variant }} w-full">
+    {% for tab in self.block.value.tabs %}
+      {% if forloop.first %}
+        <input type="radio" name="my_tabs_{{ block.id }}" class="tab tab-{{ variant }}" role="tab" aria-label="{{ tab.title }}" checked />
+      {% else %}
+        <input type="radio" name="my_tabs_{{ block.id }}" class="tab tab-{{ variant }}" role="tab" aria-label="{{ tab.title }}" />
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% for tab in self.block.value.tabs %}
+    <div role="tabpanel" class="tab-content bg-base-200/50 border border-base-300 rounded-b-xl px-6 py-4 mt-2">
+      {% if tab.icon %}
+        <div class="mb-2 text-primary">{% icon tab.icon size=16 %}</div>
+      {% endif %}
+      <h3 class="font-semibold text-base-content/90 mb-2">{{ tab.title }}</h3>
+      <div class="text-sm text-base-content/70 whitespace-pre-line">{{ tab.content }}</div>
+    </div>
+  {% endfor %}
+  {% endwith %}
+</div>
