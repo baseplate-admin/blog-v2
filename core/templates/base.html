@@ -9,6 +9,9 @@
 
     <!DOCTYPE html>
     <html lang="en" data-theme="tanstack-dark">
+    <script>
+        (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
+    </script>
         <head>
             {% vite_hmr_client %}
             <meta charset="utf-8">
@@ -58,12 +61,13 @@
             {% vite_asset 'assets/htmx/htmx.ts' %}
             {% vite_asset 'assets/aos/aos.ts' %}
             {% vite_asset 'assets/toc/toc.ts' %}
+            {% vite_asset 'assets/mermaid/mermaid.ts' %}
 
             {% block head %}{% endblock %}
         </head>
 
         <body class="bg-base-100 font-sans text-base-content antialiased transition-colors duration-300 min-h-screen">
-            {% wagtailuserbar %}
+            {% if not request.is_htmx %}{% wagtailuserbar %}{% endif %}
 
     {# Navigation progress bar (nprogress-style) #}
             <div id="nav-progress" class="fixed top-0 left-0 w-full h-0.5 z-[70] pointer-events-none overflow-hidden">
@@ -222,31 +226,29 @@
 
       // Navigation progress bar (nprogress-style)
                 const progressBar = $(".progress-bar");
-                let progressTimeout;
+                let progressTimer;
                 function showProgress() {
                     if (!progressBar) return;
-                    clearTimeout(progressTimeout);
+                    clearTimeout(progressTimer);
+                    // Reset to 0 instantly (no transition) then animate up
+                    progressBar.style.transition = "none";
+                    progressBar.style.width = "0%";
                     progressBar.style.opacity = "1";
-                    progressBar.style.width = "30%";
-                    progressBar.style.transition = "width 0.3s ease";
-                    progressTimeout = setTimeout(() => {
+                    requestAnimationFrame(() => {
+                        progressBar.style.transition = "width 0.4s ease";
+                        progressBar.style.width = "45%";
+                    });
+                    progressTimer = setTimeout(() => {
                         if (progressBar) progressBar.style.width = "60%";
                     }, 200);
                 }
                 function completeProgress() {
                     if (!progressBar) return;
-                    clearTimeout(progressTimeout);
-                    progressBar.style.width = "100%";
-                    setTimeout(() => {
-                        if (!progressBar) return;
-                        progressBar.style.opacity = "0";
-                        setTimeout(() => {
-                            if (progressBar) {
-                                progressBar.style.width = "0%";
-                                progressBar.style.opacity = "1";
-                            }
-                        }, 300);
-                    }, 150);
+                    clearTimeout(progressTimer);
+                    progressBar.style.transition = "width 0.15s ease, opacity 0.3s ease";
+                    progressBar.style.width = "95%";
+                    progressBar.style.opacity = "0";
+                    // Don't reset width - leave hidden at 95%. Next showProgress() resets to 0 instantly.
                 }
                 document.body.addEventListener("htmx:before:request", showProgress);
                 document.body.addEventListener("htmx:after:request", completeProgress);

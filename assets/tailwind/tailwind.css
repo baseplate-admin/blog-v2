@@ -17,23 +17,23 @@
   prefersdark: true;
   color-scheme: dark;
 
-  /* Hashnode-inspired Deep Dark Theme (Purple Tint) */
-  --color-base-100: rgb(8, 8, 9); /* Deep Purple/Slate */
-  --color-base-200: rgb(17, 17, 20); /* Surface Purple/Slate */
-  --color-base-300: rgb(25, 25, 20); /* Border Purple/Slate */
-  --color-base-content: oklch(98% 0.01 280); /* White/Off-white */
+  /* Deep Dark Base */
+  --color-base-100: rgb(8, 8, 9);
+  --color-base-200: rgb(17, 17, 20);
+  --color-base-300: rgb(25, 25, 20);
+  --color-base-content: oklch(98% 0.01 280);
 
   /* Vibrant Purple Primary */
-  --color-primary: oklch(60% 0.2 290);
+  --color-primary: oklch(62% 0.22 295);
   --color-primary-content: oklch(98% 0.01 290);
 
-  /* Secondary */
-  --color-secondary: oklch(60% 0.12 260);
-  --color-secondary-content: oklch(95% 0.01 260);
+  /* Deep Purple Secondary */
+  --color-secondary: oklch(55% 0.18 310);
+  --color-secondary-content: oklch(95% 0.01 310);
 
-  /* Warm amber accent */
-  --color-accent: oklch(75% 0.18 75);
-  --color-accent-content: oklch(18% 0.02 75);
+  /* Golden Yellow Accent */
+  --color-accent: oklch(78% 0.18 90);
+  --color-accent-content: oklch(18% 0.03 90);
 
   /* Neutral */
   --color-neutral: oklch(30% 0.01 260);
@@ -74,14 +74,17 @@
   --color-base-300: oklch(90% 0.012 260);
   --color-base-content: oklch(18% 0.02 250);
 
-  --color-primary: oklch(50% 0.2 185);
-  --color-primary-content: oklch(99% 0.003 185);
+  /* Purple Primary */
+  --color-primary: oklch(55% 0.22 295);
+  --color-primary-content: oklch(98% 0.01 290);
 
-  --color-secondary: oklch(45% 0.12 260);
-  --color-secondary-content: oklch(98% 0.01 260);
+  /* Deep Purple Secondary */
+  --color-secondary: oklch(50% 0.18 310);
+  --color-secondary-content: oklch(98% 0.01 310);
 
-  --color-accent: oklch(60% 0.18 75);
-  --color-accent-content: oklch(98% 0.01 75);
+  /* Golden Yellow Accent */
+  --color-accent: oklch(65% 0.18 90);
+  --color-accent-content: oklch(18% 0.03 90);
 
   --color-neutral: oklch(28% 0.015 260);
   --color-neutral-content: oklch(95% 0.01 260);

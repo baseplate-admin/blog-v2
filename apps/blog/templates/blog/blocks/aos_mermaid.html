@@ -1,0 +1,45 @@
+{# Mermaid diagram block — lazy-rendered on scroll-intersect via HTMX 4.0 #}
+<div class="mermaid-block relative my-8 rounded-xl border border-base-300/50 bg-base-200/50 overflow-hidden"
+     data-aos="{{ block.value.animation }}"
+     data-aos-delay="{{ block.value.delay }}">
+
+    {# Dotwork corner accents #}
+    <div class="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-20">
+        <svg viewBox="0 0 32 32" fill="currentColor" class="text-base-content">
+            <circle cx="4" cy="4" r="1.5"/><circle cx="12" cy="4" r="1"/><circle cx="20" cy="4" r="0.75"/>
+            <circle cx="4" cy="12" r="1"/><circle cx="12" cy="12" r="0.75"/><circle cx="4" cy="20" r="0.75"/>
+        </svg>
+    </div>
+    <div class="absolute bottom-2 right-2 w-8 h-8 pointer-events-none opacity-20">
+        <svg viewBox="0 0 32 32" fill="currentColor" class="text-base-content">
+            <circle cx="28" cy="28" r="1.5"/><circle cx="20" cy="28" r="1"/><circle cx="12" cy="28" r="0.75"/>
+            <circle cx="28" cy="20" r="1"/><circle cx="20" cy="20" r="0.75"/><circle cx="28" cy="12" r="0.75"/>
+        </svg>
+    </div>
+
+    {# Label bar #}
+    <div class="flex items-center gap-2 px-4 py-2 border-b border-base-300/30 bg-base-200/30">
+        <div class="w-2 h-2 rounded-full bg-primary/60"></div>
+        <span class="text-xs font-mono text-base-content/40 uppercase tracking-wider">Diagram</span>
+        <span class="ml-auto flex gap-1">
+            <span class="w-1 h-1 rounded-full bg-base-content/15"></span>
+            <span class="w-1 h-1 rounded-full bg-base-content/10"></span>
+            <span class="w-1 h-1 rounded-full bg-base-content/10"></span>
+        </span>
+    </div>
+
+    {# Mermaid render target — lazy-loaded on intersect via HTMX 4.0 #}
+    <div class="mermaid-render p-6 text-center"
+         data-mermaid-code="{{ block.value.code|escapejs }}"
+         data-mermaid-theme="{{ block.value.theme }}"
+         hx-trigger="intersect once"
+         hx-on::trigger="window.__mermaidRender(this)">
+        <div class="py-8 text-base-content/30 text-sm font-mono flex flex-col items-center justify-center gap-3">
+            <svg class="w-5 h-5 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+            </svg>
+            <span>Scroll to render diagram</span>
+        </div>
+    </div>
+</div>

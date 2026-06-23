@@ -18,6 +18,7 @@ export default defineConfig({
                 htmx: resolve('./assets/htmx/htmx.ts'),
                 aos: resolve('./assets/aos/aos.ts'),
                 toc: resolve('./assets/toc/toc.ts'),
+                mermaid: resolve('./assets/mermaid/mermaid.ts'),
             },
         },
     },

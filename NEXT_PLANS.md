@@ -1,5 +1,30 @@
 # Next Plans
 
+## Completed (2026-06-23) — Mermaid.js + Genshin Aesthetic + CSS Grid + Dotted Borders + HTMX 4.0 Patterns + Dotwork + Fixes
+- [x] Added Mermaid.js StreamField block (AOSMermaidBlock) with code editor, theme chooser (dark/light/forest/neutral)
+- [x] Created mermaid Vite entry (assets/mermaid/mermaid.ts) with lazy-render on HTMX intersect
+- [x] Mermaid diagrams lazy-render via `hx-trigger="intersect once"` + `hx-on::trigger` handler
+- [x] Fixed mermaid oklch color error — now reads CSS variables from DaisyUI theme at runtime
+- [x] Redesigned blog_page.html with dotwork tattoo aesthetic: SVG dot grids, geometric line rails, crosshair markers, corner dot accents
+- [x] Redesigned blog_index_page.html with matching dotwork aesthetic: background dot grid, vertical rails, corner accents, dotwork separators
+- [x] AOS timing fixed — fires on DOMContentLoaded + requestAnimationFrame (no window.load delay, CSS loads first in head)
+- [x] NProgress bar fixed — no spring-back, animates 0%→45%→60%→95%→fade out, resets instantly on next show
+- [x] Avatar ring fixed — rounded-full ring matches mask-circle image
+- [x] Color scheme updated to orange + purple (primary: purple oklch(62% 0.22 295), accent: orange oklch(70% 0.22 35))
+- [x] Removed unnecessary bottom decorative band from blog_page.html
+- [x] Migration 0008 created and applied for new StreamField block
+- [x] Genshin Impact / anime aesthetic applied across blog pages — constellation rails, ornamental dividers, crown ornaments, crystal frames
+- [x] All borders converted to dotted (`border-dotted`) for ornamental, anime-style framing
+- [x] CSS Grid layout for blog_page.html — `grid-cols-[auto_1fr_auto]` for rails + content, `grid-cols-[auto_1fr]` for TOC + body
+- [x] Feminine icon set — `sparkles`, `infinity`, `gem`, `star`, `compass`, `cross`, `prism`, `orbit`, `crown` replace harsh geometric icons
+- [x] Added new Lucide icons to registry: `flower`, `heart`, `infinity`, `moon-star`, `star`, `diamond`, `crown`, `feather`, `droplet`, `flame`, `leaf`, `zap`, `orbit`, `prism`, `cross`, `sunrise`, `atlas`
+- [x] Fixed wagtail userbar HTMX re-render error — proper `HtmxDetectMiddleware` sets `request.is_htmx` from `HTTP_HX_REQUEST` meta, template guard uses `{% if not request.is_htmx %}`
+- [x] Compass at end marker repositioned to sit cleanly above dotted border with `bg-base-100` backdrop
+- [x] Theme toggle now persists across page loads via `localStorage` + inline `<script>` in `<head>` to prevent flash of wrong theme
+- [x] Added bulletin board thumbtack pins to sidebar cards — 4 colored pins (red/blue/amber/emerald) in each corner
+- [x] Added transition to BLOG placeholder hover glow — `transition-colors duration-300 group-hover:text-secondary/20`
+- [x] Homepage redesigned with dotwork aesthetic — constellation dots, dot ornaments, dot corner accents on cards, dot separators
+
 ## Completed
 - [x] Migrated to HTMX 4.0.0-beta4 (from 2.0.10) - all event names, attributes, config updated
 - [x] Fixed Vite config path (`./assets/tailwind.css` → `./assets/tailwind/tailwind.css`)

@@ -4,12 +4,37 @@
 {% block inner_content %}
 
 {# ── Header / Intro ──────────────────────────────────────── #}
-<div class="relative w-full border-b border-base-300 overflow-hidden">
+<div class="relative w-full border-b border-dotted border-base-300 overflow-hidden">
     <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+    <div class="absolute inset-0 pointer-events-none"
+         style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;0.6&quot; fill=&quot;%23a1a1aa&quot; opacity=&quot;0.05&quot;/%3E%3C/svg%3E'); background-size: 24px 24px;"></div>
+
     <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
-        <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
-        <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+        {# Left constellation rail ── #}
+        <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300/30 hidden md:flex flex-col items-center">
+            <div class="h-full w-px bg-gradient-to-b from-transparent via-base-content/10 to-transparent"></div>
+            <div class="absolute top-12 text-primary/25">{% icon "star" size=6 %}</div>
+            <div class="absolute top-24 text-primary/20">{% icon "orbit" size=8 %}</div>
+            <div class="absolute top-1/2 text-primary/15">{% icon "sparkles" size=5 %}</div>
+            <div class="absolute top-3/4 text-primary/20">{% icon "infinity" size=8 %}</div>
+        </div>
+        {# Right constellation rail ── #}
+        <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300/30 hidden md:flex flex-col items-center">
+            <div class="h-full w-px bg-gradient-to-b from-transparent via-base-content/10 to-transparent"></div>
+            <div class="absolute top-16 text-primary/20">{% icon "sparkles" size=5 %}</div>
+            <div class="absolute top-1/3 text-primary/25">{% icon "gem" size=7 %}</div>
+            <div class="absolute top-2/3 text-primary/20">{% icon "orbit" size=8 %}</div>
+            <div class="absolute bottom-16 text-primary/15">{% icon "star" size=6 %}</div>
+        </div>
+
         <div class="max-w-3xl pl-0 md:pl-12">
+            {# Top compass ornament ── #}
+            <div class="flex items-center gap-2 mb-6" data-aos="fade-down">
+                <div class="text-primary/20">{% icon "compass" size=18 %}</div>
+                <div class="w-12 h-px bg-gradient-to-r from-primary/15 to-transparent"></div>
+                <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+            </div>
+
             <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-aos="fade-up">
                 <span class="bg-linear-to-r from-secondary to-accent bg-clip-text text-transparent">{{ page.title }}</span>
             </h1>
@@ -18,6 +43,18 @@
                     {{ page.intro|richtext }}
                 </div>
             {% endif %}
+
+            {# Ornamental divider under title ── #}
+            <div class="flex items-center gap-2 mb-6" data-aos="fade-in" data-aos-delay="150">
+                <div class="w-16 h-px bg-gradient-to-r from-transparent to-primary/20"></div>
+                <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+                <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                <div class="text-primary/25">{% icon "prism" size=8 %}</div>
+                <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+                <div class="w-16 h-px bg-gradient-to-l from-transparent to-primary/20"></div>
+            </div>
+
             {% if request_tag or request_mood %}
                 <div class="flex items-center gap-3 mt-4" data-aos="fade-in">
                     <span class="text-sm font-medium text-base-content/60 uppercase tracking-wider">Filtered by</span>
@@ -30,7 +67,7 @@
                         </a>
                     {% endif %}
                     {% if request_tag %}
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium border border-secondary/20">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium border border-dotted border-secondary/20">
                             #{{ request_tag }}
                             <a href="{% pageurl page %}"
                                class="hover:text-secondary/70 ml-1 transition-colors cursor-pointer"
@@ -48,8 +85,32 @@
 
 {# ── Blog List + Sidebar ─────────────────────────────────── #}
 <div class="relative">
-    <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block opacity-50"></div>
-    <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block opacity-50"></div>
+    <div class="absolute inset-0 pointer-events-none"
+         style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;0.5&quot; fill=&quot;%23a1a1aa&quot; opacity=&quot;0.04&quot;/%3E%3C/svg%3E'); background-size: 24px 24px;"></div>
+
+    {# Left constellation rail ── #}
+    <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300/20 hidden md:flex flex-col items-center">
+        <div class="h-full w-px bg-gradient-to-b from-transparent via-base-content/8 to-transparent"></div>
+        <div class="absolute top-12 text-primary/15">{% icon "star" size=6 %}</div>
+        <div class="absolute top-1/4 text-primary/20">{% icon "orbit" size=8 %}</div>
+        <div class="absolute top-1/3 text-base-content/10">{% icon "sparkles" size=5 %}</div>
+        <div class="absolute top-1/2 text-primary/15">{% icon "infinity" size=8 %}</div>
+        <div class="absolute top-2/3 text-primary/20">{% icon "gem" size=7 %}</div>
+        <div class="absolute top-3/4 text-primary/15">{% icon "orbit" size=8 %}</div>
+        <div class="absolute bottom-12 text-primary/10">{% icon "star" size=6 %}</div>
+    </div>
+    {# Right constellation rail ── #}
+    <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300/20 hidden md:flex flex-col items-center">
+        <div class="h-full w-px bg-gradient-to-b from-transparent via-base-content/8 to-transparent"></div>
+        <div class="absolute top-8 text-primary/20">{% icon "sparkles" size=5 %}</div>
+        <div class="absolute top-20 text-primary/15">{% icon "star" size=6 %}</div>
+        <div class="absolute top-1/3 text-primary/15">{% icon "gem" size=7 %}</div>
+        <div class="absolute top-1/2 text-base-content/10">{% icon "sparkles" size=5 %}</div>
+        <div class="absolute top-2/3 text-primary/20">{% icon "orbit" size=8 %}</div>
+        <div class="absolute top-3/4 text-primary/15">{% icon "infinity" size=8 %}</div>
+        <div class="absolute bottom-16 text-primary/10">{% icon "star" size=6 %}</div>
+    </div>
+
     <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
         <div class="flex flex-col lg:flex-row gap-12">
 
@@ -61,7 +122,13 @@
                             <div class="group relative flex flex-col {% cycle 'lg:flex-row' 'lg:flex-row-reverse' as row_dir silent %} gap-12 items-start"
                                  data-aos="fade-up">
                                 <div class="w-full relative">
-                                    <div class="relative overflow-hidden rounded-2xl border border-base-300 shadow-2xl transition-transform duration-500 hover:shadow-secondary/10 group-hover:scale-[1.01]">
+                                    {# Corner constellation accents ── #}
+                                    <div class="absolute -top-1 -left-1 text-primary/25 z-10">{% icon "sparkles" size=5 %}</div>
+                                    <div class="absolute -top-1 -right-1 text-primary/25 z-10">{% icon "sparkles" size=5 %}</div>
+                                    <div class="absolute -bottom-1 -left-1 text-primary/25 z-10">{% icon "sparkles" size=5 %}</div>
+                                    <div class="absolute -bottom-1 -right-1 text-primary/25 z-10">{% icon "sparkles" size=5 %}</div>
+
+                                    <div class="relative overflow-hidden rounded-2xl border border-dotted border-base-300 shadow-2xl transition-transform duration-500 hover:shadow-secondary/10 group-hover:scale-[1.01]">
                                         <a href="{% pageurl post %}" class="aspect-video bg-base-200 block w-full">
                                             {% if post.feed_image %}
                                                 {% image post.feed_image fill-1200x675 class="w-full h-full object-cover" %}
@@ -71,26 +138,29 @@
                                                 {% endif %}
                                                 {% endwith %}
                                             {% else %}
-                                                <div class="w-full h-full flex items-center justify-center text-base-content/10 font-black text-6xl select-none bg-base-300/50">BLOG</div>
+                                                <div class="w-full h-full flex items-center justify-center text-base-content/10 font-black text-6xl select-none bg-base-300/50 transition-colors duration-300 group-hover:text-secondary/20">BLOG</div>
                                             {% endif %}
                                         </a>
                                         <div class="absolute inset-0 bg-base-100/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                     </div>
-                                    <div class="absolute -top-4 -left-4 w-24 h-24 border-t border-l border-base-300 -z-10 rounded-tl-3xl opacity-60"></div>
-                                    <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b border-r border-base-300 -z-10 rounded-br-3xl opacity-60"></div>
+                                    <div class="absolute -top-4 -left-4 w-24 h-24 border-t border-l border-dotted border-base-300/20 -z-10 rounded-tl-3xl opacity-60"></div>
+                                    <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b border-r border-dotted border-base-300/20 -z-10 rounded-br-3xl opacity-60"></div>
                                 </div>
                                 <div class="w-full space-y-8 relative z-10 pt-4">
                                     <div class="space-y-4">
                                         {% mood_badge post.mood %}
                                         <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-base-content/60 font-mono tracking-wider uppercase">
                                             <span>{{ post.date|date:"M j, Y" }}</span>
-                                            <span class="text-base-content/40">{% icon "calendar" size=12 %}</span>
+                                            <span class="text-primary/20">{% icon "sparkles" size=4 %}</span>
                                             <span>{{ post.reading_time|default:"4 min read" }}</span>
                                         </div>
                                         <h2 class="text-3xl md:text-4xl font-bold leading-tight group-hover:text-secondary transition-colors duration-300">
                                             <a href="{% pageurl post %}">{{ post.title }}</a>
                                         </h2>
-                                        <div class="w-12 h-1 bg-secondary rounded-full"></div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-12 h-px bg-secondary"></div>
+                                            <div class="text-primary/30">{% icon "gem" size=5 %}</div>
+                                        </div>
                                     </div>
                                     <div class="text-xl text-base-content/80 leading-relaxed">{{ post.intro }}</div>
                                     {% if post.tags.all %}
@@ -113,14 +183,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="hidden lg:block absolute left-1/2 -translate-x-1/2 w-px bg-base-300 h-32 -mt-16 opacity-50 z-0 pointer-events-none"></div>
-                            {% if not forloop.last %}
-                                <div class="w-px h-24 bg-base-300 mx-auto opacity-50 lg:hidden"></div>
-                            {% endif %}
+                            {# Post separator ── #}
+                            <div class="hidden lg:flex items-center justify-center gap-3 -mt-16 mb-32" data-aos="fade-in">
+                                <div class="w-24 h-px bg-gradient-to-r from-transparent to-base-content/10"></div>
+                                <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                                <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+                                <div class="text-primary/25">{% icon "prism" size=8 %}</div>
+                                <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+                                <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                                <div class="w-24 h-px bg-gradient-to-l from-transparent to-base-content/10"></div>
+                            </div>
+                            <div class="w-px h-24 bg-base-300/20 mx-auto opacity-50 lg:hidden"></div>
                         {% endfor %}
-   </div>
+                    </div>
 
-                    {# Infinite scroll trigger #}
+                    {# Infinite scroll trigger ── #}
                     {% if blogpages.has_next %}
                         <div id="load-more-trigger"
                              hx-get="{% url 'blog_page_partial' %}?page={{ blogpages.next_page_number }}{% if request_tag %}&tag={{ request_tag }}{% endif %}{% if request_mood %}&mood={{ request_mood }}{% endif %}"
@@ -143,11 +220,19 @@
                 {% endif %}
             </div>
 
-            {# Right Sidebar #}
+            {# Right Sidebar ── #}
             <aside class="lg:w-72 xl:w-80 shrink-0 space-y-8">
                 <div class="sticky top-8 space-y-8">
-                    <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="100">
-                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">About</h3>
+                    {# About card ── #}
+                    <div class="rounded-xl border border-dotted border-base-300 bg-base-200/50 p-6 backdrop-blur-sm relative" data-aos="fade-right" data-aos-delay="100">
+                        <div class="absolute top-2 left-2 w-3 h-3 rounded-full bg-red-400/80 shadow-sm border border-red-500/40"></div>
+                        <div class="absolute top-2 right-2 w-3 h-3 rounded-full bg-blue-400/80 shadow-sm border border-blue-500/40"></div>
+                        <div class="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-amber-400/80 shadow-sm border border-amber-500/40"></div>
+                        <div class="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-emerald-400/80 shadow-sm border border-emerald-500/40"></div>
+                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <span class="text-primary/20">{% icon "orbit" size=8 %}</span>
+                            About
+                        </h3>
                         <div class="space-y-3 text-sm text-base-content/70 leading-relaxed">
                             {% if page.about %}
                                 <p>{{ page.about|richtext }}</p>
@@ -156,8 +241,17 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="200">
-                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Browse by Mood</h3>
+
+                    {# Mood filter card ── #}
+                    <div class="rounded-xl border border-dotted border-base-300 bg-base-200/50 p-6 backdrop-blur-sm relative" data-aos="fade-right" data-aos-delay="200">
+                        <div class="absolute top-2 left-2 w-3 h-3 rounded-full bg-red-400/80 shadow-sm border border-red-500/40"></div>
+                        <div class="absolute top-2 right-2 w-3 h-3 rounded-full bg-blue-400/80 shadow-sm border border-blue-500/40"></div>
+                        <div class="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-amber-400/80 shadow-sm border border-amber-500/40"></div>
+                        <div class="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-emerald-400/80 shadow-sm border border-emerald-500/40"></div>
+                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <span class="text-primary/20">{% icon "orbit" size=8 %}</span>
+                            Browse by Mood
+                        </h3>
                         <form class="filter mb-3" action="{% pageurl page %}" method="get">
                             <input class="btn btn-ghost btn-sm filter-reset" type="reset" aria-label="Reset" />
                             {% for mood_key, mood_label in mood_choices %}
@@ -184,22 +278,36 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {# HTMX 4.x lazy-load pattern for tag cloud #}
+
+                    {# Tag cloud (lazy-loaded) ── #}
                     <div hx-get="{% url 'blog_page_partial' %}?type=tags"
                          hx-trigger="load"
                          hx-target="this"
                          hx-select:inherited=""
                          hx-swap:inherited=""
-                         class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm"
+                         class="rounded-xl border border-dotted border-base-300 bg-base-200/50 p-6 backdrop-blur-sm relative"
                          data-aos="fade-right"
                          data-aos-delay="300">
+                        <div class="absolute top-2 left-2 w-3 h-3 rounded-full bg-red-400/80 shadow-sm border border-red-500/40"></div>
+                        <div class="absolute top-2 right-2 w-3 h-3 rounded-full bg-blue-400/80 shadow-sm border border-blue-500/40"></div>
+                        <div class="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-amber-400/80 shadow-sm border border-amber-500/40"></div>
+                        <div class="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-emerald-400/80 shadow-sm border border-emerald-500/40"></div>
                         <div class="flex items-center gap-2 text-xs text-base-content/40 font-mono">
-                            <span class="loading loading-spinner loading-xs text-primary"></span>
+                            <span class="loading loading-spinner loading-xs text-primary">{% icon "orbit" size=10 %}</span>
                             Loading tags...
                         </div>
                     </div>
-                    <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 backdrop-blur-sm" data-aos="fade-right" data-aos-delay="400">
-                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4">Stats</h3>
+
+                    {# Stats card ── #}
+                    <div class="rounded-xl border border-dotted border-base-300 bg-base-200/50 p-6 backdrop-blur-sm relative" data-aos="fade-right" data-aos-delay="400">
+                        <div class="absolute top-2 left-2 w-3 h-3 rounded-full bg-red-400/80 shadow-sm border border-red-500/40"></div>
+                        <div class="absolute top-2 right-2 w-3 h-3 rounded-full bg-blue-400/80 shadow-sm border border-blue-500/40"></div>
+                        <div class="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-amber-400/80 shadow-sm border border-amber-500/40"></div>
+                        <div class="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-emerald-400/80 shadow-sm border border-emerald-500/40"></div>
+                        <h3 class="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <span class="text-primary/20">{% icon "orbit" size=8 %}</span>
+                            Stats
+                        </h3>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="text-center">
                                 <div class="text-2xl font-bold text-secondary">{{ blogpages.paginator.count }}</div>
@@ -216,6 +324,17 @@
 
         </div>
     </div>
+</div>
+
+{# ── Bottom end marker ── #}
+<div class="relative max-w-7xl mx-auto px-8 pb-16 hidden lg:flex items-center justify-center gap-3">
+    <div class="w-32 h-px bg-gradient-to-r from-transparent to-base-content/10"></div>
+    <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+    <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+    <div class="text-primary/25">{% icon "crown" size=10 %}</div>
+    <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+    <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+    <div class="w-32 h-px bg-gradient-to-l from-transparent to-base-content/10"></div>
 </div>
 
 {% endblock %}

@@ -4,7 +4,7 @@
 
 A hyper-modern personal blog powered by **Wagtail CMS** covering technology, personal life, and politics. Dark-first aesthetic inspired by Ghost blog, github.blog (mood badges), and MakerKit articles. SPA-like feel achieved through HTMX boost with zero web components.
 
-**Tech Stack:** Django + Wagtail 7.3 | Vite 7 | Tailwind CSS 4 + DaisyUI | HTMX 4.0.0-beta4 (boost) | AOS (scroll animations) | django-vite 3.1
+**Tech Stack:** Django + Wagtail 7.3 | Vite 7 | Tailwind CSS 4 + DaisyUI | HTMX 4.0.0-beta4 (boost) | AOS (scroll animations) | Mermaid.js (diagrams) | django-vite 3.1
 
 ## Hard Rules
 
@@ -67,6 +67,7 @@ blog/
 ├── assets/
 │   ├── htmx/htmx.ts         # HTMX config + style injection (no raw CSS)
 │   ├── aos/aos.ts           # AOS init (fade-up), DOMContentLoaded + HTMX swap refresh
+│   ├── mermaid/mermaid.ts   # Mermaid.js init + lazy-render handler (window.__mermaidRender)
 │   ├── tailwind/
 │   │   ├── tailwind.css     # Tailwind 4 + DaisyUI themes, fonts, @utility grid-bg
 │   │   └── tailwind.ts
@@ -91,7 +92,7 @@ blog/
 - **Templates:** `core/templates/` (base, components) + `apps/*/templates/*/` (pages)
 - **Template tags:** `wagtail_url_from_model_slug`, `mood_badge`
 - **Server-side logic:** search visibility, nav URLs, theme state all rendered server-side
-- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock`, `AOSCalloutBlock`, `AOSStatsGridBlock`, `AOSCardGridBlock`, `AOSTabBlock`, `AOSTimelineBlock`, `AOSStepsBlock`, `AOSAlertBlock`, `AOSTooltipWrapperBlock` in `apps/blog/blocks.py`
+- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock`, `AOSCalloutBlock`, `AOSStatsGridBlock`, `AOSCardGridBlock`, `AOSTabBlock`, `AOSTimelineBlock`, `AOSStepsBlock`, `AOSAlertBlock`, `AOSTooltipWrapperBlock`, `AOSMermaidBlock` in `apps/blog/blocks.py`. Mermaid block renders client-side via `window.__mermaidRender()` on HTMX intersect
 - **DaisyUI components:** Tab Panel (tabs-box), Timeline (timeline-vertical), Steps (steps-vertical), Alert (rounded-2xl), Tooltip (tooltip wrapper)
 - **Navbar:** uses DaisyUI `navbar` with `navbar-start`/`navbar-center`/`navbar-end`
 - **Blog filter:** uses DaisyUI `filter` component with radio inputs + form submission
@@ -111,10 +112,13 @@ blog/
 
 ### Design System
 - **Ghost blog:** centered article card, generous whitespace, clean typography
+- **Genshin Impact / anime aesthetic:** constellation rails (connected dots + stars), ornamental dividers (gem + prism + sparkles), crown ornaments, crystal frames, dotted borders (`border-dotted`), celestial markers (orbit, compass, infinity)
 - **github.blog:** colored mood badges (purple=tech, sky=personal, red=politics, etc.)
-- **Sidebar TOC:** Takumi docs style — left-border rail, scroll-spy, H2/H3 nesting
-- **Blog index:** MakerKit alternating rows, decorative lines, AOS fade-up on scroll
-- **Color palette:** deep dark (#080809), purple primary, amber accent
+- **Sidebar TOC:** Takumi docs style — left-border dotted rail with sparkles markers, scroll-spy, H2/H3 nesting
+- **Blog index:** MakerKit alternating rows, ornamental decorative separators, AOS fade-up on scroll, background dot grid, constellation rails (left/right) with stars/orbits/gems
+- **Blog page:** CSS Grid layout (`grid-cols-[auto_1fr_auto]` for rails+content, `grid-cols-[auto_1fr]` for TOC+body), dotted borders on all frames, ornamental corner sparkles, crown end marker
+- **Feminine icon set:** `sparkles` (decorative dots), `infinity` (ornamental curves), `gem` (crystalline), `star` (celestial), `compass` (navigation), `cross` (ornamental), `prism` (crystalline), `orbit` (planetary), `crown` (regal)
+- **Color palette:** deep dark (#080809), purple primary, orange accent
 - **Typography:** Plus Jakarta Sans (headings/body), Inter (body), Hind Siliguri (Bengali), JetBrains Mono (code)
 - **Fonts:** all via npm (@fontsource), bundled through Vite, zero CDN, no fallback fonts
 
@@ -129,14 +133,17 @@ blog/
 - **Reading progress bar** fixed at top of blog pages, updates on scroll
 - **Theme transition** via `@apply transition-colors` on all key elements
 - **Error pages** (404, 500) styled with AOS animations, centered layout
-- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with Lucide SVG path registry. No Lucide JS — all icons rendered server-side as inline SVGs. Icon names: `arrow-right`, `arrow-left`, `search`, `moon`, `sun`, `menu`, `x`, `github`, `external-link`, `chevron-up`, `calendar`, `list`, `lightning-bolt`, `shield`, `info`, `code`, `chart-bar`, `globe`, `puzzle-piece`, `circle`, `bookmark`, `history`, `message-circle`, `alert-circle`
+- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with Lucide SVG path registry. No Lucide JS — all icons rendered server-side as inline SVGs. Icon names: `arrow-right`, `arrow-left`, `search`, `moon`, `sun`, `menu`, `x`, `github`, `external-link`, `chevron-up`, `calendar`, `list`, `lightning-bolt`, `shield`, `info`, `code`, `chart-bar`, `globe`, `puzzle-piece`, `circle`, `bookmark`, `history`, `message-circle`, `alert-circle`, `aperture`, `asterisk`, `at-sign`, `compass`, `crosshair`, `gem`, `diamond`, `hexagon`, `minus`, `plus`, `radar`, `sparkles`, `snowflake`, `target`, `wand`, `waves`, `wind`, `flower`, `heart`, `infinity`, `moon-star`, `star`, `crown`, `feather`, `droplet`, `flame`, `leaf`, `zap`, `orbit`, `prism`, `cross`, `sunrise`, `atlas`
 - **Nav progress bar** nprogress-style bar at top shows during HTMX boost requests
 - **Infinite scroll** blog index uses HTMX `hx-trigger="intersect"` + `hx-swap="outerHTML"` partial view endpoint
 - **Lazy-load** tag cloud uses HTMX 4.x `hx-trigger="load"` pattern
 - **HTMX 4.0.0-beta4** all event names use `htmx:phase:action` format (e.g., `htmx:before:request`)
 - **Boost container** uses `:inherited` modifiers (`hx-boost:inherited`, `hx-target:inherited="main"`, etc.) + `hx-on::before:swap` safety net to force swaps into `<main>` instead of `<body>`
 - **HTMX config**: `noSwap: [204, 304, '4xx', '5xx']` prevents error responses from replacing UI
+- **HTMX 4.0 intersect pattern**: `hx-trigger="intersect once"` + `hx-on::trigger="callback(this)"` for lazy-rendering heavy blocks (mermaid diagrams). Fires once when element scrolls into viewport
 - **Image colors** via `modern_colorthief` template tags: `get_dominant_color`, `get_palette_colors`
+- **Wagtail userbar** guarded with `{% if not request.headers.HX_Request %}` to prevent re-render errors during HTMX boost swaps
+- **Mermaid.js**: bundled via npm + Vite, lazy-rendered on scroll intersect. Exposes `window.__mermaidRender(el)` which reads `data-mermaid-code` + `data-mermaid-theme` from the container element
 
 ## What to Do When...
 

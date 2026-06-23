@@ -10,6 +10,7 @@
         "aos": "^2.3.4",
         "daisyui": "^5.5.18",
         "htmx.org": "^4.0.0-beta4",
+        "mermaid": "^11.15.0",
         "tailwindcss": "^4.1.18",
         "typescript": "^5.9.3",
         "vite": "^7.3.1"
@@ -17,5 +18,8 @@
     "scripts": {
         "dev": "vite dev",
         "build": "vite build"
+    },
+    "allowScripts": {
+        "esbuild@0.27.3": true
     }
 }

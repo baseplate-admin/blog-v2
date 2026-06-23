@@ -26,6 +26,7 @@ from apps.blog.blocks import (
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSImageBlock,
+    AOSMermaidBlock,
     AOSQuoteBlock,
     AOSStepsBlock,
     AOSStatsGridBlock,
@@ -161,8 +162,9 @@ class BlogPage(Page):
             ("aos_steps", AOSStepsBlock()),
             ("aos_alert", AOSAlertBlock()),
             ("aos_tooltip", AOSTooltipWrapperBlock()),
+            ("aos_mermaid", AOSMermaidBlock()),
         ],
-        help_text="Main content of the post. Use paragraphs, images, code blocks, and animated AOS blocks.",
+        help_text="Main content of the post. Use paragraphs, images, code blocks, mermaid diagrams, and animated AOS blocks.",
     )
     tags: ClusterTaggableManager = ClusterTaggableManager(through=BlogPageTag, blank=True, help_text="Tags for categorizing this post.")
 

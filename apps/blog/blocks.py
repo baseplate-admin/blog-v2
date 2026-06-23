@@ -289,6 +289,30 @@ class AOSAlertBlock(AOSBlock):
         group = "Interactive"
 
 
+class AOSMermaidBlock(AOSBlock):
+    """Mermaid.js diagram block — renders flowcharts, sequence diagrams, Gantt charts, etc."""
+    code = blocks.TextBlock(
+        required=True,
+        help_text="Mermaid diagram syntax. See mermaid.js live editor for examples.",
+    )
+    theme = blocks.ChoiceBlock(
+        choices=[
+            ("dark", "Dark"),
+            ("light", "Light"),
+            ("forest", "Forest"),
+            ("neutral", "Neutral"),
+        ],
+        default="dark",
+        help_text="Diagram color theme.",
+    )
+
+    class Meta:
+        icon = "chart"
+        label = "Mermaid Diagram"
+        template = "blog/blocks/aos_mermaid.html"
+        group = "Media"
+
+
 class AOSTooltipWrapperBlock(blocks.StructBlock):
     inner_text = blocks.CharBlock(
         required=True, help_text="The visible text or label.",
