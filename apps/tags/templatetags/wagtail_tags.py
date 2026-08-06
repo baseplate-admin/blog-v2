@@ -34,3 +34,5 @@ def wagtail_url_from_model_slug(app_model: str, slug: str | None = None) -> str 
     if page:
         return page.url
     return None
+
+

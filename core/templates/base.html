@@ -1,11 +1,13 @@
 {% load django_vite wagtailcore_tags wagtailuserbar wagtail_tags site_tags %}
 
-{# Resolve nav URLs once #}
+{# Resolve nav URLs once — all nav links resolved from Wagtail #}
 {% wagtail_url_from_model_slug 'blog.BlogIndexPage' as blog_url %}
 {% wagtail_url_from_model_slug 'projects.ProjectIndexPage' as projects_url %}
+{% wagtail_url_from_model_slug 'wagtailcore.Page' 'about' as about_url %}
+{% wagtail_url_from_model_slug 'wagtailcore.Page' 'contact' as contact_url %}
 
 {# Nav items + current path — used in navbar, mobile menu, footer #}
-{% with about="/about/" blog=blog_url projects=projects_url contact="/contact/" current_path=request.path %}
+{% with about=about_url blog=blog_url projects=projects_url contact=contact_url current_path=request.path %}
 
     <!DOCTYPE html>
     <html lang="en" data-theme="tanstack-dark">
@@ -89,10 +91,18 @@
                 {# Desktop nav links #}
                     <div class="navbar-center hidden md:flex">
                         <div class="flex items-center gap-6">
-                            <a href="{{ about }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">About</a>
-                            <a href="{{ blog }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Blog</a>
-                            <a href="{{ projects }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Projects</a>
-                            <a href="{{ contact }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</a>
+                            {% if about %}
+                                <a href="{{ about }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">About</a>
+                            {% endif %}
+                            {% if blog %}
+                                <a href="{{ blog }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Blog</a>
+                            {% endif %}
+                            {% if projects %}
+                                <a href="{{ projects }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Projects</a>
+                            {% endif %}
+                            {% if contact %}
+                                <a href="{{ contact }}" class="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</a>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -138,10 +148,18 @@
         {# Mobile dropdown menu #}
                 <div id="mobile-menu" class="hidden absolute right-4 top-full pt-2 z-50">
                     <div class="menu bg-base-100 rounded-box border border-base-300 shadow-xl p-2 w-56 animate-in fade-in slide-in-from-top-2 duration-200">
-                        <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
-                        <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
-                        <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
-                        <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
+                        {% if about %}
+                            <a href="{{ about }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">About</a>
+                        {% endif %}
+                        {% if blog %}
+                            <a href="{{ blog }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Blog</a>
+                        {% endif %}
+                        {% if projects %}
+                            <a href="{{ projects }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Projects</a>
+                        {% endif %}
+                        {% if contact %}
+                            <a href="{{ contact }}" class="rounded-lg hover:bg-base-200 px-3 py-2 text-sm">Contact</a>
+                        {% endif %}
                         <div class="pt-2 mt-2 border-t border-base-300">
                             <button id="mobile-theme-toggle" class="flex items-center gap-2 cursor-pointer p-2 w-full rounded-lg hover:bg-base-200 text-sm text-base-content/70">
                                 <span class="mobile-theme-dark inline">{% icon "moon" %}</span>

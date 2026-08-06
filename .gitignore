@@ -14,3 +14,6 @@ static
 staticfiles
 db.sqlite3
 .playwright-mcp
+
+# Environment variables
+.env
