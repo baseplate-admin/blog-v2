@@ -4,6 +4,9 @@
 *.sqlite3
 
 # Python and others
+/.claude/
+/CLAUDE.md
+/NEXT_PLANS.md
 __pycache__
 *.pyc
 .DS_Store
