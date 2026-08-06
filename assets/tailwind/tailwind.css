@@ -175,7 +175,7 @@
 .code-highlight .ni { @apply text-success/80; }
 .code-highlight .ne { @apply text-warning/80; }
 .code-highlight .nt { @apply text-primary font-semibold; }
-.code-highlight .nv, .code-highlight .vc, .code-highlight .vi { @apply text-red/70; }
+.code-highlight .nv, .code-highlight .vc, .code-highlight .vi { @apply text-error/70; }
 .code-highlight .vg { @apply text-warning/70; }
 .code-highlight .bp { @apply text-success italic; }
 .code-highlight .w { @apply text-accent/40; }
