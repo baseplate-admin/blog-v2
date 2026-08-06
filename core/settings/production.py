@@ -28,7 +28,7 @@ requests_cache.install_cache(
 )
 
 # Backblaze B2 media storage (S3-compatible)
-_required_env = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_STORAGE_BUCKET_NAME"]
+_required_env = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_STORAGE_BUCKET_NAME", "AWS_S3_ENDPOINT_URL"]
 _missing = [v for v in _required_env if not os.getenv(v)]
 if _missing:
     raise ImproperlyConfigured(
@@ -38,13 +38,13 @@ if _missing:
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL", "https://s3.backblazeb2.com")
-AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-005")
-AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN", "")
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")
+AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN")
 AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
 AWS_DEFAULT_ACL = "public-read"
 AWS_S3_USE_SSL = True
-AWS_LOCATION = os.getenv("AWS_LOCATION", "media")
+AWS_LOCATION = os.getenv("AWS_LOCATION")
 
 STORAGES["default"]["BACKEND"] = "storages.backends.s3.S3Boto3Storage"
 
