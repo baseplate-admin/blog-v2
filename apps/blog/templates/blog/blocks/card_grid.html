@@ -1,5 +1,5 @@
-<div data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
-  class="my-10">
+{% load site_tags %}
+<div class="my-10">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for card in self.block.value.cards %}
       <div class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 p-6">

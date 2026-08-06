@@ -118,8 +118,8 @@
   body {
     font-family: "Plus Jakarta Sans", "Inter", "Hind Siliguri";
   }
-  code, pre, kbd, [class*="font-mono"] {
-    font-family: "JetBrains Mono";
+  code, pre, kbd, [class*="font-mono"], pre.line-numbers code {
+    font-family: "JetBrains Mono" !important;
   }
   /* Smooth theme transitions */
   body, nav, article, dialog, .modal-box, .menu, footer {
@@ -133,3 +133,49 @@
     linear-gradient(to right, oklch(var(--b3) / 0.3) 1px, transparent 1px),
     linear-gradient(to bottom, oklch(var(--b3) / 0.3) 1px, transparent 1px);
 }
+
+/* ── Pygments syntax highlighting (Lovelace theme) ── */
+/* Swap theme by editing these @apply rules. Source: pygments lovelace style. */
+
+.code-highlight pre {
+  @apply leading-relaxed p-4 m-0 text-sm;
+  font-family: "JetBrains Mono Variable", monospace !important;
+}
+
+.code-highlight td.linenos {
+  @apply pr-2 pl-2 text-right select-none text-base-content/30;
+  min-width: 2.5rem;
+}
+
+.code-highlight .hll { @apply bg-base-200; }
+.code-highlight .c, .code-highlight .cm, .code-highlight .cpf, .code-highlight .c1, .code-highlight .cs { @apply text-base-content/50 italic; }
+.code-highlight .ch { @apply text-success/80 italic; }
+.code-highlight .cp { @apply text-success; }
+.code-highlight .err { @apply bg-error/30 text-error; }
+.code-highlight .k, .code-highlight .kn, .code-highlight .kp, .code-highlight .kr { @apply text-primary font-semibold; }
+.code-highlight .kd, .code-highlight .kt { @apply text-primary italic font-semibold; }
+.code-highlight .kc { @apply text-base-content/60 italic; }
+.code-highlight .o, .code-highlight .ow, .code-highlight .pm, .code-highlight .p, .code-highlight .gh, .code-highlight .go, .code-highlight .gp, .code-highlight .gu { @apply text-base-content/40; }
+.code-highlight .gd, .code-highlight .gr { @apply text-error; }
+.code-highlight .ge { @apply italic; }
+.code-highlight .ges { @apply italic font-bold; }
+.code-highlight .gi { @apply text-success; }
+.code-highlight .gs { @apply font-bold; }
+.code-highlight .gt { @apply text-primary; }
+.code-highlight .m, .code-highlight .mb, .code-highlight .mf, .code-highlight .mh, .code-highlight .mi, .code-highlight .mo, .code-highlight .il, .code-highlight .sa { @apply text-base-content/60; }
+.code-highlight .s, .code-highlight .sb, .code-highlight .s2, .code-highlight .sh, .code-highlight .s1, .code-highlight .ss { @apply text-error/80; }
+.code-highlight .sc { @apply text-primary/80; }
+.code-highlight .dl, .code-highlight .fm, .code-highlight .vm, .code-highlight .sd { @apply text-accent/80 italic; }
+.code-highlight .se { @apply text-success; }
+.code-highlight .si { @apply text-error/80 underline; }
+.code-highlight .sx, .code-highlight .sr { @apply text-primary/80; }
+.code-highlight .na, .code-highlight .nb, .code-highlight .nl, .code-highlight .nn { @apply text-success; }
+.code-highlight .nc, .code-highlight .nd { @apply text-info/80; }
+.code-highlight .no, .code-highlight .nf { @apply text-accent/80; }
+.code-highlight .ni { @apply text-success/80; }
+.code-highlight .ne { @apply text-warning/80; }
+.code-highlight .nt { @apply text-primary font-semibold; }
+.code-highlight .nv, .code-highlight .vc, .code-highlight .vi { @apply text-red/70; }
+.code-highlight .vg { @apply text-warning/70; }
+.code-highlight .bp { @apply text-success italic; }
+.code-highlight .w { @apply text-accent/40; }

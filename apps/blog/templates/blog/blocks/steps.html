@@ -1,6 +1,5 @@
 {% load site_tags %}
-<div data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
-  class="my-8">
+<div class="my-8">
   {% with vertical=self.block.value.vertical active=self.block.value.active_step %}
   <ul class="steps {% if vertical %}steps-vertical{% else %}steps-horizontal{% endif %} w-full">
     {% for step in self.block.value.steps %}

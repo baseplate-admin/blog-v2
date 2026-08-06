@@ -1,7 +1,9 @@
 from typing import Any
 
 from django.db import models
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList
 from wagtail.fields import RichTextField
@@ -34,6 +36,10 @@ class ProjectIndexPage(Page):
 
     subpage_types: list[str] = ["ProjectPage"]
     parent_page_types: list[type[Page]] = [HomePage]
+
+    @method_decorator(cache_page(300))
+    def serve(self, request: HttpRequest) -> HttpResponse:
+        return super().serve(request)
 
     def get_context(self, request: HttpRequest) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context(request)
@@ -92,3 +98,7 @@ class ProjectPage(Page):
 
     parent_page_types: list[type[Page]] = [ProjectIndexPage]
     subpage_types: list[str] = []
+
+    @method_decorator(cache_page(300))
+    def serve(self, request: HttpRequest) -> HttpResponse:
+        return super().serve(request)

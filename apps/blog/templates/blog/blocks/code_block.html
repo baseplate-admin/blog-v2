@@ -1,0 +1,35 @@
+{# Pygments code block - server-side highlighted, class-based CSS, zero JS #}
+{% load wagtailcore_tags %}
+
+<div class="code-block-wrapper relative my-8"
+     {% if self.animation %}data-aos="{{ self.animation }}" data-aos-delay="{{ self.delay }}"{% endif %}>
+
+    {# Language badge header #}
+    <div class="flex items-center justify-between px-4 py-2 bg-base-200/80 border border-dotted border-base-300/50 rounded-t-xl">
+        <div class="flex items-center gap-2">
+            <span class="text-primary/40">{% icon "code" size=12 %}</span>
+            <span class="text-xs font-mono text-base-content/40 uppercase tracking-wider">{{ language_display }}</span>
+        </div>
+        <button
+            type="button"
+            class="code-copy-btn text-xs font-mono text-base-content/30 hover:text-primary transition-colors flex items-center gap-1"
+            onclick="this.closest('.code-block-wrapper').querySelector('pre code') && navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('pre code').textContent); this.textContent = this.textContent === 'Copy' ? 'Copied!' : 'Copy'; setTimeout(() => this.textContent = 'Copy', 2000);"
+        >
+            {% icon "bookmark" size=10 %}
+            Copy
+        </button>
+    </div>
+
+    {# Highlighted code body #}
+    <div class="overflow-x-auto bg-base-200/50 border-x border-b border-dotted border-base-300/50 rounded-b-xl">
+        {{ highlighted|safe }}
+    </div>
+
+    {# Optional footer #}
+    {% if footer_text %}
+        <div class="mt-3 px-4 flex items-start gap-2 text-sm text-base-content/40">
+            <span class="text-primary/30 mt-0.5">{% icon "info" size=12 %}</span>
+            <p class="leading-relaxed">{{ footer_text }}</p>
+        </div>
+    {% endif %}
+</div>

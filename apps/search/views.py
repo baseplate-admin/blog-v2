@@ -1,6 +1,8 @@
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from wagtail.search import query as search_query
 
@@ -10,6 +12,7 @@ MIN_QUERY_LEN: int = 1
 MAX_RESULTS: int = 10
 
 
+@cache_page(60)
 def search_view(request: HttpRequest) -> HttpResponse:
     """Search blog pages by title, intro and body. Returns partial for HTMX swap."""
     query_string: str = request.GET.get("q", "").strip()

@@ -1,6 +1,5 @@
 {% load site_tags %}
-<div data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
-  class="my-8">
+<div class="my-8">
   {% with compact=self.block.value.compact %}
   <ul class="timeline {% if compact %}timeline-compact{% endif %} timeline-vertical">
     {% for item in self.block.value.items %}

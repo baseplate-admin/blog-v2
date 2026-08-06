@@ -1,5 +1,5 @@
-<div data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
-  class="alert border border-base-300/50 bg-base-200/50 my-6">
+{% load site_tags %}
+<div class="alert border border-base-300/50 bg-base-200/50 my-6">
   {% with variant=self.block.value.variant %}
     {% if variant == "warning" %}
       <span class="text-warning">{% icon "lightning-bolt" %}</span>

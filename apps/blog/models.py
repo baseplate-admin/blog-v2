@@ -1,9 +1,12 @@
 
+from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
+from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
+from django.views.decorators.cache import cache_page
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
@@ -15,25 +18,24 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
 from wagtail.search import index
-from wagtailcodeblock.blocks import CodeBlock
-
 import readtime
 
 from apps.blog.blocks import (
-    AOSAlertBlock,
-    AOSCardGridBlock,
-    AOSCalloutBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
-    AOSImageBlock,
-    AOSMermaidBlock,
     AOSQuoteBlock,
-    AOSStepsBlock,
-    AOSStatsGridBlock,
-    AOSSeparatorBlock,
-    AOSTabBlock,
-    AOSTimelineBlock,
-    AOSTooltipWrapperBlock,
+    AlertBlock,
+    CardGridBlock,
+    CalloutBlock,
+    ImageBlock,
+    MermaidBlock,
+    PygmentsCodeBlock,
+    SeparatorBlock,
+    StepsBlock,
+    StatsGridBlock,
+    TabsBlock,
+    TimelineBlock,
+    TooltipBlock,
 )
 from apps.home.models import HomePage
 from apps.site_settings.models import LicenseOptions
@@ -75,6 +77,10 @@ class BlogIndexPage(Page):
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ]
+
+    @method_decorator(cache_page(300))  # Cache for 5 minutes
+    def serve(self, request: HttpRequest) -> HttpResponse:
+        return super().serve(request)
 
     def get_context(self, request: HttpRequest) -> dict[str, object]:
         # Update context to include only published posts, ordered by reverse-chron
@@ -149,21 +155,21 @@ class BlogPage(Page):
         [
             ("paragraph", RichTextBlock(label="Paragraph")),
             ("image", ImageChooserBlock(label="Image")),
-            ("code", CodeBlock(label="Code")),
+            ("code", PygmentsCodeBlock()),
             ("aos_heading", AOSHeadingBlock()),
             ("aos_quote", AOSQuoteBlock()),
             ("aos_highlight", AOSHighlightBlock()),
-            ("aos_separator", AOSSeparatorBlock()),
-            ("aos_image", AOSImageBlock()),
-            ("aos_callout", AOSCalloutBlock()),
-            ("aos_stats_grid", AOSStatsGridBlock()),
-            ("aos_card_grid", AOSCardGridBlock()),
-            ("aos_tab", AOSTabBlock()),
-            ("aos_timeline", AOSTimelineBlock()),
-            ("aos_steps", AOSStepsBlock()),
-            ("aos_alert", AOSAlertBlock()),
-            ("aos_tooltip", AOSTooltipWrapperBlock()),
-            ("aos_mermaid", AOSMermaidBlock()),
+            ("separator", SeparatorBlock()),
+            ("inline_image", ImageBlock()),
+            ("callout", CalloutBlock()),
+            ("stats_grid", StatsGridBlock()),
+            ("card_grid", CardGridBlock()),
+            ("tabs", TabsBlock()),
+            ("timeline", TimelineBlock()),
+            ("steps", StepsBlock()),
+            ("alert", AlertBlock()),
+            ("tooltip", TooltipBlock()),
+            ("mermaid", MermaidBlock()),
         ],
         help_text="Main content of the post. Use paragraphs, images, code blocks, mermaid diagrams, and animated AOS blocks.",
     )
@@ -211,27 +217,39 @@ class BlogPage(Page):
 
     subpage_types: list[str] = []
 
+    @method_decorator(cache_page(300))  # Cache for 5 minutes
+    def serve(self, request: HttpRequest) -> HttpResponse:
+        return super().serve(request)
+
     @cached_property
     def author_avatar_url(self) -> str:
-        import hashlib
+        from django.contrib.auth import get_user_model
+        from django.urls import reverse
 
-        email: str = self.owner.email if self.owner and self.owner.email else ""
-        hash_email: str = hashlib.sha256(email.lower().encode("utf-8")).hexdigest()
-        return f"https://seccdn.libravatar.org/avatar/{hash_email}?s=200&d=retro"
+        User = get_user_model()
+        author = User.objects.first()
+        if author:
+            return reverse("author_avatar", args=[author.id])
+        return ""
 
     @cached_property
     def reading_time(self) -> str:
+        # Use Redis cache keyed by page state
+        cached = cache.get(f"reading_time_{self.cache_key}")
+        if cached:
+            return cached  # type: ignore[return-value]
+
         parts: list[str] = []
 
         for block in self.body:
             if block.block_type == "paragraph":
-                # RichText stores HTML
                 parts.append(strip_tags(block.value.source))
             elif block.block_type == "code":
                 parts.append(str(block.value))
 
         text: str = "\n\n".join(parts)
         result = readtime.of_text(text)
+        cache.set(f"reading_time_{self.cache_key}", result.text, 3600)
         return result.text
 
     def get_toc_headings(self) -> list[dict[str, str]]:

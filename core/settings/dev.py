@@ -40,6 +40,13 @@ DATABASES = {
 
 WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 
+# requests-cache with in-memory backend for dev
+import requests_cache
+requests_cache.install_cache(
+    backend="memory",
+    expire_after=3600,  # 1 hour
+)
+
 
 try:
     from .local import *

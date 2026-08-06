@@ -11,6 +11,38 @@ STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesSt
 
 SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
 
+# Redis cache backend
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/0"),
+    }
+}
+
+# requests-cache backend for external HTTP calls (avatar, etc.)
+import requests_cache
+requests_cache.install_cache(
+    backend=f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/1",
+    expire_after=86400,  # 24 hours
+)
+
+# S3 media storage
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "auto")
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL", "")
+AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN", "")
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+AWS_DEFAULT_ACL = "private"
+AWS_S3_USE_SSL = True
+AWS_S3_ADDRESSING_STYLE = os.getenv("AWS_S3_ADDRESSING_STYLE", "auto")
+AWS_LOCATION = os.getenv("AWS_LOCATION", "media")
+AWS_S3_SIGNATURE_VERSION = os.getenv("AWS_S3_SIGNATURE_VERSION", "s3v4")
+AWS_S3_VERIFY = os.getenv("AWS_S3_VERIFY", "True") == "True"
+
+STORAGES["default"]["BACKEND"] = "storages.backends.s3.S3Boto3Storage"
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")

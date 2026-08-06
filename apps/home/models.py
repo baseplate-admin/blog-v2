@@ -2,7 +2,9 @@
 from typing import Any
 
 from django.db import models
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from wagtail.admin.panels import FieldPanel, ObjectList
 from wagtail.fields import RichTextField, StreamField
@@ -12,19 +14,20 @@ from wagtail.search import index
 from .blocks import CTABlock
 
 from apps.blog.blocks import (
-    AOSAlertBlock,
-    AOSCardGridBlock,
-    AOSCalloutBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
-    AOSImageBlock,
     AOSQuoteBlock,
-    AOSStepsBlock,
-    AOSStatsGridBlock,
-    AOSSeparatorBlock,
-    AOSTabBlock,
-    AOSTimelineBlock,
-    AOSTooltipWrapperBlock,
+    AlertBlock,
+    CardGridBlock,
+    CalloutBlock,
+    ImageBlock,
+    MermaidBlock,
+    SeparatorBlock,
+    StepsBlock,
+    StatsGridBlock,
+    TabsBlock,
+    TimelineBlock,
+    TooltipBlock,
 )
 
 
@@ -65,19 +68,20 @@ class HomePage(Page):
             ("aos_heading", AOSHeadingBlock()),
             ("aos_quote", AOSQuoteBlock()),
             ("aos_highlight", AOSHighlightBlock()),
-            ("aos_separator", AOSSeparatorBlock()),
-            ("aos_image", AOSImageBlock()),
-            ("aos_callout", AOSCalloutBlock()),
-            ("aos_stats_grid", AOSStatsGridBlock()),
-            ("aos_card_grid", AOSCardGridBlock()),
-            ("aos_tab", AOSTabBlock()),
-            ("aos_timeline", AOSTimelineBlock()),
-            ("aos_steps", AOSStepsBlock()),
-            ("aos_alert", AOSAlertBlock()),
-            ("aos_tooltip", AOSTooltipWrapperBlock()),
+            ("separator", SeparatorBlock()),
+            ("image", ImageBlock()),
+            ("callout", CalloutBlock()),
+            ("stats_grid", StatsGridBlock()),
+            ("card_grid", CardGridBlock()),
+            ("tabs", TabsBlock()),
+            ("timeline", TimelineBlock()),
+            ("steps", StepsBlock()),
+            ("alert", AlertBlock()),
+            ("tooltip", TooltipBlock()),
+            ("mermaid", MermaidBlock()),
         ],
         blank=True,
-        help_text="Animated content blocks for the homepage.",
+        help_text="Content blocks for the homepage.",
     )
 
     content_panels: list[FieldPanel] = Page.content_panels + [
@@ -92,6 +96,10 @@ class HomePage(Page):
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ]
+
+    @method_decorator(cache_page(300))
+    def serve(self, request: HttpRequest) -> HttpResponse:
+        return super().serve(request)
 
     def get_context(self, request: HttpRequest) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context(request)

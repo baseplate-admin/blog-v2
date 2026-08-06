@@ -17,30 +17,57 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    container_name: redis_cache
+    image: redis:8-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: blog
     restart: unless-stopped
-   
+
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: blog
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       DJANGO_ALLOWED_HOSTS: 'blog.baseplate-admin.dev,localhost,127.0.0.1,blog'
       DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.baseplate-admin.dev,http://blog:8000'
+      # S3 media storage
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME:-auto}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
+      AWS_S3_CUSTOM_DOMAIN: ${AWS_S3_CUSTOM_DOMAIN:-}
+      AWS_S3_ADDRESSING_STYLE: ${AWS_S3_ADDRESSING_STYLE:-auto}
+      AWS_S3_SIGNATURE_VERSION: ${AWS_S3_SIGNATURE_VERSION:-s3v4}
     depends_on:
           postgres:
+            condition: service_healthy
+          redis:
             condition: service_healthy
     networks:
       - backend_net
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=proxy" 
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.blog.rule=Host(`blog.baseplate-admin.dev`)"
       - "traefik.http.routers.blog.entrypoints=websecure"
       - "traefik.http.routers.blog.tls=true"
@@ -56,3 +83,4 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:
