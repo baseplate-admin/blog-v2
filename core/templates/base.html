@@ -7,7 +7,7 @@
 {% wagtail_url_from_model_slug 'wagtailcore.Page' 'contact' as contact_url %}
 
 {# Nav items + current path — used in navbar, mobile menu, footer #}
-{% with about=about_url blog=blog_url projects=projects_url contact=contact_url current_path=request.path %}
+{% with about=about_url|default:'' blog=blog_url|default:'' projects=projects_url|default:'' contact=contact_url|default:'' current_path=request.path %}
 
     <!DOCTYPE html>
     <html lang="en" data-theme="tanstack-dark">

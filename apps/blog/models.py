@@ -36,6 +36,7 @@ from apps.blog.blocks import (
     AOSTooltipWrapperBlock,
 )
 from apps.home.models import HomePage
+from apps.site_settings.models import LicenseOptions
 
 
 class BlogPageTag(TaggedItemBase):
@@ -167,6 +168,12 @@ class BlogPage(Page):
         help_text="Main content of the post. Use paragraphs, images, code blocks, mermaid diagrams, and animated AOS blocks.",
     )
     tags: ClusterTaggableManager = ClusterTaggableManager(through=BlogPageTag, blank=True, help_text="Tags for categorizing this post.")
+    license_type: models.CharField = models.CharField(
+        max_length=20,
+        choices=LicenseOptions.choices,
+        default=LicenseOptions.ALL_RIGHTS,
+        help_text="License for this post.",
+    )
 
     feed_image: models.ForeignKey = models.ForeignKey(
         "wagtailimages.Image",
@@ -188,6 +195,7 @@ class BlogPage(Page):
                 FieldPanel("date"),
                 FieldPanel("mood"),
                 FieldPanel("tags"),
+                FieldPanel("license_type"),
             ],
             heading="Blog information",
         ),

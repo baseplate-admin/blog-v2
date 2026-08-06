@@ -11,9 +11,14 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 class LicenseOptions(models.TextChoices):
     ALL_RIGHTS: str = "all_rights", "All Rights Reserved"
     MIT: str = "mit", "MIT License"
-    CC_BY: str = "cc_by", "Creative Commons BY"
-    CC_BY_SA: str = "cc_by_sa", "Creative Commons BY-SA"
+    APACHE_2: str = "apache_2_0", "Apache License 2.0"
     GPL_3: str = "gpl_3", "GNU GPL v3"
+    BSD_3: str = "bsd_3_clause", "BSD 3-Clause"
+    CC_BY: str = "cc_by", "CC BY 4.0"
+    CC_BY_SA: str = "cc_by_sa", "CC BY-SA 4.0"
+    CC_BY_NC: str = "cc_by_nc", "CC BY-NC 4.0"
+    CC0: str = "cc0", "CC0 1.0"
+    PUBLIC_DOMAIN: str = "public_domain", "Public Domain"
 
 
 @register_setting

@@ -295,7 +295,14 @@
                                     <span class="text-base-content/20">{% icon "sparkles" size=3 %}</span>
                                     <span class="text-base-content/15">{% icon "sparkles" size=3 %}</span>
                                 </div>
-                                <p class="text-xs text-base-content/20 font-mono tracking-widest uppercase">End of article</p>
+                                {# License badge #}
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
+                                    <span class="text-xs text-base-content/30 font-mono uppercase tracking-wider">Licensed Under</span>
+                                    <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
+                                </div>
+                                {% license_badge page.license_type %}
+                                <p class="text-xs text-base-content/20 font-mono tracking-widest uppercase mt-4">End of article</p>
                             </div>
                         </div>
                     </div>

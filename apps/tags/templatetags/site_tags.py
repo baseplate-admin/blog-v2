@@ -86,6 +86,32 @@ MOOD_COLORS: dict[str, tuple[str, str]] = {
     "review": ("bg-teal-500/10 text-teal-400 border-teal-500/20", "bg-teal-400"),
 }
 
+LICENSE_COLORS: dict[str, tuple[str, str]] = {
+    "all_rights": ("bg-red-500/10 text-red-400 border-red-500/20", "bg-red-400"),
+    "mit": ("bg-green-500/10 text-green-400 border-green-500/20", "bg-green-400"),
+    "apache_2_0": ("bg-blue-500/10 text-blue-400 border-blue-500/20", "bg-blue-400"),
+    "gpl_3": ("bg-orange-500/10 text-orange-400 border-orange-500/20", "bg-orange-400"),
+    "bsd_3_clause": ("bg-cyan-500/10 text-cyan-400 border-cyan-500/20", "bg-cyan-400"),
+    "cc_by": ("bg-yellow-500/10 text-yellow-400 border-yellow-500/20", "bg-yellow-400"),
+    "cc_by_sa": ("bg-purple-500/10 text-purple-400 border-purple-500/20", "bg-purple-400"),
+    "cc_by_nc": ("bg-pink-500/10 text-pink-400 border-pink-500/20", "bg-pink-400"),
+    "cc0": ("bg-teal-500/10 text-teal-400 border-teal-500/20", "bg-teal-400"),
+    "public_domain": ("bg-emerald-500/10 text-emerald-400 border-emerald-500/20", "bg-emerald-400"),
+}
+
+LICENSE_LABELS: dict[str, str] = {
+    "all_rights": "All Rights Reserved",
+    "mit": "MIT License",
+    "apache_2_0": "Apache License 2.0",
+    "gpl_3": "GNU GPL v3",
+    "bsd_3_clause": "BSD 3-Clause",
+    "cc_by": "CC BY 4.0",
+    "cc_by_sa": "CC BY-SA 4.0",
+    "cc_by_nc": "CC BY-NC 4.0",
+    "cc0": "CC0 1.0",
+    "public_domain": "Public Domain",
+}
+
 MOOD_LABELS: dict[str, str] = {
     "tech": "Technology",
     "personal": "Personal",
@@ -107,5 +133,18 @@ def mood_badge(context: template.RequestContext, mood: str, extra_class: str | N
         "mood_bg": bg_class,
         "mood_dot": dot_color,
         "mood_label": label,
+        "extra_class": extra_class or "",
+    }
+
+
+@register.inclusion_tag("tags/license_badge.html", takes_context=False)
+def license_badge(license_key: str, extra_class: str | None = None) -> dict[str, object]:
+    """Render a license badge. Usage: {% license_badge page.license_type %}"""
+    bg_class, dot_color = LICENSE_COLORS.get(license_key, LICENSE_COLORS["all_rights"])
+    label = LICENSE_LABELS.get(license_key, license_key.replace("_", " ").title())
+    return {
+        "license_bg": bg_class,
+        "license_dot": dot_color,
+        "license_label": label,
         "extra_class": extra_class or "",
     }
