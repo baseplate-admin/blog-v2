@@ -30,8 +30,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: blog
-      DJANGO_ALLOWED_HOSTS: 'blog.zad.bd,localhost,127.0.0.1,blog'
-      DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.zad.bd,http://blog:8000'
+      DJANGO_ALLOWED_HOSTS: 'blog.baseplate-admin.dev,localhost,127.0.0.1,blog'
+      DJANGO_CSRF_TRUSTED_ORIGINS: 'https://blog.baseplate-admin.dev,http://blog:8000'
     depends_on:
           postgres:
             condition: service_healthy
@@ -41,7 +41,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy" 
-      - "traefik.http.routers.blog.rule=Host(`blog.zad.bd`)"
+      - "traefik.http.routers.blog.rule=Host(`blog.baseplate-admin.dev`)"
       - "traefik.http.routers.blog.entrypoints=websecure"
       - "traefik.http.routers.blog.tls=true"
       - "traefik.http.routers.blog.tls.certresolver=letsencrypt"
