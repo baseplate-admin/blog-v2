@@ -39,6 +39,9 @@ COPY --from=frontend-builder /app/static /app/static
 
 WORKDIR /app
 
+# Remove unneeded build artifacts
+RUN rm -rf /app/assets /app/.claude /app/CLAUDE.md /app/NEXT_PLANS.md
+
 # Place executables in the environment at the front of the path
 
 ENV PATH="/app/.venv/bin:$PATH"
