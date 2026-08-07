@@ -3,10 +3,7 @@ FROM node:26-alpine AS frontend-builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-# Only copy source needed for the build — rest comes from builder stage
-COPY assets/ assets/
-COPY public/ public/
-COPY vite.config.ts tsconfig.json vite-env.d.ts ./
+COPY . .
 # This will create the /app/static/ directory containing manifest.json and assets
 RUN npm run build
 
@@ -54,7 +51,7 @@ RUN chmod +x /app/scripts/start_server.sh
 # Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
-RUN python manage.py collectstatic --noinput --clear --link
+RUN python manage.py collectstatic --noinput --link
 
 EXPOSE 8000
 ENTRYPOINT ["/app/scripts/start_server.sh"]
