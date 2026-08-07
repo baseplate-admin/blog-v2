@@ -115,8 +115,8 @@ class PygmentsCodeBlock(blocks.StructBlock):
         template = "blog/blocks/code_block.html"
         group = "Interactive"
 
-    def get_context(self, value, name=None, **kwargs):
-        context = super().get_context(value, name=name, **kwargs)
+    def get_context(self, value, **kwargs):
+        context = super().get_context(value, **kwargs)
         language = value.data.get("language", "text")
         code = value.data.get("code", "")
         line_numbers = value.data.get("line_numbers", False)
