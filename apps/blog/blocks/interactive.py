@@ -132,6 +132,7 @@ class PygmentsCodeBlock(blocks.StructBlock):
                 break
 
         context["highlighted"] = highlight_code(code, language, line_numbers)
+        context["raw_code"] = code
         context["language_display"] = lang_display
         context["footer_text"] = footer_text
         return context
