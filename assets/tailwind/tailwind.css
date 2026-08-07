@@ -136,6 +136,7 @@
 
 /* ── Pygments syntax highlighting — CodeMirror 6 style ── */
 /* Swap theme by editing these @apply rules. Source: pygments lovelace style. */
+/* Uses inline line numbers — line number and code share the same <td>. */
 
 .code-highlight {
   & pre {
@@ -143,52 +144,16 @@
     font-family: "JetBrains Mono Variable", monospace !important;
   }
 
-  & table {
-    @apply m-0 border-collapse border-spacing-0 w-full;
-  }
-
-  /* Line number gutter — CodeMirror 6 style: subtle, right-aligned, muted */
-  & td.linenos {
-    @apply pr-3 pl-2 text-right select-none text-base-content/20 rounded-sm align-top border-r border-base-300/15;
+  /* Line number span — CodeMirror 6 gutter style: subtle, muted, fixed-width */
+  & .ln {
+    @apply inline-block select-none text-base-content/20 text-right;
     min-width: 2.5rem;
     width: 2.5rem;
     max-width: 2.5rem;
     font-size: 0.8em;
-
-    & > div {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
-    & pre {
-      @apply p-0 m-0 font-mono leading-relaxed py-4;
-    }
-  }
-
-  /* Code area */
-  & td.code {
-    @apply p-0 align-top;
-
-    & pre {
-      @apply py-4 pl-0 pr-4;
-    }
-  }
-
-  /* Hover row highlight — CodeMirror active line style */
-  & tr {
-    & td {
-      @apply transition-colors duration-150;
-    }
-
-    &:hover td.linenos,
-    &.cm-active td.linenos {
-      @apply text-base-content/40;
-    }
-
-    &:hover td.code,
-    &.cm-active td.code {
-      @apply bg-base-200/50;
-    }
+    padding-right: 0.75rem;
+    border-right: 1px solid oklch(var(--b3) / 0.15);
+    margin-right: 0.75rem;
   }
 
   /* Syntax tokens */
