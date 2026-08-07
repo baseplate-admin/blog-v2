@@ -67,7 +67,6 @@ def highlight_code(code: str, language: str) -> str:
 
     Returns class-based HTML only - no inline styles. Theme is controlled
     via Tailwind @apply rules in tailwind.css for easy swapping.
-    Line numbers always enabled.
     """
     try:
         lexer = get_lexer_by_name(language, stripnl=False)
@@ -77,7 +76,6 @@ def highlight_code(code: str, language: str) -> str:
     formatter = HtmlFormatter(
         style=get_style_by_name("lovelace"),
         cssclass="code-highlight",
-        linenos="inline",
         noclasses=False,
         full=False,
         title=False,
@@ -86,6 +84,17 @@ def highlight_code(code: str, language: str) -> str:
         wrapcode=False,
     )
     return pygments_highlight(code, lexer, formatter)
+
+
+def strip_line_numbers(code: str) -> str:
+    """Remove leading line numbers from each line of code."""
+    import re
+    lines = code.split("\n")
+    result: list[str] = []
+    for line in lines:
+        stripped = re.sub(r"^\s*\d+\s+", "", line, count=1)
+        result.append(stripped)
+    return "\n".join(result)
 
 
 class PygmentsCodeBlock(blocks.StructBlock):
@@ -127,7 +136,7 @@ class PygmentsCodeBlock(blocks.StructBlock):
                 break
 
         context["highlighted"] = highlight_code(code, language)
-        context["raw_code"] = code
+        context["raw_code"] = strip_line_numbers(code)
         context["language_display"] = lang_display
         context["footer_text"] = footer_text
         return context
