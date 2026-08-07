@@ -2,9 +2,9 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
-from django.utils import timezone
+import requests
 
-from core.requests import get_cached_session
+from django.utils import timezone
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -74,7 +74,6 @@ def parse_github_url(url: str) -> str | None:
 def fetch_repo_data(repo_url: str) -> GitHubRepoData:
     """Fetch repository metadata from GitHub API.
 
-    Uses the cached session so results are stored in Redis for 24 hours by default.
     Auth token (if configured) bumps rate limit from 60 to 1000 req/hr.
     Returns a GitHubRepoData instance with error set if fetch fails.
     """
@@ -82,7 +81,6 @@ def fetch_repo_data(repo_url: str) -> GitHubRepoData:
     if not owner_repo:
         return GitHubRepoData(error="Invalid GitHub URL")
 
-    session = get_cached_session()
     api_url: str = f"{GITHUB_API_BASE}/repos/{owner_repo}"
 
     # Add auth header if token is configured
@@ -92,7 +90,7 @@ def fetch_repo_data(repo_url: str) -> GitHubRepoData:
         headers = {"Authorization": f"token {token}"}
 
     try:
-        response = session.get(api_url, timeout=10, headers=headers)
+        response = requests.get(api_url, timeout=10, headers=headers)
         response.raise_for_status()
         data = response.json()
     except Exception as exc:

@@ -27,7 +27,7 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
     if not author or not author.email:
         return HttpResponseNotFound()
 
-    email_hash: str = hashlib.md5(author.email.lower().encode("utf-8")).hexdigest()
+    email_hash: str = hashlib.sha256(author.email.lower().encode("utf-8")).hexdigest()
     avatar_url: str = f"https://seccdn.libravatar.org/avatar/{email_hash}?s=200&d=retro"
 
     # Check local cache first
@@ -39,21 +39,20 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
     try:
         import requests
 
-        response = requests.get(avatar_url, timeout=5, stream=True)
+        response = requests.get(avatar_url, timeout=5)
         response.raise_for_status()
 
         content_type: str = response.headers.get("Content-Type", "")
-        content_length: int = int(response.headers.get("Content-Length", 0))
 
         # Reject non-image responses
         if not content_type.startswith("image/"):
             return HttpResponseNotFound()
 
-        # Reject oversized images (>500KB)
-        if content_length > 500 * 1024:
-            return HttpResponseNotFound()
-
         data: bytes = response.content
+
+        # Reject oversized images (>500KB)
+        if len(data) > 500 * 1024:
+            return HttpResponseNotFound()
 
         # Cache validated image
         cache.set(cache_key, data, 86400)
