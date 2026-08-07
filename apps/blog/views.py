@@ -27,7 +27,7 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
     if not author or not author.email:
         return HttpResponseNotFound()
 
-    email_hash: str = hashlib.sha256(author.email.lower().encode("utf-8")).hexdigest()
+    email_hash: str = hashlib.md5(author.email.lower().encode("utf-8")).hexdigest()
     avatar_url: str = f"https://seccdn.libravatar.org/avatar/{email_hash}?s=200&d=retro"
 
     # Check local cache first
