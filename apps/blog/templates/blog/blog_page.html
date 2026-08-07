@@ -151,7 +151,13 @@
                             <div class="flex items-center gap-3">
                                 <div class="avatar online relative">
                                     <div class="w-10 rounded-full ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100 overflow-hidden">
+                                        {% if page.author_avatar_url %}
                                         <img src="{{ page.author_avatar_url }}" alt="Author" class="w-full h-full object-cover">
+                                        {% else %}
+                                        <div class="w-full h-full bg-primary/10 flex items-center justify-center">
+                                            <span class="text-primary/40">{% icon "crown" size=14 %}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="flex flex-col">
