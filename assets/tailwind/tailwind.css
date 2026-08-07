@@ -148,7 +148,7 @@
 
 /* Line number gutter — CodeMirror 6 style: subtle, right-aligned, muted */
 .code-highlight td.linenos {
-  @apply pr-3 pl-2 text-right select-none text-base-content/20 bg-transparent align-top border-r border-base-300/15;
+  @apply pr-3 pl-2 text-right select-none text-base-content/20 bg-base-200/50 rounded-sm align-top border-r border-base-300/15;
   min-width: 2.5rem;
   width: 2.5rem;
   max-width: 2.5rem;
