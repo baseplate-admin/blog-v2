@@ -117,10 +117,10 @@ class PygmentsCodeBlock(blocks.StructBlock):
 
     def get_context(self, value, **kwargs):
         context = super().get_context(value, **kwargs)
-        language = value.data.get("language", "text")
-        code = value.data.get("code", "")
-        line_numbers = value.data.get("line_numbers", False)
-        footer_text = value.data.get("footer_text", "")
+        language = getattr(value, "language", "text") or "text"
+        code = getattr(value, "code", "") or ""
+        line_numbers = getattr(value, "line_numbers", False)
+        footer_text = getattr(value, "footer_text", "") or ""
 
         # Get language display name
         lang_display = language
