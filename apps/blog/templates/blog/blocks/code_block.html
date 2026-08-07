@@ -14,7 +14,7 @@
             type="button"
             class="code-copy-btn text-[11px] font-mono text-base-content/20 hover:text-base-content/50 transition-colors flex items-center gap-1.5"
             data-code="{{ raw_code|escapejs }}"
-            onclick="var btn=this;var code=btn.dataset.code||'';if(code){navigator.clipboard.writeText(code);btn.innerHTML=btn.innerHTML.replace('Copy','Copied!');setTimeout(function(){btn.innerHTML=btn.innerHTML.replace('Copied!','Copy');},2000);}"
+            onclick="await navigator.clipboard.writeText(this.dataset.code);this.innerHTML=this.innerHTML.replace('Copy','Copied!');await new Promise(r=>setTimeout(r,2000));this.innerHTML=this.innerHTML.replace('Copied!','Copy');"
         >
             {% icon "bookmark" size=10 %}
             Copy
