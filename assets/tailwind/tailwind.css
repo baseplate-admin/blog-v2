@@ -142,9 +142,17 @@
   font-family: "JetBrains Mono Variable", monospace !important;
 }
 
+.code-highlight table {
+  @apply m-0 border-collapse;
+}
+
 .code-highlight td.linenos {
-  @apply pr-2 pl-2 text-right select-none text-base-content/30;
+  @apply pr-2 pl-2 text-right select-none text-base-content/30 border-r border-base-300/50;
   min-width: 2.5rem;
+}
+
+.code-highlight .normal {
+  @apply text-base-content/30;
 }
 
 .code-highlight .hll { @apply bg-base-200; }

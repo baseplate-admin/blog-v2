@@ -104,8 +104,9 @@ class PygmentsCodeBlock(blocks.StructBlock):
         default=False,
         help_text="Show line numbers.",
     )
-    footer_text = blocks.CharBlock(
+    footer_text = blocks.RichTextBlock(
         required=False,
+        feature_names=["bold", "italic", "link"],
         help_text="Optional footer text displayed below the code block.",
     )
 
@@ -117,10 +118,11 @@ class PygmentsCodeBlock(blocks.StructBlock):
 
     def get_context(self, value, **kwargs):
         context = super().get_context(value, **kwargs)
-        language = getattr(value, "language", "text") or "text"
-        code = getattr(value, "code", "") or ""
-        line_numbers = getattr(value, "line_numbers", False)
-        footer_text = getattr(value, "footer_text", "") or ""
+        # StructValue is a dict subclass - use dict key access, not getattr
+        language = value.get("language") or "text"
+        code = value.get("code") or ""
+        line_numbers = value.get("line_numbers", False)
+        footer_text = value.get("footer_text") or ""
 
         # Get language display name
         lang_display = language
