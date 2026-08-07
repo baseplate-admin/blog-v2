@@ -13,6 +13,7 @@
 - [x] Conditional nav links, dj-database-url, per-post license selection
 - [x] Requests-cache with Redis backend
 - [x] Blocks refactoring, code block, AOS templates modularization
+- [x] Fix copy button - moved inline onclick to JS handler in toc.ts (DOM clone approach, no JSON.parse)
 
 ## Pending
 
