@@ -132,10 +132,10 @@
     // Theme toggle
     function syncTheme() {
         const isDark = document.documentElement.dataset.theme === "tanstack-dark";
-        $$(".theme-icon-dark").forEach(el => el.style.display = isDark ? "inline" : "none");
-        $$(".theme-icon-light").forEach(el => el.style.display = isDark ? "none" : "inline");
-        $$(".mobile-theme-dark").forEach(el => el.style.display = isDark ? "inline" : "none");
-        $$(".mobile-theme-light").forEach(el => el.style.display = isDark ? "none" : "inline");
+        $$(".theme-icon-dark").forEach(el => el.classList.toggle("hidden", !isDark));
+        $$(".theme-icon-light").forEach(el => el.classList.toggle("hidden", isDark));
+        $$(".mobile-theme-dark").forEach(el => el.classList.toggle("hidden", !isDark));
+        $$(".mobile-theme-light").forEach(el => el.classList.toggle("hidden", isDark));
     }
     function toggleTheme() {
         const next = document.documentElement.dataset.theme === "tanstack-dark" ? "tanstack-light" : "tanstack-dark";
