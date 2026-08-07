@@ -1,8 +1,18 @@
 import mermaid from 'mermaid';
 
+// Global render function called by HTMX intersect handler
+declare global {
+    interface Window {
+        __mermaidRender: (container: HTMLElement) => Promise<void>;
+    }
+}
 // Read computed CSS from DaisyUI theme to get actual color values
 function getCssVar(name: string): string {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '';
+    return (
+        getComputedStyle(document.documentElement)
+            .getPropertyValue(name)
+            .trim() || ''
+    );
 }
 
 // Initialize mermaid with colors resolved from DaisyUI CSS variables
@@ -16,7 +26,8 @@ function initMermaid() {
         startOnLoad: false,
         theme: 'dark',
         securityLevel: 'loose',
-        fontFamily: 'var(--font-family-body, "Plus Jakarta Sans", "Inter", sans-serif)',
+        fontFamily:
+            'var(--font-family-body, "Plus Jakarta Sans", "Inter", sans-serif)',
         fontSize: 16,
         darkMode: true,
         themeVariables: {
@@ -33,13 +44,6 @@ function initMermaid() {
 
 initMermaid();
 
-// Global render function called by HTMX intersect handler
-declare global {
-    interface Window {
-        __mermaidRender: (container: HTMLElement) => Promise<void>;
-    }
-}
-
 window.__mermaidRender = async function (container: HTMLElement) {
     const code = container.getAttribute('data-mermaid-code');
     const themeAttr = container.getAttribute('data-mermaid-theme');
@@ -49,7 +53,18 @@ window.__mermaidRender = async function (container: HTMLElement) {
     if (themeAttr) {
         mermaid.initialize({
             startOnLoad: false,
-            theme: themeAttr as 'dark' | 'default' | 'base' | 'forest' | 'neutral' | 'neo' | 'neo-dark' | 'redux' | 'redux-dark' | 'redux-color' | 'redux-dark-color',
+            theme: themeAttr as
+                | 'dark'
+                | 'default'
+                | 'base'
+                | 'forest'
+                | 'neutral'
+                | 'neo'
+                | 'neo-dark'
+                | 'redux'
+                | 'redux-dark'
+                | 'redux-color'
+                | 'redux-dark-color',
             securityLevel: 'loose',
             darkMode: themeAttr === 'dark',
         });
