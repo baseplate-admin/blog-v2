@@ -82,6 +82,7 @@ def highlight_code(code: str, language: str, line_numbers: bool = False) -> str:
         title=False,
         nowrap=False,
         guess_html=True,
+        wrapcode=False,
     )
     return pygments_highlight(code, lexer, formatter)
 
