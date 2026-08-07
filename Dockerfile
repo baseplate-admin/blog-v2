@@ -3,7 +3,10 @@ FROM node:26-alpine AS frontend-builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-COPY . .
+# Only copy source needed for the build — rest comes from builder stage
+COPY assets/ assets/
+COPY public/ public/
+COPY vite.config.ts tsconfig.json vite-env.d.ts ./
 # This will create the /app/static/ directory containing manifest.json and assets
 RUN npm run build
 
