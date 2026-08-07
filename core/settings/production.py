@@ -1,5 +1,4 @@
 import os
-import re
 from django.core.exceptions import ImproperlyConfigured
 from .base import *
 
@@ -18,12 +17,6 @@ DJANGO_VITE = {
 # See https://docs.djangoproject.com/en/6.0/ref/contrib/staticfiles/#manifeststaticfilesstorage
 STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesStorage"
 
-# WhiteNoise: treat Vite-hashed assets as immutable for max-age caching
-# https://github.com/MrBin99/django-vite#whitenoise
-def _immutable_file_test(path: str, url: str) -> bool:
-    return bool(re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url))
-
-WHITENOISE_IMMUTABLE_FILE_TEST = _immutable_file_test
 
 SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
 
@@ -31,12 +24,20 @@ SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/0"),
+        "LOCATION": os.getenv(
+            "REDIS_URL",
+            f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/0",
+        ),
     }
 }
 
 # Backblaze B2 media storage (S3-compatible)
-_required_env = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_STORAGE_BUCKET_NAME", "AWS_S3_ENDPOINT_URL"]
+_required_env = [
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_STORAGE_BUCKET_NAME",
+    "AWS_S3_ENDPOINT_URL",
+]
 _missing = [v for v in _required_env if not os.getenv(v)]
 if _missing:
     raise ImproperlyConfigured(

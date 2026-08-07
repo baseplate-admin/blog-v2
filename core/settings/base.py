@@ -216,3 +216,13 @@ WAGTAILADMIN_RICH_TEXT_FEATURES = [
     "document-link",
     "image",
 ]
+import re
+
+
+# WhiteNoise: treat Vite-hashed assets as immutable for max-age caching
+# https://github.com/MrBin99/django-vite#whitenoise
+def _immutable_file_test(path: str, url: str) -> bool:
+    return bool(re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url))
+
+
+WHITENOISE_IMMUTABLE_FILE_TEST = _immutable_file_test
