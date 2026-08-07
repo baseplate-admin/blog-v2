@@ -54,7 +54,7 @@ RUN chmod +x /app/scripts/start_server.sh
 # Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
-RUN python manage.py collectstatic --noinput --link
+RUN python manage.py collectstatic --noinput --clear --link
 
 EXPOSE 8000
 ENTRYPOINT ["/app/scripts/start_server.sh"]
