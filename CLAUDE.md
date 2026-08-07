@@ -57,7 +57,9 @@ blog/
 │   ├── projects/
 │   │   └── models.py        # ProjectIndexPage, ProjectPage
 │   ├── tags/
+│   │   ├── models.py                  # BlogImage (custom Wagtail Image with auto palette), BlogImageRendition
 │   │   ├── templatetags/site_tags.py  # wagtail_url_from_model_slug tag, mood_badge tag + color mapping
+│   │   ├── templatetags/image_colors.py  # get_dominant_color, get_palette_colors, get_dominant_color_css, image_accent_color
 │   │   └── templates/tags/mood_badge.html  # Mood badge HTML (full class names for Tailwind scanning)
 │   ├── site_settings/
 │   │   └── models.py        # SiteConfigSettings (copyright, license, site name)
@@ -100,6 +102,7 @@ blog/
 - **Homepage hero:** uses DaisyUI `hero` + `hero-content`
 - **RichTextField:** all have explicit `feature_names` restriction
 - **WAGTAILADMIN_RICH_TEXT_FEATURES:** global feature config set
+- **Custom image model:** `tags.BlogImage` via `WAGTAILIMAGES_IMAGE_MODEL = "tags.BlogImage"`. Extends `AbstractImage` with auto palette extraction (modern_colorthief) on save. Palette cached as `palette_json` (JSONField) and `dominant_color_hex` (CharField).
 - **Image security:** `WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000` (~12MP)
 - **No `XFrameOptionsMiddleware`** — removed since Wagtail 4.0+ doesn't need it
 

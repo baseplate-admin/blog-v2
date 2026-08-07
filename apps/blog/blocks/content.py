@@ -41,7 +41,7 @@ class AOSHighlightBlock(AOSBlock):
     )
 
     class Meta:
-        icon = "info-circle"
+        icon = "info"
         label = "Animated Highlight"
         template = "blog/blocks/aos_highlight.html"
         group = "Content"

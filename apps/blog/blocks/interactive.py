@@ -150,7 +150,7 @@ class CalloutBlock(blocks.StructBlock):
     )
 
     class Meta:
-        icon = "info-circle"
+        icon = "info"
         label = "Callout"
         template = "blog/blocks/callout.html"
         group = "Interactive"
@@ -333,7 +333,7 @@ class TooltipBlock(blocks.StructBlock):
     )
 
     class Meta:
-        icon = "message-circle"
+        icon = "comment"
         label = "Tooltip"
         template = "blog/blocks/tooltip.html"
         group = "Interactive"

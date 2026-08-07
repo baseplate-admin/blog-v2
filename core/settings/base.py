@@ -201,6 +201,9 @@ AUTH_USER_MODEL = "users.User"
 # Image security: limit max image size to prevent DoS
 # https://docs.wagtail.org/en/stable/topics/images.html#security
 WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000  # ~12MP default
+WAGTAILIMAGES_IMAGE_MODEL = "tags.BlogImage"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Rich text editor features - global control
 # https://docs.wagtail.org/en/stable/topics/rich_text.html#feature-configuration
