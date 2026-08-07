@@ -100,6 +100,7 @@ class PygmentsCodeBlock(blocks.StructBlock):
     )
     line_numbers = blocks.BooleanBlock(
         default=False,
+        required=False,
         help_text="Show line numbers.",
     )
     footer_text = blocks.RichTextBlock(
