@@ -134,7 +134,7 @@
     linear-gradient(to bottom, oklch(var(--b3) / 0.3) 1px, transparent 1px);
 }
 
-/* ── Pygments syntax highlighting (Lovelace theme, Firefox DevTools style) ── */
+/* ── Pygments syntax highlighting (Lovelace theme, Firefox vertical tabs style) ── */
 /* Swap theme by editing these @apply rules. Source: pygments lovelace style. */
 
 .code-highlight pre {
@@ -146,9 +146,9 @@
   @apply m-0 border-collapse border-spacing-0 w-full;
 }
 
-/* Line number gutter — darker background like Firefox DevTools sidebar */
+/* Line number gutter — Firefox vertical tabs sidebar style */
 .code-highlight td.linenos {
-  @apply pr-4 pl-4 text-right select-none text-base-content/20 bg-base-200/80 align-top;
+  @apply pr-3 pl-3 text-right select-none text-base-content/25 bg-base-300/20 align-top;
   min-width: 2.5rem;
   width: 2.5rem;
   max-width: 2.5rem;
@@ -161,7 +161,7 @@
   @apply p-0 m-0;
 }
 
-/* Code area — slightly lighter background */
+/* Code area */
 .code-highlight td.code {
   @apply p-0 align-top;
 }
