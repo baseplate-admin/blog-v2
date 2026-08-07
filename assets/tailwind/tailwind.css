@@ -144,14 +144,16 @@
     font-family: "JetBrains Mono Variable", monospace !important;
   }
 
-  /* Line number span — CodeMirror 6 gutter style: subtle, muted, fixed-width */
-  & .ln {
+  /* Line number span — VS Code gutter style: subtle, muted, fixed-width with side padding */
+  & .linenos {
     @apply inline-block select-none text-base-content/20 text-right;
     min-width: 2.5rem;
     width: 2.5rem;
     max-width: 2.5rem;
     font-size: 0.8em;
-    padding-right: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: 0.75rem;
     border-right: 1px solid oklch(var(--b3) / 0.15);
     margin-right: 0.75rem;
   }
