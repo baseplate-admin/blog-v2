@@ -13,7 +13,8 @@
         <button
             type="button"
             class="code-copy-btn cursor-pointer text-[11px] font-mono text-base-content/20 hover:text-base-content/50 transition-colors flex items-center gap-1.5"
-            onclick="var wrapper=this.closest('.code-block-wrapper');var pre=wrapper.querySelector('.code-highlight pre');if(pre){var code=pre.cloneNode(true);code.querySelectorAll('.linenos').forEach(function(s){s.remove()});navigator.clipboard.writeText(code.textContent);var btn=this;btn.innerHTML=btn.innerHTML.replace('Copy','Copied!');setTimeout(function(){btn.innerHTML=btn.innerHTML.replace('Copied!','Copy');},2000);}"
+            data-code="{{ raw_code|escapejs }}"
+            onclick="navigator.clipboard.writeText(this.dataset.code).then(()=>{this.innerHTML=this.innerHTML.replace('Copy','Copied!');setTimeout(()=>{this.innerHTML=this.innerHTML.replace('Copied!','Copy');},2000);});"
         >
             {% icon "bookmark" size=10 %}
             Copy
