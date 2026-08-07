@@ -42,8 +42,8 @@ COPY --from=frontend-builder /app/static /app/static
 
 WORKDIR /app
 
-# Remove unneeded build artifacts
-RUN rm -rf /app/assets /app/.claude /app/CLAUDE.md /app/NEXT_PLANS.md
+# Remove unneeded build artifacts (assets dir not needed at runtime)
+RUN rm -rf /app/assets
 
 # Place executables in the environment at the front of the path
 
