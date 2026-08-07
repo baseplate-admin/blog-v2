@@ -39,7 +39,7 @@ class BlogImage(AbstractImage):
                 self.palette_json = [list(rgb) for rgb in palette]
                 self.dominant_color_hex = f"#{palette[0][0]:02x}{palette[0][1]:02x}{palette[0][2]:02x}"
                 self.save(update_fields=["palette_json", "dominant_color_hex"])
-        except Exception:
+        except (OSError, ValueError, TypeError):
             pass
 
     @property

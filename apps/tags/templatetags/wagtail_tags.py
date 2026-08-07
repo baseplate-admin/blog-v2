@@ -23,7 +23,7 @@ def wagtail_url_from_model_slug(app_model: str, slug: str | None = None) -> str:
     try:
         app_label, model_name = app_model.split(".")
         PageModel = apps.get_model(app_label, model_name)  # type: ignore[assignment]
-    except Exception:
+    except (ValueError, LookupError):
         return ""
 
     qs: Any = PageModel.objects.live()

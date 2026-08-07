@@ -36,7 +36,7 @@ def _get_github_token() -> str | None:
         from apps.site_settings.models import SiteConfigSettings
         settings = SiteConfigSettings.for_site(None)
         return settings.github_token or None
-    except Exception:
+    except (ImportError, AttributeError, LookupError):
         return None
 
 
@@ -93,7 +93,7 @@ def fetch_repo_data(repo_url: str) -> GitHubRepoData:
         response = requests.get(api_url, timeout=10, headers=headers)
         response.raise_for_status()
         data = response.json()
-    except Exception as exc:
+    except requests.RequestException as exc:
         logger.warning("Failed to fetch GitHub data for %s: %s", owner_repo, exc)
         return GitHubRepoData(error=str(exc))
 

@@ -30,7 +30,7 @@ def _get_cached_palette(image) -> list[tuple[int, int, int]]:
     # Fallback: extract on demand (for images uploaded before migration)
     try:
         return get_palette(str(image.file.path), color_count=5, quality=10)
-    except Exception:
+    except (OSError, ValueError, TypeError):
         return []
 
 

@@ -1,13 +1,13 @@
 import hashlib
 
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+import requests
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
-from django.contrib.auth import get_user_model
-import requests
 
 from apps.blog.models import BlogIndexPage, BlogPageTag
 
@@ -56,7 +56,7 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
         cache.set(cache_key, data, 86400)
         return HttpResponse(data, content_type=content_type)
 
-    except Exception:
+    except requests.RequestException:
         return HttpResponseNotFound()
 
 
