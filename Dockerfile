@@ -47,10 +47,11 @@ RUN rm -rf /app/assets /app/.claude /app/CLAUDE.md /app/NEXT_PLANS.md
 ENV PATH="/app/.venv/bin:$PATH"
 
 ENV DJANGO_SETTINGS_MODULE="core.settings.production"
+RUN chmod +x /app/scripts/start_server.sh
 # Collectstatic:
 # Pulls from ./static and ./public 
 # into /app/staticfiles
 RUN python manage.py collectstatic --noinput --link
 
 EXPOSE 8000
-CMD ["sh", "-c", "python manage.py migrate --noinput || exit 1; uvicorn core.asgi:application --host 0.0.0.0 --port 8000"]
+ENTRYPOINT ["/app/scripts/start_server.sh"]

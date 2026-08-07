@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python manage.py migrate --noinput
+python manage.py migrate --noinput || exit 1
 python manage.py collectstatic --noinput --clear --link
 
-granian --interface wsgi core.wsgi:application
+uvicorn core.asgi:application --host 0.0.0.0 --port 8000
