@@ -39,7 +39,7 @@ AWS_DEFAULT_ACL = "public-read"
 AWS_S3_USE_SSL = True
 AWS_LOCATION = os.getenv("AWS_LOCATION")
 
-STORAGES["default"]["BACKEND"] = "storages.backends.s3.S3Boto3Storage"
+STORAGES["default"]["BACKEND"] = "storages.backends.s3.S3Storage"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
