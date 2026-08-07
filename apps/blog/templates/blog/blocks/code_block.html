@@ -12,7 +12,7 @@
         </div>
         <button
             type="button"
-            class="code-copy-btn text-[11px] font-mono text-base-content/20 hover:text-base-content/50 transition-colors flex items-center gap-1.5"
+            class="code-copy-btn cursor-pointer text-[11px] font-mono text-base-content/20 hover:text-base-content/50 transition-colors flex items-center gap-1.5"
             data-code="{{ raw_code|escapejs }}"
             onclick="await navigator.clipboard.writeText(this.dataset.code);this.innerHTML=this.innerHTML.replace('Copy','Copied!');await new Promise(r=>setTimeout(r,2000));this.innerHTML=this.innerHTML.replace('Copied!','Copy');"
         >
