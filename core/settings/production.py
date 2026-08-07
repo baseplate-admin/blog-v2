@@ -1,4 +1,5 @@
 import os
+import re
 from django.core.exceptions import ImproperlyConfigured
 from .base import *
 
@@ -16,6 +17,13 @@ DJANGO_VITE = {
 # (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/6.0/ref/contrib/staticfiles/#manifeststaticfilesstorage
 STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesStorage"
+
+# WhiteNoise: treat Vite-hashed assets as immutable for max-age caching
+# https://github.com/MrBin99/django-vite#whitenoise
+def _immutable_file_test(path: str, url: str) -> bool:
+    return bool(re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url))
+
+WHITENOISE_IMMUTABLE_FILE_TEST = _immutable_file_test
 
 SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
 
