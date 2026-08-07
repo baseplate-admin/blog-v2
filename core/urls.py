@@ -11,7 +11,7 @@ from wagtail.api.v2.views import PagesAPIViewSet
 from wagtail.images.views.serve import ServeView
 
 from apps.blog.feeds import BlogRSSFeed
-from apps.blog.views import author_avatar, blog_page_partial
+from apps.blog.views import blog_page_partial
 
 api_router = api_router_module.WagtailAPIRouter("api")
 api_router.register_endpoint("pages", PagesAPIViewSet)
@@ -26,7 +26,6 @@ urlpatterns = [
     path("feed/", BlogRSSFeed(), name="rss_feed"),
     path("rss/", BlogRSSFeed(), name="rss_feed"),
     path("blog/load-more/", blog_page_partial, name="blog_page_partial"),
-    path("avatar/<int:id>/", author_avatar, name="author_avatar"),
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),

@@ -223,13 +223,14 @@ class BlogPage(Page):
 
     @cached_property
     def author_avatar_url(self) -> str:
+        import hashlib
         from django.contrib.auth import get_user_model
-        from django.urls import reverse
 
         User = get_user_model()
         author = User.objects.first()
-        if author:
-            return reverse("author_avatar", args=[author.id])
+        if author and author.email:
+            email_hash: str = hashlib.sha256(author.email.lower().encode("utf-8")).hexdigest()
+            return f"https://seccdn.libravatar.org/avatar/{email_hash}?s=200&d=retro"
         return ""
 
     @cached_property

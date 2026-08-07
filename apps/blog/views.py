@@ -1,45 +1,10 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
-from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 
-import hashlib
-
 from apps.blog.models import BlogIndexPage, BlogPageTag
-
-
-@cache_page(3600)  # Cache avatar for 1 hour
-def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
-    """Fetch the author avatar image using requests-cache (Redis-backed) and return the bytes directly."""
-    import requests
-
-    from django.contrib.auth import get_user_model
-
-    User = get_user_model()
-    try:
-        author = User.objects.get(pk=id)
-    except User.DoesNotExist:
-        return HttpResponseNotFound()
-
-    if not author or not author.email:
-        return HttpResponseNotFound()
-
-    email_hash: str = hashlib.md5(author.email.lower().encode("utf-8")).hexdigest()
-    avatar_url: str = f"https://seccdn.libravatar.org/avatar/{email_hash}?s=200&d=retro"
-
-    try:
-        from core.requests import get_cached_session
-
-        session = get_cached_session()
-        response = session.get(avatar_url, timeout=5)
-        response.raise_for_status()
-        return HttpResponse(
-            response.content,
-            content_type=response.headers.get("Content-Type", "image/png"),
-        )
-    except Exception:
-        return HttpResponseNotFound()
 
 
 @cache_page(300)  # Cache blog partial for 5 minutes
