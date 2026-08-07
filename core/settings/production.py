@@ -22,8 +22,10 @@ CACHES = {
 
 # requests-cache backend for external HTTP calls (avatar, etc.)
 import requests_cache
+redis_url = os.getenv("REDIS_URL", f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/1")
 requests_cache.install_cache(
-    backend=f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/1",
+    backend="redis",
+    filename=redis_url,
     expire_after=86400,  # 24 hours
 )
 
