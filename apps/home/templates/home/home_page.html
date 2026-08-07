@@ -4,239 +4,239 @@
 {% block inner_content %}
 
 {# ── Hero Section ────────────────────────────────────────── #}
-<div class="relative w-full border-b border-base-300 overflow-hidden">
-    <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+    <div class="relative w-full border-b border-base-300 overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
     {# Dotwork constellation background ── #}
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-10 left-10 w-2 h-2 rounded-full bg-primary/20"></div>
-        <div class="absolute top-20 left-32 w-1.5 h-1.5 rounded-full bg-primary/15"></div>
-        <div class="absolute top-16 left-24 w-1 h-1 rounded-full bg-primary/10"></div>
-        <div class="absolute top-40 right-20 w-2 h-2 rounded-full bg-secondary/20"></div>
-        <div class="absolute top-56 right-48 w-1.5 h-1.5 rounded-full bg-secondary/15"></div>
-        <div class="absolute top-48 right-36 w-1 h-1 rounded-full bg-secondary/10"></div>
-        <div class="absolute bottom-20 left-1/4 w-2 h-2 rounded-full bg-accent/15"></div>
-        <div class="absolute bottom-32 left-1/3 w-1 h-1 rounded-full bg-accent/10"></div>
-        <div class="absolute bottom-16 right-1/4 w-1.5 h-1.5 rounded-full bg-primary/15"></div>
-        <div class="absolute top-1/3 left-1/6 w-1 h-1 rounded-full bg-primary/10"></div>
-        <div class="absolute top-2/3 right-1/6 w-1 h-1 rounded-full bg-secondary/10"></div>
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-10 left-10 w-2 h-2 rounded-full bg-primary/20"></div>
+            <div class="absolute top-20 left-32 w-1.5 h-1.5 rounded-full bg-primary/15"></div>
+            <div class="absolute top-16 left-24 w-1 h-1 rounded-full bg-primary/10"></div>
+            <div class="absolute top-40 right-20 w-2 h-2 rounded-full bg-secondary/20"></div>
+            <div class="absolute top-56 right-48 w-1.5 h-1.5 rounded-full bg-secondary/15"></div>
+            <div class="absolute top-48 right-36 w-1 h-1 rounded-full bg-secondary/10"></div>
+            <div class="absolute bottom-20 left-1/4 w-2 h-2 rounded-full bg-accent/15"></div>
+            <div class="absolute bottom-32 left-1/3 w-1 h-1 rounded-full bg-accent/10"></div>
+            <div class="absolute bottom-16 right-1/4 w-1.5 h-1.5 rounded-full bg-primary/15"></div>
+            <div class="absolute top-1/3 left-1/6 w-1 h-1 rounded-full bg-primary/10"></div>
+            <div class="absolute top-2/3 right-1/6 w-1 h-1 rounded-full bg-secondary/10"></div>
         {# Connecting lines ── #}
-        <div class="absolute top-10 left-10 w-24 h-px bg-primary/5 transform rotate-12"></div>
-        <div class="absolute top-40 right-20 w-28 h-px bg-secondary/5 transform -rotate-12"></div>
-        <div class="absolute bottom-20 left-1/4 w-20 h-px bg-accent/5 transform rotate-6"></div>
-    </div>
-    <div class="hero min-h-[70vh] bg-base-100/50 relative z-10">
-        <div class="hero-content text-center flex-col max-w-4xl">
-            <div class="max-w-2xl">
+            <div class="absolute top-10 left-10 w-24 h-px bg-primary/5 transform rotate-12"></div>
+            <div class="absolute top-40 right-20 w-28 h-px bg-secondary/5 transform -rotate-12"></div>
+            <div class="absolute bottom-20 left-1/4 w-20 h-px bg-accent/5 transform rotate-6"></div>
+        </div>
+        <div class="hero min-h-[70vh] bg-base-100/50 relative z-10">
+            <div class="hero-content text-center flex-col max-w-4xl">
+                <div class="max-w-2xl">
                 {# Dotwork ornament above title ── #}
-                <div class="flex justify-center mb-6" data-aos="fade-down">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-px bg-gradient-to-r from-transparent to-primary/30"></div>
-                        <div class="w-2 h-2 rounded-full bg-primary/20"></div>
-                        <div class="w-3 h-3 rounded-full bg-primary/25"></div>
-                        <div class="w-2 h-2 rounded-full bg-primary/20"></div>
-                        <div class="w-12 h-px bg-gradient-to-l from-transparent to-primary/30"></div>
+                    <div class="flex justify-center mb-6" data-aos="fade-down">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-px bg-gradient-to-r from-transparent to-primary/30"></div>
+                            <div class="w-2 h-2 rounded-full bg-primary/20"></div>
+                            <div class="w-3 h-3 rounded-full bg-primary/25"></div>
+                            <div class="w-2 h-2 rounded-full bg-primary/20"></div>
+                            <div class="w-12 h-px bg-gradient-to-l from-transparent to-primary/30"></div>
+                        </div>
                     </div>
-                </div>
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-aos="fade-up">
-                    {{ page.hero_title }}
-                </h1>
-                <p class="py-6 text-xl md:text-2xl text-base-content/80 leading-relaxed" data-aos="fade-up" data-aos-delay="100">
-                    {{ page.hero_subtitle|richtext }}
-                </p>
-                <div class="flex gap-4 justify-center mt-4" data-aos="fade-up" data-aos-delay="200">
-                    {% if page.hero_ctas %}
-                        {% for block in page.hero_ctas|slice:":2" %}
-                            {% with cta=block.value %}
-                                {% if forloop.first %}
-                                    <a href="{{ cta.url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ cta.text }}</a>
-                                {% else %}
-                                    <a href="{{ cta.url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ cta.text }}</a>
-                                {% endif %}
-                            {% endwith %}
-                        {% endfor %}
-                    {% endif %}
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-aos="fade-up">
+                        {{ page.hero_title }}
+                    </h1>
+                    <p class="py-6 text-xl md:text-2xl text-base-content/80 leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+                        {{ page.hero_subtitle|richtext }}
+                    </p>
+                    <div class="flex gap-4 justify-center mt-4" data-aos="fade-up" data-aos-delay="200">
+                        {% if page.hero_ctas %}
+                            {% for block in page.hero_ctas|slice:":2" %}
+                                {% with cta=block.value %}
+                                    {% if forloop.first %}
+                                        <a href="{{ cta.url }}" class="btn btn-primary btn-lg rounded-box shadow-lg hover:shadow-primary/20 transition-all">{{ cta.text }}</a>
+                                    {% else %}
+                                        <a href="{{ cta.url }}" class="btn btn-ghost btn-lg rounded-box border border-base-content/10 hover:bg-base-200">{{ cta.text }}</a>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary to-transparent opacity-50"></div>
     </div>
-    <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary to-transparent opacity-50"></div>
-</div>
 
 {# ── Latest Posts ────────────────────────────────────────── #}
-<div class="relative border-b border-base-300 bg-base-100 overflow-hidden">
-    {# Dotwork side rails ── #}
-    <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
-    <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
-    {# Dotwork dots along rails ── #}
-    <div class="absolute left-8 top-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
-    <div class="absolute left-8 bottom-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
-    <div class="absolute right-8 top-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
-    <div class="absolute right-8 bottom-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
-    <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-base-300 pb-8" data-aos="fade-up">
-            <div>
-                <div class="text-primary font-mono mb-2 flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-primary/30"></span>
-                    01. WRITINGS
-                </div>
-                <h2 class="text-4xl md:text-5xl font-bold">Latest <span class="font-light italic text-base-content/60">Thoughts</span></h2>
-            </div>
-            <a href="{{ blog }}" class="btn btn-outline btn-sm gap-2 mt-4 md:mt-0 group">
-                Read all posts
-                <span class="transition-transform group-hover:translate-x-1">{% icon "arrow-right" size=16 %}</span>
-            </a>
-        </div>
-
-        {% if latest_posts %}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {% for post in latest_posts %}
-                    {% with accent=post.feed_image|get_dominant_color %}
-                    <a href="{% pageurl post %}"
-                       class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full rounded-none md:rounded-box relative"
-                       data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'100' }}"
-                       {% if accent %}style="--card-accent: {{ accent}};"{% endif %}>
-                        {# Dotwork corner accents ── #}
-                        <div class="absolute top-2 left-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
-                        <div class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
-                        <div class="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
-                        <div class="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
-                        {% if accent %}
-                        <div class="card-accent-bar h-1 w-full rounded-t-lg" style="background-color: {{ accent }}; opacity: 0.7;"></div>
-                        {% endif %}
-                        <figure class="aspect-video relative overflow-hidden border-b border-base-300">
-                            {% if post.feed_image %}
-                                {% image post.feed_image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
-                            {% else %}
-                                <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/20 font-mono text-4xl"></div>
-                            {% endif %}
-                            <div class="absolute top-4 right-4 badge badge-neutral bg-base-100/80 backdrop-blur-sm border-0 font-mono text-xs">
-                                {{ post.first_published_at|date:"M d, Y" }}
-                            </div>
-                        </figure>
-                        <div class="card-body p-6">
-                            <h3 class="card-title text-xl font-bold group-hover:text-primary transition-colors leading-tight mb-2">{{ post.title }}</h3>
-                            <p class="text-base-content/70 line-clamp-3 text-sm">{{ post.intro }}</p>
-                            <div class="card-actions justify-end mt-4 pt-4 border-t border-base-300/50 w-full">
-                                <div class="text-xs font-mono uppercase text-base-content/50 group-hover:text-primary transition-colors flex items-center gap-1">
-                                    Read Article <span>{% icon "arrow-right" size=12 %}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                {% endwith %}
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
-                <span>Check back soon for new articles!</span>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-{# ── Editable AOS Body Sections ──────────────────────────── #}
-{% if page.body %}
     <div class="relative border-b border-base-300 bg-base-100 overflow-hidden">
-        {# Dotwork background dots ── #}
-        <div class="absolute inset-0 pointer-events-none">
-            <div class="absolute top-12 left-12 w-1 h-1 rounded-full bg-primary/10"></div>
-            <div class="absolute top-24 right-24 w-1.5 h-1.5 rounded-full bg-primary/15"></div>
-            <div class="absolute bottom-12 left-1/3 w-1 h-1 rounded-full bg-secondary/10"></div>
-            <div class="absolute bottom-24 right-12 w-1 h-1 rounded-full bg-secondary/15"></div>
-        </div>
+    {# Dotwork side rails ── #}
+        <div class="absolute left-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+        <div class="absolute right-8 top-0 bottom-0 w-px bg-base-300 hidden md:block"></div>
+    {# Dotwork dots along rails ── #}
+        <div class="absolute left-8 top-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
+        <div class="absolute left-8 bottom-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
+        <div class="absolute right-8 top-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
+        <div class="absolute right-8 bottom-8 w-2 h-2 rounded-full bg-primary/20 hidden md:block"></div>
         <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative">
-            {% for block in page.body %}
-                {% include_block block %}
-            {% endfor %}
-        </div>
-    </div>
-{% endif %}
-
-{# ── Featured Projects ───────────────────────────────────── #}
-<div id="projects" class="relative border-b border-base-300 bg-base-200/30 overflow-hidden">
-    <div class="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
-    {# Dotwork constellation ── #}
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-16 left-16 w-2 h-2 rounded-full bg-secondary/15"></div>
-        <div class="absolute top-32 left-32 w-1 h-1 rounded-full bg-secondary/10"></div>
-        <div class="absolute top-24 left-24 w-1.5 h-1.5 rounded-full bg-secondary/20"></div>
-        <div class="absolute bottom-16 right-16 w-2 h-2 rounded-full bg-primary/15"></div>
-        <div class="absolute bottom-32 right-32 w-1 h-1 rounded-full bg-primary/10"></div>
-        <div class="absolute bottom-24 right-24 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
-        <div class="absolute top-1/3 right-1/4 w-1 h-1 rounded-full bg-accent/10"></div>
-        <div class="absolute bottom-1/3 left-1/4 w-1 h-1 rounded-full bg-accent/10"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
-        <div class="mb-16 border-b border-base-300 pb-8" data-aos="fade-up">
-            <div class="text-secondary font-mono mb-2 flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-secondary/30"></span>
-                02. WORK
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-base-300 pb-8" data-aos="fade-up">
+                <div>
+                    <div class="text-primary font-mono mb-2 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary/30"></span>
+                        01. WRITINGS
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold">Latest <span class="font-light italic text-base-content/60">Thoughts</span></h2>
+                </div>
+                <a href="{{ blog }}" class="btn btn-outline btn-sm gap-2 mt-4 md:mt-0 group">
+                    Read all posts
+                    <span class="transition-transform group-hover:translate-x-1">{% icon "arrow-right" size=16 %}</span>
+                </a>
             </div>
-            <h2 class="text-4xl md:text-5xl font-bold">Featured <span class="font-light italic text-base-content/60">Projects</span></h2>
-        </div>
 
-        <div class="flex flex-col gap-24">
-            {% if featured_projects %}
-                {% for project in featured_projects %}
-                    {% if forloop.counter0|divisibleby:"2" %}
-                        <div class="flex flex-col lg:flex-row gap-12 items-center group" data-aos="fade-right" data-aos-delay="{{ forloop.counter|add:'200' }}">
-                    {% else %}
-                        <div class="flex flex-col lg:flex-row-reverse gap-12 items-center group" data-aos="fade-left" data-aos-delay="{{ forloop.counter|add:'200' }}">
-                    {% endif %}
-                    <div class="w-full lg:w-2/5">
-                        <div class="mockup-browser border border-base-300 bg-base-200 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/10">
-                            <div class="mockup-browser-toolbar border-b border-base-300">
-                                <div class="input border border-base-300">{{ project.demo_url|default:'' }}</div>
-                            </div>
-                            <div class="flex justify-center items-center bg-base-100 aspect-video relative overflow-hidden text-base-content/10 font-black text-6xl select-none">
-                                {% if project.image %}
-                                    {% image project.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
-                                {% else %}
-                                    PROJECT
+            {% if latest_posts %}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {% for post in latest_posts %}
+                        {% with accent=post.feed_image|get_dominant_color %}
+                            <a href="{% pageurl post %}"
+                               class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full rounded-none md:rounded-box relative"
+                               data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'100' }}"
+                               {% if accent %}style="--card-accent: {{ accent}};"{% endif %}>
+                        {# Dotwork corner accents ── #}
+                                <div class="absolute top-2 left-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+                                <div class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+                                <div class="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+                                <div class="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+                                {% if accent %}
+                                    <div class="card-accent-bar h-1 w-full rounded-t-lg" style="background-color: {{ accent }}; opacity: 0.7;"></div>
                                 {% endif %}
-                                <div class="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full lg:w-3/5 space-y-8 {% if not forloop.counter0|divisibleby:"2" %}lg:text-right{% endif %}">
-                        <h3 class="text-4xl font-bold tracking-tight">{{ project.title }}</h3>
-                        <p class="text-xl text-base-content/80 leading-relaxed">{{ project.description|richtext }}</p>
-                        <div class="flex gap-4 {% if not forloop.counter0|divisibleby:"2" %}lg:justify-end{% endif %} pt-2">
-                            {% if project.demo_url %}
-                                <a href="{{ project.demo_url }}" class="btn btn-primary rounded-box shadow-lg hover:shadow-primary/30">Live Demo</a>
-                            {% endif %}
-                            {% if project.github_url %}
-                                <a href="{{ project.github_url }}" class="btn btn-ghost rounded-box border border-base-content/10">GitHub</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    </div>
-                    {% if not forloop.last %}
-                        <div class="flex items-center justify-center gap-2">
-                            <div class="w-16 h-px bg-base-300/30"></div>
-                            <div class="w-1.5 h-1.5 rounded-full bg-primary/15"></div>
-                            <div class="w-16 h-px bg-base-300/30"></div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                                <figure class="aspect-video relative overflow-hidden border-b border-base-300">
+                                    {% if post.feed_image %}
+                                        {% image post.feed_image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                    {% else %}
+                                        <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/20 font-mono text-4xl"></div>
+                                    {% endif %}
+                                    <div class="absolute top-4 right-4 badge badge-neutral bg-base-100/80 backdrop-blur-sm border-0 font-mono text-xs">
+                                        {{ post.first_published_at|date:"M d, Y" }}
+                                    </div>
+                                </figure>
+                                <div class="card-body p-6">
+                                    <h3 class="card-title text-xl font-bold group-hover:text-primary transition-colors leading-tight mb-2">{{ post.title }}</h3>
+                                    <p class="text-base-content/70 line-clamp-3 text-sm">{{ post.intro }}</p>
+                                    <div class="card-actions justify-end mt-4 pt-4 border-t border-base-300/50 w-full">
+                                        <div class="text-xs font-mono uppercase text-base-content/50 group-hover:text-primary transition-colors flex items-center gap-1">
+                                            Read Article <span>{% icon "arrow-right" size=12 %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
             {% else %}
                 <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
-                    <span>No featured projects yet.</span>
+                    <span>Check back soon for new articles!</span>
                 </div>
             {% endif %}
         </div>
     </div>
-</div>
+
+{# ── Editable AOS Body Sections ──────────────────────────── #}
+    {% if page.body %}
+        <div class="relative border-b border-base-300 bg-base-100 overflow-hidden">
+        {# Dotwork background dots ── #}
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-12 left-12 w-1 h-1 rounded-full bg-primary/10"></div>
+                <div class="absolute top-24 right-24 w-1.5 h-1.5 rounded-full bg-primary/15"></div>
+                <div class="absolute bottom-12 left-1/3 w-1 h-1 rounded-full bg-secondary/10"></div>
+                <div class="absolute bottom-24 right-12 w-1 h-1 rounded-full bg-secondary/15"></div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative">
+                {% for block in page.body %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+{# ── Featured Projects ───────────────────────────────────── #}
+    <div id="projects" class="relative border-b border-base-300 bg-base-200/30 overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
+    {# Dotwork constellation ── #}
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute top-16 left-16 w-2 h-2 rounded-full bg-secondary/15"></div>
+            <div class="absolute top-32 left-32 w-1 h-1 rounded-full bg-secondary/10"></div>
+            <div class="absolute top-24 left-24 w-1.5 h-1.5 rounded-full bg-secondary/20"></div>
+            <div class="absolute bottom-16 right-16 w-2 h-2 rounded-full bg-primary/15"></div>
+            <div class="absolute bottom-32 right-32 w-1 h-1 rounded-full bg-primary/10"></div>
+            <div class="absolute bottom-24 right-24 w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+            <div class="absolute top-1/3 right-1/4 w-1 h-1 rounded-full bg-accent/10"></div>
+            <div class="absolute bottom-1/3 left-1/4 w-1 h-1 rounded-full bg-accent/10"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
+            <div class="mb-16 border-b border-base-300 pb-8" data-aos="fade-up">
+                <div class="text-secondary font-mono mb-2 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary/30"></span>
+                    02. WORK
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold">Featured <span class="font-light italic text-base-content/60">Projects</span></h2>
+            </div>
+
+            <div class="flex flex-col gap-24">
+                {% if featured_projects %}
+                    {% for project in featured_projects %}
+                        {% if forloop.counter0|divisibleby:"2" %}
+                            <div class="flex flex-col lg:flex-row gap-12 items-center group" data-aos="fade-right" data-aos-delay="{{ forloop.counter|add:'200' }}">
+                        {% else %}
+                            <div class="flex flex-col lg:flex-row-reverse gap-12 items-center group" data-aos="fade-left" data-aos-delay="{{ forloop.counter|add:'200' }}">
+                        {% endif %}
+                        <div class="w-full lg:w-2/5">
+                            <div class="mockup-browser border border-base-300 bg-base-200 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/10">
+                                <div class="mockup-browser-toolbar border-b border-base-300">
+                                    <div class="input border border-base-300">{{ project.demo_url|default:'' }}</div>
+                                </div>
+                                <div class="flex justify-center items-center bg-base-100 aspect-video relative overflow-hidden text-base-content/10 font-black text-6xl select-none">
+                                    {% if project.image %}
+                                        {% image project.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                    {% else %}
+                                        PROJECT
+                                    {% endif %}
+                                    <div class="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-3/5 space-y-8 {% if not forloop.counter0|divisibleby:"2" %}lg:text-right{% endif %}">
+                            <h3 class="text-4xl font-bold tracking-tight">{{ project.title }}</h3>
+                            <p class="text-xl text-base-content/80 leading-relaxed">{{ project.description|richtext }}</p>
+                            <div class="flex gap-4 {% if not forloop.counter0|divisibleby:"2" %}lg:justify-end{% endif %} pt-2">
+                                {% if project.demo_url %}
+                                    <a href="{{ project.demo_url }}" class="btn btn-primary rounded-box shadow-lg hover:shadow-primary/30">Live Demo</a>
+                                {% endif %}
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" class="btn btn-ghost rounded-box border border-base-content/10">GitHub</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </div>
+                        {% if not forloop.last %}
+                            <div class="flex items-center justify-center gap-2">
+                                <div class="w-16 h-px bg-base-300/30"></div>
+                                <div class="w-1.5 h-1.5 rounded-full bg-primary/15"></div>
+                                <div class="w-16 h-px bg-base-300/30"></div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info shadow-lg rounded-none md:rounded-box">
+                        <span>No featured projects yet.</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {# ── Bottom dotwork end marker ── #}
-<div class="relative max-w-7xl mx-auto px-8 pb-16 hidden lg:flex items-center justify-center gap-3">
-    <div class="w-32 h-px bg-gradient-to-r from-transparent to-base-content/10"></div>
-    <div class="w-1.5 h-1.5 rounded-full bg-primary/15"></div>
-    <div class="w-2 h-2 rounded-full bg-primary/20"></div>
-    <div class="w-1 h-1 rounded-full bg-primary/25"></div>
-    <div class="w-2 h-2 rounded-full bg-primary/20"></div>
-    <div class="w-1.5 h-1.5 rounded-full bg-primary/15"></div>
-    <div class="w-32 h-px bg-gradient-to-l from-transparent to-base-content/10"></div>
-</div>
+    <div class="relative max-w-7xl mx-auto px-8 pb-16 hidden lg:flex items-center justify-center gap-3">
+        <div class="w-32 h-px bg-gradient-to-r from-transparent to-base-content/10"></div>
+        <div class="w-1.5 h-1.5 rounded-full bg-primary/15"></div>
+        <div class="w-2 h-2 rounded-full bg-primary/20"></div>
+        <div class="w-1 h-1 rounded-full bg-primary/25"></div>
+        <div class="w-2 h-2 rounded-full bg-primary/20"></div>
+        <div class="w-1.5 h-1.5 rounded-full bg-primary/15"></div>
+        <div class="w-32 h-px bg-gradient-to-l from-transparent to-base-content/10"></div>
+    </div>
 
 {% endblock %}
