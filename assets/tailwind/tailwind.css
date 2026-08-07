@@ -4,9 +4,6 @@
 @import "@fontsource-variable/jetbrains-mono/index.css";
 @import "@fontsource/hind-siliguri/index.css";
 
-@source "../../core/templates";
-@source "../../apps/*/templates";
-
 @plugin "@tailwindcss/typography";
 
 @plugin "daisyui" {
