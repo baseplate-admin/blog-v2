@@ -34,18 +34,24 @@ function initMermaid() {
 initMermaid();
 
 // Global render function called by HTMX intersect handler
+declare global {
+    interface Window {
+        __mermaidRender: (container: HTMLElement) => Promise<void>;
+    }
+}
+
 window.__mermaidRender = async function (container: HTMLElement) {
     const code = container.getAttribute('data-mermaid-code');
-    const theme = container.getAttribute('data-mermaid-theme');
+    const themeAttr = container.getAttribute('data-mermaid-theme');
     if (!code) return;
 
     // Re-initialize with the specified theme
-    if (theme) {
+    if (themeAttr) {
         mermaid.initialize({
             startOnLoad: false,
-            theme,
+            theme: themeAttr as 'dark' | 'default' | 'base' | 'forest' | 'neutral' | 'neo' | 'neo-dark' | 'redux' | 'redux-dark' | 'redux-color' | 'redux-dark-color',
             securityLevel: 'loose',
-            darkMode: theme === 'dark',
+            darkMode: themeAttr === 'dark',
         });
     }
 
