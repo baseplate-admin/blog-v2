@@ -57,7 +57,8 @@ class ProjectPage(Page):
         help_text="Detailed description of the project.",
     )
     github_url: models.URLField = models.URLField(
-        blank=True, help_text="Link to the GitHub repository. Stats are fetched automatically.",
+        blank=True,
+        help_text="Link to the GitHub repository. Stats are fetched automatically.",
     )
     demo_url: models.URLField = models.URLField(
         blank=True, help_text="Link to the live demo"
@@ -68,27 +69,36 @@ class ProjectPage(Page):
 
     # Cached GitHub repo data
     gh_full_name: models.CharField = models.CharField(
-        max_length=255, blank=True, editable=False,
+        max_length=255,
+        blank=True,
+        editable=False,
         help_text="Auto-filled from GitHub (e.g. owner/repo)",
     )
     gh_description: models.TextField = models.TextField(
-        blank=True, editable=False,
+        blank=True,
+        editable=False,
         help_text="Auto-filled from GitHub",
     )
     gh_stars: models.PositiveIntegerField = models.PositiveIntegerField(
-        default=0, editable=False,
+        default=0,
+        editable=False,
         help_text="Auto-filled from GitHub",
     )
     gh_forks: models.PositiveIntegerField = models.PositiveIntegerField(
-        default=0, editable=False,
+        default=0,
+        editable=False,
         help_text="Auto-filled from GitHub",
     )
     gh_language: models.CharField = models.CharField(
-        max_length=50, blank=True, editable=False,
+        max_length=50,
+        blank=True,
+        editable=False,
         help_text="Primary language detected by GitHub",
     )
     gh_last_updated: models.DateTimeField = models.DateTimeField(
-        null=True, blank=True, editable=False,
+        null=True,
+        blank=True,
+        editable=False,
         help_text="Last push date from GitHub",
     )
 

@@ -1,4 +1,3 @@
-
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
@@ -143,14 +142,18 @@ class BlogPage(Page):
         ("review", "Review"),
     ]
 
-    date: models.DateField = models.DateField("Post date", help_text="The publication date of this post.")
+    date: models.DateField = models.DateField(
+        "Post date", help_text="The publication date of this post."
+    )
     mood: models.CharField = models.CharField(
         max_length=32,
         choices=MOOD_CHOICES,
         default="tech",
         help_text="The mood/category of this post. Shown as a colored badge.",
     )
-    intro: models.CharField = models.CharField(max_length=250, help_text="Brief summary shown in listings and previews.")
+    intro: models.CharField = models.CharField(
+        max_length=250, help_text="Brief summary shown in listings and previews."
+    )
     body: StreamField = StreamField(
         [
             ("paragraph", RichTextBlock(label="Paragraph")),
@@ -173,7 +176,9 @@ class BlogPage(Page):
         ],
         help_text="Main content of the post. Use paragraphs, images, code blocks, mermaid diagrams, and animated AOS blocks.",
     )
-    tags: ClusterTaggableManager = ClusterTaggableManager(through=BlogPageTag, blank=True, help_text="Tags for categorizing this post.")
+    tags: ClusterTaggableManager = ClusterTaggableManager(
+        through=BlogPageTag, blank=True, help_text="Tags for categorizing this post."
+    )
     license_type: models.CharField = models.CharField(
         max_length=20,
         choices=LicenseOptions.choices,

@@ -155,7 +155,7 @@
 }
 
 .code-highlight td.linenos pre {
-  @apply p-0 m-0;
+  @apply p-0 m-0 rounded-none;
 }
 
 .code-highlight td.code {

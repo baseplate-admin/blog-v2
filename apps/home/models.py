@@ -1,4 +1,3 @@
-
 from typing import Any
 
 from django.db import models
@@ -42,7 +41,9 @@ class HomePage(Page):
 
     # Editable hero fields
     hero_title: models.CharField = models.CharField(
-        max_length=255, blank=False, default="Building things with Code & Passion",
+        max_length=255,
+        blank=False,
+        default="Building things with Code & Passion",
         help_text="Main heading displayed in the hero section.",
     )
     hero_subtitle: RichTextField = RichTextField(
@@ -58,8 +59,11 @@ class HomePage(Page):
     )
 
     # Allow editors to control how many latest posts are shown
-    latest_posts_count: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
-        default=3, help_text="Number of recent blog posts to display on the homepage.",
+    latest_posts_count: models.PositiveSmallIntegerField = (
+        models.PositiveSmallIntegerField(
+            default=3,
+            help_text="Number of recent blog posts to display on the homepage.",
+        )
     )
 
     # Editable body with AOS animated blocks
@@ -105,11 +109,20 @@ class HomePage(Page):
         context: dict[str, Any] = super().get_context(request)
         # Import dynamically to avoid circular dependency
         from apps.blog.models import BlogPage
+
         # Get latest published blog posts using editable count
         count: int = getattr(self, "latest_posts_count", 3) or 3
-        context["latest_posts"] = BlogPage.objects.live().public().order_by("-first_published_at")[:count]
+        context["latest_posts"] = (
+            BlogPage.objects.live().public().order_by("-first_published_at")[:count]
+        )
 
         # Get featured projects for the homepage
         from apps.projects.models import ProjectPage
-        context["featured_projects"] = ProjectPage.objects.live().public().filter(featured=True).order_by("-first_published_at")[:3]
+
+        context["featured_projects"] = (
+            ProjectPage.objects.live()
+            .public()
+            .filter(featured=True)
+            .order_by("-first_published_at")[:3]
+        )
         return context

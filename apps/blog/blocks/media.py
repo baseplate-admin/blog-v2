@@ -1,8 +1,6 @@
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
-from .base import AOSBlock
-
 
 class ImageBlock(blocks.StructBlock):
     image = ImageChooserBlock(required=True)
@@ -17,6 +15,7 @@ class ImageBlock(blocks.StructBlock):
 
 class MermaidBlock(blocks.StructBlock):
     """Mermaid.js diagram block - renders flowcharts, sequence diagrams, Gantt charts, etc."""
+
     code = blocks.TextBlock(
         required=True,
         help_text="Mermaid diagram syntax. See mermaid.js live editor for examples.",

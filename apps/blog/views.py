@@ -6,6 +6,8 @@ from django.db.models import Count
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
+from django.contrib.auth import get_user_model
+import requests
 
 from apps.blog.models import BlogIndexPage, BlogPageTag
 
@@ -16,8 +18,6 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
 
     Validates content-type and size before returning image bytes.
     """
-    from django.contrib.auth import get_user_model
-
     User = get_user_model()
     try:
         author = User.objects.get(pk=id)
@@ -37,8 +37,6 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
         return HttpResponse(cached_data, content_type="image/png")
 
     try:
-        import requests
-
         response = requests.get(avatar_url, timeout=5)
         response.raise_for_status()
 
@@ -93,7 +91,9 @@ def blog_page_partial(request: HttpRequest) -> HttpResponse:
     tag: str | None = request.GET.get("tag", None)
     mood: str | None = request.GET.get("mood", None)
 
-    blogpages = blog_index.get_children().live().specific().order_by("-first_published_at")
+    blogpages = (
+        blog_index.get_children().live().specific().order_by("-first_published_at")
+    )
 
     if tag:
         blogpages = blogpages.filter(blogpage__tags__name=tag)
@@ -104,7 +104,7 @@ def blog_page_partial(request: HttpRequest) -> HttpResponse:
 
     try:
         pages = paginator.page(page_num)
-    except (PageNotAnInteger, EmptyPage):
+    except PageNotAnInteger, EmptyPage:
         return HttpResponse("")
 
     return render(
