@@ -76,6 +76,7 @@ def highlight_code(code: str, language: str) -> str:
     formatter = HtmlFormatter(
         style=get_style_by_name("lovelace"),
         cssclass="code-highlight",
+        linenos="inline",
         noclasses=False,
         full=False,
         title=False,
