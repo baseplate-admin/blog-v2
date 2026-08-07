@@ -5,8 +5,6 @@ from pygments.styles import get_style_by_name
 
 from wagtail import blocks
 
-from .base import AOSBlock
-
 
 # Language choices for code blocks derived from Pygments lexers
 CODE_LANGUAGES: list[tuple[str, str]] = [
@@ -240,9 +238,12 @@ class TabsBlock(blocks.StructBlock):
 
 class TimelineItemBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=True, help_text="Timeline item title.")
-    description = blocks.TextBlock(required=True, help_text="Timeline item description.")
+    description = blocks.TextBlock(
+        required=True, help_text="Timeline item description."
+    )
     timestamp = blocks.CharBlock(
-        required=False, help_text="Date or time label (e.g. '2024', 'Q1').",
+        required=False,
+        help_text="Date or time label (e.g. '2024', 'Q1').",
     )
 
 
@@ -254,7 +255,8 @@ class TimelineBlock(blocks.StructBlock):
         help_text="Add 2-10 timeline items.",
     )
     compact = blocks.BooleanBlock(
-        default=False, help_text="Compact layout - all items on one side.",
+        default=False,
+        help_text="Compact layout - all items on one side.",
     )
 
     class Meta:
@@ -277,10 +279,12 @@ class StepsBlock(blocks.StructBlock):
         help_text="Add 2-8 steps.",
     )
     active_step = blocks.IntegerBlock(
-        default=1, help_text="Which step is currently active (1-based number).",
+        default=1,
+        help_text="Which step is currently active (1-based number).",
     )
     vertical = blocks.BooleanBlock(
-        default=True, help_text="Vertical layout (uncheck for horizontal).",
+        default=True,
+        help_text="Vertical layout (uncheck for horizontal).",
     )
 
     class Meta:
@@ -313,13 +317,20 @@ class AlertBlock(blocks.StructBlock):
 
 class TooltipBlock(blocks.StructBlock):
     inner_text = blocks.CharBlock(
-        required=True, help_text="The visible text or label.",
+        required=True,
+        help_text="The visible text or label.",
     )
     tooltip_text = blocks.CharBlock(
-        required=True, help_text="Tooltip text shown on hover.",
+        required=True,
+        help_text="Tooltip text shown on hover.",
     )
     placement = blocks.ChoiceBlock(
-        choices=[("top", "Top"), ("bottom", "Bottom"), ("left", "Left"), ("right", "Right")],
+        choices=[
+            ("top", "Top"),
+            ("bottom", "Bottom"),
+            ("left", "Left"),
+            ("right", "Right"),
+        ],
         default="top",
         help_text="Tooltip placement direction.",
     )

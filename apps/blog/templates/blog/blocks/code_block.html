@@ -1,11 +1,11 @@
-{# Pygments code block - DaisyUI mockup-code style with server-side highlighting #}
+{# Pygments code block - CodeMirror-style with server-side highlighting #}
 {% load wagtailcore_tags site_tags %}
 
-<div class="code-block-wrapper relative my-8"
+<div class="code-block-wrapper relative my-8 rounded-xl overflow-hidden border border-dotted border-base-300/50"
      {% if self.animation %}data-aos="{{ self.animation }}" data-aos-delay="{{ self.delay }}"{% endif %}>
 
-    {# Language badge header #}
-    <div class="flex items-center justify-between px-4 py-2 bg-base-200/80 border border-dotted border-base-300/50 rounded-t-xl">
+    {# Title bar - language badge + copy button #}
+    <div class="flex items-center justify-between px-4 py-2 bg-base-200/80">
         <div class="flex items-center gap-2">
             <span class="text-primary/40">{% icon "code" size=12 %}</span>
             <span class="text-xs font-mono text-base-content/40 uppercase tracking-wider">{{ language_display }}</span>
@@ -13,15 +13,15 @@
         <button
             type="button"
             class="code-copy-btn text-xs font-mono text-base-content/30 hover:text-primary transition-colors flex items-center gap-1"
-            onclick="var pre=this.closest('.code-block-wrapper').querySelector('pre');if(pre){navigator.clipboard.writeText(pre.textContent);var btn=this;btn.innerHTML=btn.innerHTML.replace('Copy','Copied!');setTimeout(function(){btn.innerHTML=btn.innerHTML.replace('Copied!','Copy');},2000);}"
+            onclick="var wrapper=this.closest('.code-block-wrapper');var pre=wrapper.querySelector('td.code pre')||wrapper.querySelector('.code-highlight pre');if(pre){navigator.clipboard.writeText(pre.textContent);var btn=this;btn.innerHTML=btn.innerHTML.replace('Copy','Copied!');setTimeout(function(){btn.innerHTML=btn.innerHTML.replace('Copied!','Copy');},2000);}"
         >
             {% icon "bookmark" size=10 %}
             Copy
         </button>
     </div>
 
-    {# Highlighted code body - mockup-code inspired style #}
-    <div class="overflow-x-auto bg-base-200/50 border-x border-b border-dotted border-base-300/50 rounded-b-xl">
+    {# Highlighted code body - CodeMirror-style tight layout #}
+    <div class="overflow-x-auto bg-base-200/50">
         {{ highlighted|safe }}
     </div>
 
