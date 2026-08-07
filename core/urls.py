@@ -1,13 +1,12 @@
 from django.conf import settings
-from django.urls import include, path, re_path
 from django.contrib import admin
-
-from wagtail.admin import urls as wagtailadmin_urls
+from django.urls import include, path, re_path
 from wagtail import urls as wagtail_urls
-from wagtail.documents import urls as wagtaildocs_urls
-from wagtail.contrib.sitemaps.views import sitemap
+from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.api.v2 import router as api_router_module
 from wagtail.api.v2.views import PagesAPIViewSet
+from wagtail.contrib.sitemaps.views import sitemap
+from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.images.views.serve import ServeView
 
 from apps.blog.feeds import BlogRSSFeed
@@ -35,9 +34,9 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-    from debug_toolbar.toolbar import debug_toolbar_urls
 
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
