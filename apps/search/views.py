@@ -1,9 +1,6 @@
-
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
 from wagtail.search import query as search_query
 
 from apps.blog.models import BlogPage
@@ -19,9 +16,13 @@ def search_view(request: HttpRequest) -> HttpResponse:
     results: list[BlogPage] = []
 
     if query_string and len(query_string) >= MIN_QUERY_LEN:
-        page_qs = BlogPage.objects.live().public().search(
-            search_query.Query(query_string),
-            search_fields=["title", "intro", "body"],
+        page_qs = (
+            BlogPage.objects.live()
+            .public()
+            .search(
+                search_query.Query(query_string),
+                search_fields=["title", "intro", "body"],
+            )
         )
         results = list(page_qs.specific()[:MAX_RESULTS])
 

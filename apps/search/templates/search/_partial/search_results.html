@@ -1,32 +1,32 @@
 {% load wagtailcore_tags site_tags %}
 
 {% if query %}
-  {% if results %}
-    <ul class="max-h-80 overflow-y-auto py-2">
-      {% for post in results %}
-        <li>
-          <a href="{% pageurl post %}"
-             class="block px-4 py-3 hover:bg-base-200 transition-colors group search-result-link"
-             onclick="this.closest('dialog')?.close()">
-            <div class="flex items-center gap-2 mb-1">
-              <div class="shrink-0">{% mood_badge post.mood %}</div>
-              <span class="text-sm font-medium group-hover:text-primary transition-colors truncate">{{ post.title }}</span>
-            </div>
-            {% if post.intro %}
-              <p class="text-xs text-base-content/60 line-clamp-2 ml-8">{{ post.intro }}</p>
-            {% endif %}
-            <div class="text-[10px] text-base-content/30 font-mono ml-8 mt-0.5">{{ post.date|date:"M d, Y" }}</div>
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <div class="py-8 text-center text-sm text-base-content/50">
-      No results for "{{ query }}"
-    </div>
-  {% endif %}
+    {% if results %}
+        <ul class="max-h-80 overflow-y-auto py-2">
+            {% for post in results %}
+                <li>
+                    <a href="{% pageurl post %}"
+                       class="block px-4 py-3 hover:bg-base-200 transition-colors group search-result-link"
+                       onclick="this.closest('dialog')?.close()">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="shrink-0">{% mood_badge post.mood %}</div>
+                            <span class="text-sm font-medium group-hover:text-primary transition-colors truncate">{{ post.title }}</span>
+                        </div>
+                        {% if post.intro %}
+                            <p class="text-xs text-base-content/60 line-clamp-2 ml-8">{{ post.intro }}</p>
+                        {% endif %}
+                        <div class="text-[10px] text-base-content/30 font-mono ml-8 mt-0.5">{{ post.date|date:"M d, Y" }}</div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="py-8 text-center text-sm text-base-content/50">
+            No results for "{{ query }}"
+        </div>
+    {% endif %}
 {% else %}
-  <div class="py-6 text-center text-xs text-base-content/30 font-mono">
-    Start typing to search...
-  </div>
+    <div class="py-6 text-center text-xs text-base-content/30 font-mono">
+        Start typing to search...
+    </div>
 {% endif %}
