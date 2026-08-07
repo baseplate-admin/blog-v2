@@ -1,4 +1,3 @@
-import '../tailwind/tailwind.css';
 import htmx from 'htmx.org';
 
 // -- HTMX 4.x config --
@@ -23,7 +22,9 @@ const showProgress = () => {
     bar.style.width = '0%';
     bar.style.opacity = '1';
     bar.style.transition = 'width 0.4s ease';
-    requestAnimationFrame(() => { bar.style.width = '70%'; });
+    requestAnimationFrame(() => {
+        bar.style.width = '70%';
+    });
 };
 const hideProgress = () => {
     const bar = document.querySelector('#nprogress-bar');
@@ -31,17 +32,22 @@ const hideProgress = () => {
     bar.style.transition = 'width 0.3s ease, opacity 0.5s ease';
     bar.style.width = '100%';
     bar.style.opacity = '0';
-    setTimeout(() => { bar.style.width = '0%'; bar.style.opacity = '0'; }, 300);
+    setTimeout(() => {
+        bar.style.width = '0%';
+        bar.style.opacity = '0';
+    }, 300);
 };
 
 document.body.addEventListener('htmx:before:request', ((evt: Event) => {
     const elt = evt.target as HTMLElement | null;
-    const isBoosted = elt?.hasAttribute('hx-boost') || elt?.closest('[hx-boost]');
+    const isBoosted =
+        elt?.hasAttribute('hx-boost') || elt?.closest('[hx-boost]');
     if (isBoosted) showProgress();
 }) as EventListener);
 document.body.addEventListener('htmx:after:request', ((evt: Event) => {
     const elt = evt.target as HTMLElement | null;
-    const isBoosted = elt?.hasAttribute('hx-boost') || elt?.closest('[hx-boost]');
+    const isBoosted =
+        elt?.hasAttribute('hx-boost') || elt?.closest('[hx-boost]');
     if (isBoosted) hideProgress();
 }) as EventListener);
 
