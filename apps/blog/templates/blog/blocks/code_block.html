@@ -1,5 +1,5 @@
 {# Pygments code block - server-side highlighted, class-based CSS, zero JS #}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags site_tags %}
 
 <div class="code-block-wrapper relative my-8"
      {% if self.animation %}data-aos="{{ self.animation }}" data-aos-delay="{{ self.delay }}"{% endif %}>
