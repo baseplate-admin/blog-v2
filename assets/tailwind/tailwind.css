@@ -138,45 +138,45 @@
 /* Swap theme by editing these @apply rules. Source: pygments lovelace style. */
 
 .code-highlight {
-  pre {
+  & pre {
     @apply leading-relaxed py-4 px-3 m-0 text-sm text-base-content/80;
     font-family: "JetBrains Mono Variable", monospace !important;
   }
 
-  table {
+  & table {
     @apply m-0 border-collapse border-spacing-0 w-full;
   }
 
   /* Line number gutter — CodeMirror 6 style: subtle, right-aligned, muted */
-  td.linenos {
+  & td.linenos {
     @apply pr-3 pl-2 text-right select-none text-base-content/20 rounded-sm align-top border-r border-base-300/15;
     min-width: 2.5rem;
     width: 2.5rem;
     max-width: 2.5rem;
     font-size: 0.8em;
 
-    > div {
+    & > div {
       margin: 0 !important;
       padding: 0 !important;
     }
 
-    pre {
+    & pre {
       @apply p-0 m-0 font-mono leading-relaxed py-4;
     }
   }
 
   /* Code area */
-  td.code {
+  & td.code {
     @apply p-0 align-top;
 
-    pre {
+    & pre {
       @apply py-4 pl-0 pr-4;
     }
   }
 
   /* Hover row highlight — CodeMirror active line style */
-  tr {
-    td {
+  & tr {
+    & td {
       @apply transition-colors duration-150;
     }
 
@@ -192,37 +192,37 @@
   }
 
   /* Syntax tokens */
-  .normal { @apply text-base-content/30; }
-  .hll { @apply bg-base-200; }
-  .c, .cm, .cpf, .c1, .cs { @apply text-base-content/50 italic; }
-  .ch { @apply text-success/80 italic; }
-  .cp { @apply text-success; }
-  .err { @apply bg-error/30 text-error; }
-  .k, .kn, .kp, .kr { @apply text-primary font-semibold; }
-  .kd, .kt { @apply text-primary italic font-semibold; }
-  .kc { @apply text-base-content/60 italic; }
-  .o, .ow, .pm, .p, .gh, .go, .gp, .gu { @apply text-base-content/40; }
-  .gd, .gr { @apply text-error; }
-  .ge { @apply italic; }
-  .ges { @apply italic font-bold; }
-  .gi { @apply text-success; }
-  .gs { @apply font-bold; }
-  .gt { @apply text-primary; }
-  .m, .mb, .mf, .mh, .mi, .mo, .il, .sa { @apply text-base-content/60; }
-  .s, .sb, .s2, .sh, .s1, .ss { @apply text-error/80; }
-  .sc { @apply text-primary/80; }
-  .dl, .fm, .vm, .sd { @apply text-accent/80 italic; }
-  .se { @apply text-success; }
-  .si { @apply text-error/80 underline; }
-  .sx, .sr { @apply text-primary/80; }
-  .na, .nb, .nl, .nn { @apply text-success; }
-  .nc, .nd { @apply text-info/80; }
-  .no, .nf { @apply text-accent/80; }
-  .ni { @apply text-success/80; }
-  .ne { @apply text-warning/80; }
-  .nt { @apply text-primary font-semibold; }
-  .nv, .vc, .vi { @apply text-error/70; }
-  .vg { @apply text-warning/70; }
-  .bp { @apply text-success italic; }
-  .w { @apply text-accent/40; }
+  & .normal { @apply text-base-content/30; }
+  & .hll { @apply bg-base-200; }
+  & .c, & .cm, & .cpf, & .c1, & .cs { @apply text-base-content/50 italic; }
+  & .ch { @apply text-success/80 italic; }
+  & .cp { @apply text-success; }
+  & .err { @apply bg-error/30 text-error; }
+  & .k, & .kn, & .kp, & .kr { @apply text-primary font-semibold; }
+  & .kd, & .kt { @apply text-primary italic font-semibold; }
+  & .kc { @apply text-base-content/60 italic; }
+  & .o, & .ow, & .pm, & .p, & .gh, & .go, & .gp, & .gu { @apply text-base-content/40; }
+  & .gd, & .gr { @apply text-error; }
+  & .ge { @apply italic; }
+  & .ges { @apply italic font-bold; }
+  & .gi { @apply text-success; }
+  & .gs { @apply font-bold; }
+  & .gt { @apply text-primary; }
+  & .m, & .mb, & .mf, & .mh, & .mi, & .mo, & .il, & .sa { @apply text-base-content/60; }
+  & .s, & .sb, & .s2, & .sh, & .s1, & .ss { @apply text-error/80; }
+  & .sc { @apply text-primary/80; }
+  & .dl, & .fm, & .vm, & .sd { @apply text-accent/80 italic; }
+  & .se { @apply text-success; }
+  & .si { @apply text-error/80 underline; }
+  & .sx, & .sr { @apply text-primary/80; }
+  & .na, & .nb, & .nl, & .nn { @apply text-success; }
+  & .nc, & .nd { @apply text-info/80; }
+  & .no, & .nf { @apply text-accent/80; }
+  & .ni { @apply text-success/80; }
+  & .ne { @apply text-warning/80; }
+  & .nt { @apply text-primary font-semibold; }
+  & .nv, & .vc, & .vi { @apply text-error/70; }
+  & .vg { @apply text-warning/70; }
+  & .bp { @apply text-success italic; }
+  & .w { @apply text-accent/40; }
 }
