@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from pathlib import Path
-import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PROJECT_DIR.parent
@@ -202,4 +204,12 @@ WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000  # ~12MP default
 
 # Rich text editor features - global control
 # https://docs.wagtail.org/en/stable/topics/rich_text.html#feature-configuration
-WAGTAILADMIN_RICH_TEXT_FEATURES = ["h2", "h3", "bold", "italic", "link", "document-link", "image"]
+WAGTAILADMIN_RICH_TEXT_FEATURES = [
+    "h2",
+    "h3",
+    "bold",
+    "italic",
+    "link",
+    "document-link",
+    "image",
+]

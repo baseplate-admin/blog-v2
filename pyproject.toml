@@ -28,6 +28,7 @@ dependencies = [
     "requests-cache[redis]>=1.2",
     # Code highlighting
     "pygments>=2.20.0",
+    "python-dotenv>=1.2.2",
 ]
 
 [dependency-groups]
