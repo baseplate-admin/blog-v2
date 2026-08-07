@@ -86,17 +86,6 @@ def highlight_code(code: str, language: str) -> str:
     return pygments_highlight(code, lexer, formatter)
 
 
-def strip_line_numbers(code: str) -> str:
-    """Remove leading line numbers from each line of code."""
-    import re
-    lines = code.split("\n")
-    result: list[str] = []
-    for line in lines:
-        stripped = re.sub(r"^\s*\d+\s+", "", line, count=1)
-        result.append(stripped)
-    return "\n".join(result)
-
-
 class PygmentsCodeBlock(blocks.StructBlock):
     """Code block with server-side syntax highlighting via Pygments."""
 
@@ -136,7 +125,7 @@ class PygmentsCodeBlock(blocks.StructBlock):
                 break
 
         context["highlighted"] = highlight_code(code, language)
-        context["raw_code"] = strip_line_numbers(code)
+        context["raw_code"] = code
         context["language_display"] = lang_display
         context["footer_text"] = footer_text
         return context
