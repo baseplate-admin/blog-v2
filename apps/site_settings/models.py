@@ -51,6 +51,12 @@ class SiteConfigSettings(BaseSiteSetting):
         help_text="The legal license governing the site's content.",
     )
 
+    github_token: models.CharField = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Personal Access Token for GitHub API rate limit (1000 req/hr vs 60). Generate at https://github.com/settings/tokens. No scopes needed for public repo data.",
+    )
+
     panels: list[FieldPanel | MultiFieldPanel] = [
         FieldPanel("site_name"),
         MultiFieldPanel(
@@ -65,6 +71,12 @@ class SiteConfigSettings(BaseSiteSetting):
                 FieldPanel("license_type"),
             ],
             heading="Legal & Licensing",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("github_token"),
+            ],
+            heading="External API Tokens",
         ),
     ]
 

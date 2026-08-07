@@ -1,31 +1,31 @@
 {% with site_conf=settings.site_settings.SiteConfigSettings %}
-<footer class="footer bg-base-200/50 border-t border-base-300/50 px-4 md:px-12 py-10 text-sm">
-    <div class="flex flex-col md:flex-row w-full">
-        <aside class="flex flex-col gap-2 mb-6 md:mb-0 md:flex-row md:gap-6">
-            {% if about %}
-                <a href="{{ about }}" class="link link-hover text-base-content/60 hover:text-primary">About</a>
-            {% endif %}
-            {% if contact %}
-                <a href="{{ contact }}" class="link link-hover text-base-content/60 hover:text-primary">Contact</a>
-            {% endif %}
-            {% if blog %}
-                <a href="{{ blog }}" class="link link-hover text-base-content/60 hover:text-primary">Blog</a>
-            {% endif %}
-            {% if projects %}
-                <a href="{{ projects }}" class="link link-hover text-base-content/60 hover:text-primary">Projects</a>
-            {% endif %}
-        </aside>
-        <aside class="mt-4 md:mt-0 md:ml-auto text-xs text-base-content/40">
-            {% if site_conf.copyright_start_year or site_conf.copyright_end_year %}
-                Copyright {{ site_conf.copyright_start_year|default:site_conf.copyright_end_year }}{% if site_conf.copyright_start_year and site_conf.copyright_end_year %}&ndash;{{ site_conf.copyright_end_year }}{% endif %}
-            {% else %}
-                Copyright {% now "Y" %}
-            {% endif %}
-            <br>
-            All rights reserved
-            <br>
-            Licensed Under: {{ site_conf.get_license_type_display|default:"MIT" }}
-        </aside>
-    </div>
-</footer>
+    <footer class="footer bg-base-200/50 border-t border-base-300/50 px-4 md:px-12 py-10 text-sm">
+        <div class="flex flex-col md:flex-row w-full">
+            <aside class="flex flex-col gap-2 mb-6 md:mb-0 md:flex-row md:gap-6">
+                {% if about %}
+                    <a href="{{ about }}" class="link link-hover text-base-content/60 hover:text-primary">About</a>
+                {% endif %}
+                {% if contact %}
+                    <a href="{{ contact }}" class="link link-hover text-base-content/60 hover:text-primary">Contact</a>
+                {% endif %}
+                {% if blog %}
+                    <a href="{{ blog }}" class="link link-hover text-base-content/60 hover:text-primary">Blog</a>
+                {% endif %}
+                {% if projects %}
+                    <a href="{{ projects }}" class="link link-hover text-base-content/60 hover:text-primary">Projects</a>
+                {% endif %}
+            </aside>
+            <aside class="mt-4 md:mt-0 md:ml-auto text-xs text-base-content/40">
+                {% if site_conf.copyright_start_year or site_conf.copyright_end_year %}
+                    Copyright {{ site_conf.copyright_start_year|default:site_conf.copyright_end_year }}{% if site_conf.copyright_start_year and site_conf.copyright_end_year %}&ndash;{{ site_conf.copyright_end_year }}{% endif %}
+                {% else %}
+                    Copyright {% now "Y" %}
+                {% endif %}
+                <br>
+                All rights reserved
+                <br>
+                Licensed Under: {{ site_conf.get_license_type_display|default:"MIT" }}
+            </aside>
+        </div>
+    </footer>
 {% endwith %}

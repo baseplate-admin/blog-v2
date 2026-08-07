@@ -2,47 +2,86 @@
 {% load wagtailcore_tags wagtailimages_tags site_tags %}
 
 {% block inner_content %}
-<main class="flex-1 relative">
-    <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
-    <div class="max-w-7xl mx-auto px-4 md:px-12 py-16 md:py-24 relative z-10">
-        <div class="text-secondary font-mono mb-4 text-sm tracking-widest" data-aos="fade-up">
-            <a href="{{ page.get_parent.url }}" class="hover:underline">BACK TO PROJECTS</a>
-        </div>
+    <main class="flex-1 relative">
+        <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 md:px-12 py-16 md:py-24 relative z-10">
+            <div class="text-secondary font-mono mb-4 text-sm tracking-widest" data-aos="fade-up">
+                <a href="{{ page.get_parent.url }}" class="hover:underline">BACK TO PROJECTS</a>
+            </div>
 
-        <h1 class="text-4xl md:text-6xl font-black mb-8 leading-tight max-w-4xl tracking-tight" data-aos="fade-up" data-aos-delay="100">
-            {{ page.title }}
-        </h1>
+            <h1 class="text-4xl md:text-6xl font-black mb-8 leading-tight max-w-4xl tracking-tight" data-aos="fade-up" data-aos-delay="100">
+                {{ page.title }}
+            </h1>
 
-        <div class="flex flex-wrap gap-4 mb-12" data-aos="fade-up" data-aos-delay="150">
-            {% if page.github_url %}
-                <a href="{{ page.github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-neutral gap-2">
-                    {% icon "github" size=24 %} View Source
-                </a>
+            <div class="flex flex-wrap gap-4 mb-12" data-aos="fade-up" data-aos-delay="150">
+                {% if page.github_url %}
+                    <a href="{{ page.github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-neutral gap-2">
+                        {% icon "github" size=24 %} View Source
+                    </a>
+                {% endif %}
+                {% if page.demo_url %}
+                    <a href="{{ page.demo_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary gap-2">
+                        {% icon "external-link" size=24 %} Live Demo
+                    </a>
+                {% endif %}
+            </div>
+
+            {% with gh=page.get_github_data %}
+                {% if gh.has_url %}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" data-aos="fade-up" data-aos-delay="175">
+                        <div class="card bg-base-200 border border-base-300 rounded-2xl">
+                            <div class="card-body p-4">
+                                <div class="flex items-center gap-2 text-base-content/50 text-xs font-mono tracking-wider">
+                                    {% icon "star" size=14 %} STARS
+                                </div>
+                                <div class="text-3xl font-black mt-1">{{ gh.stars }}</div>
+                            </div>
+                        </div>
+                        <div class="card bg-base-200 border border-base-300 rounded-2xl">
+                            <div class="card-body p-4">
+                                <div class="flex items-center gap-2 text-base-content/50 text-xs font-mono tracking-wider">
+                                    {% icon "git-branch" size=14 %} FORKS
+                                </div>
+                                <div class="text-3xl font-black mt-1">{{ gh.forks }}</div>
+                            </div>
+                        </div>
+                        <div class="card bg-base-200 border border-base-300 rounded-2xl">
+                            <div class="card-body p-4">
+                                <div class="flex items-center gap-2 text-base-content/50 text-xs font-mono tracking-wider">
+                                    {% icon "code" size=14 %} LANGUAGE
+                                </div>
+                                <div class="text-lg font-bold mt-1">{{ gh.language|default:"-" }}</div>
+                            </div>
+                        </div>
+                        <div class="card bg-base-200 border border-base-300 rounded-2xl">
+                            <div class="card-body p-4">
+                                <div class="flex items-center gap-2 text-base-content/50 text-xs font-mono tracking-wider">
+                                    {% icon "history" size=14 %} LAST PUSH
+                                </div>
+                                <div class="text-lg font-bold mt-1">{{ gh.last_updated|default:"-" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% if page.image %}
+                <figure class="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl border border-base-content/10 mb-16" data-aos="fade-up" data-aos-delay="200">
+                    {% image page.image original class="w-full h-full object-cover" %}
+                </figure>
             {% endif %}
-            {% if page.demo_url %}
-                <a href="{{ page.demo_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary gap-2">
-                    {% icon "external-link" size=24 %} Live Demo
-                </a>
-            {% endif %}
-        </div>
 
-        {% if page.image %}
-            <figure class="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl border border-base-content/10 mb-16" data-aos="fade-up" data-aos-delay="200">
-                {% image page.image original class="w-full h-full object-cover" %}
-            </figure>
-        {% endif %}
+            <div class="prose prose-lg md:prose-xl max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="250">
+                {{ page.description|richtext }}
+            </div>
 
-        <div class="prose prose-lg md:prose-xl max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="250">
-            {{ page.description|richtext }}
+            <div class="border-t border-base-300 mt-24 pt-12 flex justify-between items-center" data-aos="fade-in">
+                <a href="{{ page.get_parent.url }}" class="btn btn-ghost gap-2">Start Over</a>
+                <button class="btn btn-circle btn-outline" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                    {% icon "chevron-up" size=24 %}
+                </button>
+            </div>
         </div>
-
-        <div class="border-t border-base-300 mt-24 pt-12 flex justify-between items-center" data-aos="fade-in">
-             <a href="{{ page.get_parent.url }}" class="btn btn-ghost gap-2">Start Over</a>
-             <button class="btn btn-circle btn-outline" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-                {% icon "chevron-up" size=24 %}
-             </button>
-        </div>
-    </div>
-</main>
+    </main>
 
 {% endblock %}

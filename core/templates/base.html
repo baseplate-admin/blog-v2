@@ -8,12 +8,11 @@
 
 {# Nav items + current path — used in navbar, mobile menu, footer #}
 {% with about=about_url blog=blog_url projects=projects_url contact=contact_url current_path=request.path %}
-
     <!DOCTYPE html>
     <html lang="en" data-theme="tanstack-dark">
-    <script>
-        (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
-    </script>
+        <script>
+            (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
+        </script>
         <head>
             {% vite_hmr_client %}
             <meta charset="utf-8">
@@ -27,10 +26,10 @@
             {% endif %}
             <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {# RSS feed link #}
+            {# RSS feed link #}
             <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed/">
 
-    {# Open Graph meta tags #}
+            {# Open Graph meta tags #}
             {% if page %}
                 {% with title=page.seo_title|default:page.title description=page.search_description site_name=current_site.site_name|default:"The Tinkerer" %}
                     {% wagtail_site as site %}
@@ -46,7 +45,7 @@
                                 <meta property="og:image:alt" content="{{ title }}">
                             {% endwith %}
                         {% endif %}
-                {# Twitter Card #}
+                        {# Twitter Card #}
                         <meta name="twitter:card" content="summary_large_image">
                         <meta name="twitter:title" content="{{ title }}">
                         <meta name="twitter:description" content="{{ description }}">
@@ -71,24 +70,24 @@
         <body class="bg-base-100 font-sans text-base-content antialiased transition-colors duration-300 min-h-screen">
             {% if not request.is_htmx %}{% wagtailuserbar %}{% endif %}
 
-    {# Navigation progress bar (nprogress-style) #}
+            {# Navigation progress bar (nprogress-style) #}
             <div id="nav-progress" class="fixed top-0 left-0 w-full h-0.5 z-[70] pointer-events-none overflow-hidden">
                 <div class="progress-bar h-full bg-linear-to-r from-primary to-accent w-0 transition-all duration-300 ease-in-out"></div>
             </div>
 
             <div class="page-shell min-h-screen flex flex-col">
 
-        {# ── Navbar (centered, max-w-7xl, persists across swaps) ── #}
+                {# ── Navbar (centered, max-w-7xl, persists across swaps) ── #}
                 <nav class="relative z-50 navbar w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-colors duration-300">
 
-                {# Logo #}
+                    {# Logo #}
                     <div class="navbar-start">
                         <a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
                             The Tinkerer
                         </a>
                     </div>
 
-                {# Desktop nav links #}
+                    {# Desktop nav links #}
                     <div class="navbar-center hidden md:flex">
                         <div class="flex items-center gap-6">
                             {% if about %}
@@ -106,7 +105,7 @@
                         </div>
                     </div>
 
-                {# Right side: search, theme toggle, mobile menu #}
+                    {# Right side: search, theme toggle, mobile menu #}
                     <div class="navbar-end">
                         <div class="flex items-center gap-2">
                             {% if current_path == blog %}
@@ -145,7 +144,7 @@
 
                 </nav>
 
-        {# Mobile dropdown menu #}
+                {# Mobile dropdown menu #}
                 <div id="mobile-menu" class="hidden absolute right-4 top-full pt-2 z-50">
                     <div class="menu bg-base-100 rounded-box border border-base-300 shadow-xl p-2 w-56 animate-in fade-in slide-in-from-top-2 duration-200">
                         {% if about %}
@@ -170,7 +169,7 @@
                     </div>
                 </div>
 
-        {# Search dialog #}
+                {# Search dialog #}
                 <dialog id="search-dialog" class="modal modal-bottom sm:modal-middle backdrop:bg-black/60">
                     <div class="modal-box w-full max-w-2xl p-0 overflow-hidden shadow-2xl">
                         <div class="flex items-center gap-3 px-4 py-3 border-b border-base-300">
@@ -199,7 +198,7 @@
                     </form>
                 </dialog>
 
-        {# ── HTMX boost: swaps only <main>, navbar/footer persist ── #}
+                {# ── HTMX boost: swaps only <main>, navbar/footer persist ── #}
                 <div class="boost-root flex-1"
                      hx-boost:inherited="true"
                      hx-target:inherited="main"
@@ -212,17 +211,17 @@
                     </main>
                 </div>
 
-        {# ── Footer (sticks to bottom via flexbox) ─────────── #}
+                {# ── Footer (sticks to bottom via flexbox) ─────────── #}
                 {% include "components/footer.html" with about=about blog=blog projects=projects contact=contact %}
 
             </div>
 
-    {# ── Minimal inline scripts — theme toggle, keyboard, mobile menu ── #}
+            {# ── Minimal inline scripts — theme toggle, keyboard, mobile menu ── #}
             <script type="module">
                 const $ = (sel) => document.querySelector(sel);
                 const $$ = (sel) => document.querySelectorAll(sel);
 
-      // Theme toggle
+                // Theme toggle
                 function syncTheme() {
                     const isDark = document.documentElement.dataset.theme === "tanstack-dark";
                     const show = isDark ? "" : "none";
@@ -242,7 +241,7 @@
                 $("#theme-toggle")?.addEventListener("click", toggleTheme);
                 $("#mobile-theme-toggle")?.addEventListener("click", toggleTheme);
 
-      // Navigation progress bar (nprogress-style)
+                // Navigation progress bar (nprogress-style)
                 const progressBar = $(".progress-bar");
                 let progressTimer;
                 function showProgress() {
@@ -271,17 +270,17 @@
                 document.body.addEventListener("htmx:before:request", showProgress);
                 document.body.addEventListener("htmx:after:request", completeProgress);
 
-      // Search open/close
+                // Search open/close
                 window.openSearch = () => { $("#search-dialog")?.showModal(); setTimeout(() => $("#search-input")?.focus(), 100); };
                 window.closeSearch = () => { $("#search-dialog")?.close(); };
 
-      // Keyboard shortcuts
+                // Keyboard shortcuts
                 document.addEventListener("keydown", (e) => {
                     if ((e.ctrlKey || e.metaKey) && e.key === "k") { e.preventDefault(); window.openSearch?.(); }
                     if (e.key === "Escape") window.closeSearch?.();
                 });
 
-      // Mobile hamburger icon toggle
+                // Mobile hamburger icon toggle
                 $("#mobile-menu-btn")?.addEventListener("click", (e) => {
                     e.stopPropagation();
                     const menu = $("#mobile-menu");
@@ -291,7 +290,7 @@
                     c?.classList.toggle("hidden", !isMenuOpen);
                     menu?.classList.toggle("hidden");
                 });
-      // Close mobile menu when clicking outside
+                // Close mobile menu when clicking outside
                 document.addEventListener("click", (e) => {
                     const menu = $("#mobile-menu");
                     const btn = $("#mobile-menu-btn");
@@ -302,6 +301,6 @@
                     }
                 });
             </script>
+        </body>
+    </html>
 {% endwith %}
-</body>
-</html>
