@@ -148,19 +148,24 @@
 
 /* Line number gutter — CodeMirror 6 style: subtle, right-aligned, muted */
 .code-highlight td.linenos {
-  @apply pr-4 pl-3 text-right select-none text-base-content/20 bg-transparent align-top border-r border-base-300/15;
-  min-width: 3rem;
-  width: 3rem;
-  max-width: 3rem;
+  @apply pr-3 pl-2 text-right select-none text-base-content/20 bg-transparent align-top border-r border-base-300/15;
+  min-width: 2.5rem;
+  width: 2.5rem;
+  max-width: 2.5rem;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   font-size: 0.8em;
-  line-height: 1.625;
+}
+
+/* Override Pygments inline styles on linenodiv wrapper */
+.code-highlight td.linenos > div {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .code-highlight td.linenos pre {
-  @apply p-0 m-0 font-mono;
+  @apply p-0 m-0 font-mono leading-relaxed py-4;
 }
 
 /* Code area */
