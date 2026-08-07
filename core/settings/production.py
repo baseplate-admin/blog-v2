@@ -4,6 +4,13 @@ from .base import *
 
 DEBUG = False
 
+# django-vite: disable dev mode in production, use manifest
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": False,
+    }
+}
+
 # ManifestStaticFilesStorage is recommended in production, to prevent
 # outdated JavaScript / CSS assets being served from cache
 # (e.g. after a Wagtail upgrade).
