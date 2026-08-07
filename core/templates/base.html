@@ -78,7 +78,7 @@
             <div class="page-shell min-h-screen flex flex-col">
 
                 {# ── Navbar (navbar + mobile menu + search dialog + inline scripts) ── #}
-                {% include "components/navbar.html" with about=about blog=blog projects=projects contact=contact current_path=current_path %}
+                {% include "components/navbar.html" %}
 
                 {# ── HTMX boost: swaps only <main>, navbar/footer persist ── #}
                 <div class="boost-root flex-1"
