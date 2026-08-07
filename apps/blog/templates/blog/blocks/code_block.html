@@ -14,10 +14,9 @@
             type="button"
             class="code-copy-btn cursor-pointer text-[11px] font-mono text-base-content/20 hover:text-base-content/50 transition-colors flex items-center gap-1.5"
             data-code="{{ raw_code|escapejs }}"
-            onclick="var code=JSON.parse('\"'+this.dataset.code+'\"');navigator.clipboard.writeText(code).then(()=>{this.innerHTML=this.innerHTML.replace('Copy','Copied!');setTimeout(()=>{this.innerHTML=this.innerHTML.replace('Copied!','Copy');},2000);});"
         >
             {% icon "bookmark" size=10 %}
-            Copy
+            <span class="code-copy-text">Copy</span>
         </button>
     </div>
 
