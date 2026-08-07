@@ -29,15 +29,16 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
     avatar_url: str = f"https://seccdn.libravatar.org/avatar/{email_hash}?s=200&d=retro"
 
     try:
-        session = requests.Session()
-        session.headers.update({"User-Agent": "Blog/1.0"})
+        from core.requests import get_cached_session
+
+        session = get_cached_session()
         response = session.get(avatar_url, timeout=5)
         response.raise_for_status()
         return HttpResponse(
             response.content,
             content_type=response.headers.get("Content-Type", "image/png"),
         )
-    except requests.RequestException:
+    except Exception:
         return HttpResponseNotFound()
 
 

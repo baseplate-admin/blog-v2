@@ -20,15 +20,6 @@ CACHES = {
     }
 }
 
-# requests-cache backend for external HTTP calls (avatar, etc.)
-import requests_cache
-redis_url = os.getenv("REDIS_URL", f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}/1")
-requests_cache.install_cache(
-    backend="redis",
-    filename=redis_url,
-    expire_after=86400,  # 24 hours
-)
-
 # Backblaze B2 media storage (S3-compatible)
 _required_env = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_STORAGE_BUCKET_NAME", "AWS_S3_ENDPOINT_URL"]
 _missing = [v for v in _required_env if not os.getenv(v)]
