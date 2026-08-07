@@ -62,11 +62,12 @@ CODE_LANGUAGES: list[tuple[str, str]] = [
 ]
 
 
-def highlight_code(code: str, language: str, line_numbers: bool = False) -> str:
+def highlight_code(code: str, language: str) -> str:
     """Highlight code using Pygments and return safe HTML string.
 
     Returns class-based HTML only - no inline styles. Theme is controlled
     via Tailwind @apply rules in tailwind.css for easy swapping.
+    Line numbers always enabled.
     """
     try:
         lexer = get_lexer_by_name(language, stripnl=False)
@@ -76,7 +77,7 @@ def highlight_code(code: str, language: str, line_numbers: bool = False) -> str:
     formatter = HtmlFormatter(
         style=get_style_by_name("lovelace"),
         cssclass="code-highlight",
-        linenos="inline" if line_numbers else False,
+        linenos="inline",
         noclasses=False,
         full=False,
         title=False,
@@ -99,11 +100,6 @@ class PygmentsCodeBlock(blocks.StructBlock):
         required=True,
         help_text="Code content.",
     )
-    line_numbers = blocks.BooleanBlock(
-        default=False,
-        required=False,
-        help_text="Show line numbers.",
-    )
     footer_text = blocks.RichTextBlock(
         required=False,
         feature_names=["bold", "italic", "link"],
@@ -121,7 +117,6 @@ class PygmentsCodeBlock(blocks.StructBlock):
         # StructValue is a dict subclass - use dict key access, not getattr
         language = value.get("language") or "text"
         code = value.get("code") or ""
-        line_numbers = value.get("line_numbers", False)
         footer_text = value.get("footer_text") or ""
 
         # Get language display name
@@ -131,7 +126,7 @@ class PygmentsCodeBlock(blocks.StructBlock):
                 lang_display = lang_label
                 break
 
-        context["highlighted"] = highlight_code(code, language, line_numbers)
+        context["highlighted"] = highlight_code(code, language)
         context["raw_code"] = code
         context["language_display"] = lang_display
         context["footer_text"] = footer_text
