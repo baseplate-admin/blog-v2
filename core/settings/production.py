@@ -37,7 +37,8 @@ AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN")
 AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
 AWS_DEFAULT_ACL = "public-read"
 AWS_S3_USE_SSL = True
-AWS_LOCATION = os.getenv("AWS_LOCATION")
+AWS_LOCATION = os.getenv("AWS_LOCATION", "")
+AWS_S3_FILE_OVERWRITE = False
 
 STORAGES["default"]["BACKEND"] = "storages.backends.s3.S3Storage"
 
