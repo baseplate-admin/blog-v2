@@ -1,18 +1,18 @@
-{# Pygments code block - CodeMirror-style with server-side highlighting #}
+{# Pygments code block - Firefox DevTools style #}
 {% load wagtailcore_tags site_tags %}
 
-<div class="code-block-wrapper relative my-8 rounded-sm overflow-hidden border border-dotted border-base-300/50"
+<div class="code-block-wrapper relative my-8 rounded-lg overflow-hidden border border-base-300/30 bg-base-200/50"
      {% if self.animation %}data-aos="{{ self.animation }}" data-aos-delay="{{ self.delay }}"{% endif %}>
 
-    {# Title bar - language badge + copy button #}
-    <div class="flex items-center justify-between px-4 py-2 bg-base-200/80">
+    {# Title bar - integrated like Firefox DevTools tab #}
+    <div class="flex items-center justify-between px-4 py-2.5 border-b border-base-300/20">
         <div class="flex items-center gap-2">
-            <span class="text-primary/40">{% icon "code" size=12 %}</span>
-            <span class="text-xs font-mono text-base-content/40 uppercase tracking-wider">{{ language_display }}</span>
+            <span class="text-base-content/30">{% icon "code" size=12 %}</span>
+            <span class="text-[11px] font-mono text-base-content/30 uppercase tracking-widest">{{ language_display }}</span>
         </div>
         <button
             type="button"
-            class="code-copy-btn text-xs font-mono text-base-content/30 hover:text-primary transition-colors flex items-center gap-1"
+            class="code-copy-btn text-[11px] font-mono text-base-content/20 hover:text-base-content/50 transition-colors flex items-center gap-1.5"
             onclick="var wrapper=this.closest('.code-block-wrapper');var pre=wrapper.querySelector('td.code pre')||wrapper.querySelector('.code-highlight pre');if(pre){navigator.clipboard.writeText(pre.textContent);var btn=this;btn.innerHTML=btn.innerHTML.replace('Copy','Copied!');setTimeout(function(){btn.innerHTML=btn.innerHTML.replace('Copied!','Copy');},2000);}"
         >
             {% icon "bookmark" size=10 %}
@@ -20,14 +20,14 @@
         </button>
     </div>
 
-    {# Highlighted code body - CodeMirror-style tight layout #}
-    <div class="overflow-x-auto bg-base-200/50">
+    {# Code body - Firefox DevTools style with line number gutter #}
+    <div class="overflow-x-auto">
         {{ highlighted|safe }}
     </div>
 
-    {# Optional footer - rich text, smaller font #}
+    {# Optional footer #}
     {% if footer_text %}
-        <div class="mt-3 px-4 flex items-start gap-2 text-xs text-base-content/40">
+        <div class="mt-3 px-4 flex items-start gap-2 text-xs text-base-content/30">
             <span class="text-primary/30 mt-0.5">{% icon "info" size=10 %}</span>
             <div class="leading-relaxed">{{ footer_text|richtext }}</div>
         </div>
