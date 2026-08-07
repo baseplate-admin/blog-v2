@@ -5,21 +5,29 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    # Core Wagtail Dependencies
     "django>=6.1,<7.0",
     "djangorestframework>=3.17,<4.0",
-    "django-vite>=3.1.0",
-    "modern-colorthief>=0.2.1",
+    "wagtail>=7.3",
+    "uvicorn>=0.40.0",
+    # Database adapters
+    "dj-database-url>=2.3.0",
     "psycopg[binary]>=3.3.2",
+    "redis[hiredis]>=8.1.0",
+    # storage
+    "django-storages[s3]>=1.14",
+    # Vite
+    "django-vite>=3.1.0",
+    # Color/Readtime optimization
+    "modern-colorthief>=0.2.1",
+    "readtime>=3.0.0",
+    # File serving
+    "whitenoise>=6.11.0",
+    # Pinned requests
     "requests>=2.32.0",
     "requests-cache[redis]>=1.2",
-    "readtime>=3.0.0",
-    "uvicorn>=0.40.0",
-    "wagtail>=7.3",
-    "whitenoise>=6.11.0",
-    "dj-database-url>=2.3.0",
-    "django-storages[s3]>=1.14",
+    # Code highlighting
     "pygments>=2.20.0",
-    "redis[hiredis]>=8.1.0",
 ]
 
 [dependency-groups]
