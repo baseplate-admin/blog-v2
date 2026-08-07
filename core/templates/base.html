@@ -10,10 +10,10 @@
 {% with about=about_url blog=blog_url projects=projects_url contact=contact_url current_path=request.path %}
     <!DOCTYPE html>
     <html lang="en" data-theme="tanstack-dark">
-        <script>
-            (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
-        </script>
         <head>
+            <script>
+                (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
+            </script>
             {% vite_hmr_client %}
             <meta charset="utf-8">
             <title>
