@@ -37,10 +37,9 @@ def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
         return HttpResponse(cached_data, content_type="image/png")
 
     try:
-        from core.requests import get_cached_session
+        import requests
 
-        session = get_cached_session()
-        response = session.get(avatar_url, timeout=5, stream=True)
+        response = requests.get(avatar_url, timeout=5, stream=True)
         response.raise_for_status()
 
         content_type: str = response.headers.get("Content-Type", "")
