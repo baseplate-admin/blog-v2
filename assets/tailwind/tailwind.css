@@ -138,7 +138,7 @@
 /* Swap theme by editing these @apply rules. Source: pygments lovelace style. */
 
 .code-highlight pre {
-  @apply leading-relaxed py-4 px-3 m-0 text-sm;
+  @apply leading-relaxed py-4 px-3 m-0 text-sm text-base-content/80;
   font-family: "JetBrains Mono Variable", monospace !important;
 }
 
