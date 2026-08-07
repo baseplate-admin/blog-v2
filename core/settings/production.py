@@ -42,6 +42,9 @@ AWS_S3_FILE_OVERWRITE = False
 
 STORAGES["default"]["BACKEND"] = "storages.backends.s3.S3Storage"
 
+# Media URL pointing to S3/B2 storage
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}"
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")

@@ -9,6 +9,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.api.v2 import router as api_router_module
 from wagtail.api.v2.views import PagesAPIViewSet
+from wagtail.images.serve import ServeView
 
 from apps.blog.feeds import BlogRSSFeed
 from apps.blog.views import author_avatar, blog_page_partial
@@ -17,6 +18,7 @@ api_router = api_router_module.WagtailAPIRouter('api')
 api_router.register_endpoint('pages', PagesAPIViewSet)
 
 urlpatterns = [
+    path("images/<path:action>/", ServeView.as_view(action='redirect')),
     path('sitemap.xml', sitemap),
     path('feed/', BlogRSSFeed(), name="rss_feed"),
     path('rss/', BlogRSSFeed(), name="rss_feed"),
