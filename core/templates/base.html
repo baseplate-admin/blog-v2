@@ -57,7 +57,7 @@
                 (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
             </script>
             {# Vite: HTMX (bundles Tailwind CSS), AOS #}
-            {% vite_asset "assets/tailwind/tailwind.css" type="css" %}
+            {% vite_asset "assets/tailwind/index.ts" %}
             {% vite_asset 'assets/htmx/htmx.ts' %}
             {% vite_asset 'assets/aos/aos.ts' %}
             {% vite_asset 'assets/toc/toc.ts' %}
