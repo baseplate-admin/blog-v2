@@ -132,12 +132,10 @@
     // Theme toggle
     function syncTheme() {
         const isDark = document.documentElement.dataset.theme === "tanstack-dark";
-        const show = isDark ? "" : "none";
-        const hide = isDark ? "none" : "";
-        $$(".theme-icon-dark").forEach(el => el.style.display = show);
-        $$(".theme-icon-light").forEach(el => el.style.display = hide);
-        $$(".mobile-theme-dark").forEach(el => el.style.display = show);
-        $$(".mobile-theme-light").forEach(el => el.style.display = hide);
+        $$(".theme-icon-dark").forEach(el => el.style.display = isDark ? "inline" : "none");
+        $$(".theme-icon-light").forEach(el => el.style.display = isDark ? "none" : "inline");
+        $$(".mobile-theme-dark").forEach(el => el.style.display = isDark ? "inline" : "none");
+        $$(".mobile-theme-light").forEach(el => el.style.display = isDark ? "none" : "inline");
     }
     function toggleTheme() {
         const next = document.documentElement.dataset.theme === "tanstack-dark" ? "tanstack-light" : "tanstack-dark";
