@@ -1,7 +1,7 @@
 {# Pygments code block - CodeMirror-style with server-side highlighting #}
 {% load wagtailcore_tags site_tags %}
 
-<div class="code-block-wrapper relative my-8 rounded-xl overflow-hidden border border-dotted border-base-300/50"
+<div class="code-block-wrapper relative my-8 rounded-sm overflow-hidden border border-dotted border-base-300/50"
      {% if self.animation %}data-aos="{{ self.animation }}" data-aos-delay="{{ self.delay }}"{% endif %}>
 
     {# Title bar - language badge + copy button #}
