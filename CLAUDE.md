@@ -147,7 +147,7 @@ blog/
 - **Image colors** via `modern_colorthief` template tags: `get_dominant_color`, `get_palette_colors`
 - **Wagtail userbar** guarded with `{% if not request.headers.HX_Request %}` to prevent re-render errors during HTMX boost swaps
 - **Mermaid.js**: bundled via npm + Vite, lazy-rendered on scroll intersect. Exposes `window.__mermaidRender(el)` which reads `data-mermaid-code` + `data-mermaid-theme` from the container element
-- **Code copy button**: handler in `assets/toc/toc.ts` (`initCopyButtons()`). Reads code by cloning `.code-highlight pre` DOM and stripping `.linenos` spans. Feedback via `.code-copy-text` span. Re-initializes on HTMX `htmx:after:swap`. Never use inline `onclick` for copy — DOM cloning is the reliable pattern.
+- **Code copy button**: handler in `assets/copy/copy.ts` (`initCopyButtons()`). Reads code by cloning `.code-highlight pre` DOM and stripping `.linenos` spans. Feedback via `.code-copy-text` span. Re-initializes on HTMX `htmx:after:swap`. Never use inline `onclick` for copy - DOM cloning is the reliable pattern. Module scripts use `document.readyState !== 'complete'` check to ensure DOMContentLoaded fires when script loads during `'interactive'` phase.
 
 ## What to Do When...
 

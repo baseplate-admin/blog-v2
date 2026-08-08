@@ -13,7 +13,9 @@
 - [x] Conditional nav links, dj-database-url, per-post license selection
 - [x] Requests-cache with Redis backend
 - [x] Blocks refactoring, code block, AOS templates modularization
-- [x] Fix copy button - moved inline onclick to JS handler in toc.ts (DOM clone approach, no JSON.parse)
+- [x] Fix copy button - moved inline onclick to JS handler in copy.ts (DOM clone approach, no JSON.parse)
+- [x] Fix copy button not working — DOMContentLoaded timing fix for module scripts (was: `=== 'loading'`, now: `!== 'complete'`)
+- [x] Remove info icon from code block footer, uniform footer spacing
 
 ## Pending
 
