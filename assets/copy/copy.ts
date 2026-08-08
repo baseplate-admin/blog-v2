@@ -24,8 +24,8 @@ function initCopyButtons() {
     });
 }
 
-// Initial render
-if (document.readyState === 'loading') {
+// Initial render — use DOMContentLoaded if document not yet complete
+if (document.readyState !== 'complete') {
     document.addEventListener('DOMContentLoaded', initCopyButtons);
 } else {
     requestAnimationFrame(initCopyButtons);
