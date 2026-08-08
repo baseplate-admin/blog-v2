@@ -1,8 +1,8 @@
 {% load wagtailcore_tags %}
 <div data-aos="{{ self.block.value.animation }}" data-aos-delay="{{ self.block.value.delay }}"
-  class="rounded-xl border p-6 my-6
-    {% if self.block.value.variant == 'primary' %}border-primary/30 bg-primary/5{% endif %}
-    {% if self.block.value.variant == 'accent' %}border-accent/30 bg-accent/5{% endif %}
-    {% if self.block.value.variant == 'default' %}border-base-300 bg-base-200/50{% endif %}">
-  <p class="text-base-content/70 leading-relaxed">{{ self.block.value.text }}</p>
+     class="rounded-xl border p-6 my-6
+            {% if self.block.value.variant == 'primary' %}border-primary/30 bg-primary/5{% endif %}
+            {% if self.block.value.variant == 'accent' %}border-accent/30 bg-accent/5{% endif %}
+            {% if self.block.value.variant == 'default' %}border-base-300 bg-base-200/50{% endif %}">
+    <p class="text-base-content/70 leading-relaxed">{{ self.block.value.text }}</p>
 </div>

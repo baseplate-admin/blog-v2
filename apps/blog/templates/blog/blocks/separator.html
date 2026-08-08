@@ -1,13 +1,13 @@
 <div class="my-10">
-  {% if self.block.value.style == 'line' %}
-    <hr class="border-base-300/50">
-  {% elif self.block.value.style == 'dots' %}
-    <div class="flex gap-2 justify-center">
-      <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
-      <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
-      <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
-    </div>
-  {% else %}
-    <div class="h-8"></div>
-  {% endif %}
+    {% if self.block.value.style == 'line' %}
+        <hr class="border-base-300/50">
+    {% elif self.block.value.style == 'dots' %}
+        <div class="flex gap-2 justify-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
+        </div>
+    {% else %}
+        <div class="h-8"></div>
+    {% endif %}
 </div>

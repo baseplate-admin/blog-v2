@@ -2,336 +2,336 @@
 {% load wagtailcore_tags wagtailimages_tags site_tags image_colors %}
 
 {% block head %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "{{ page.title|escapejs }}",
-  "description": "{{ page.intro|escapejs }}",
-  "datePublished": "{{ page.first_published_at|date:'c' }}",
-  "dateModified": "{{ page.last_published_at|date:'c'|default:page.first_published_at|date:'c' }}",
-  "author": {
-    "@type": "Person",
-    "name": "{% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username|escapejs }}{% else %}Author{% endif %}"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "The Tinkerer"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ request.build_absolute_uri }}"
-  }
-  {% if page.feed_image %}
-  ,"image": "{{ request.build_absolute_uri }}{{ page.feed_image.file.url }}"
-  {% endif %}
-}
-</script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "{{ page.title|escapejs }}",
+            "description": "{{ page.intro|escapejs }}",
+            "datePublished": "{{ page.first_published_at|date:'c' }}",
+            "dateModified": "{{ page.last_published_at|date:'c'|default:page.first_published_at|date:'c' }}",
+            "author": {
+                "@type": "Person",
+                "name": "{% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username|escapejs }}{% else %}Author{% endif %}"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "The Tinkerer"
+            },
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "{{ request.build_absolute_uri }}"
+            }
+            {% if page.feed_image %}
+                ,"image": "{{ request.build_absolute_uri }}{{ page.feed_image.file.url }}"
+            {% endif %}
+        }
+    </script>
 {% endblock %}
 
 {% block inner_content %}
 
-<div class="relative overflow-hidden">
+    <div class="relative overflow-hidden">
 
     {# Background dot grid ── #}
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute inset-0 text-base-content" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;0.75&quot; fill=&quot;%23a1a1aa&quot; opacity=&quot;0.06&quot;/%3E%3C/svg%3E'); background-size: 24px 24px;"></div>
-    </div>
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute inset-0 text-base-content" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;0.75&quot; fill=&quot;%23a1a1aa&quot; opacity=&quot;0.06&quot;/%3E%3C/svg%3E'); background-size: 24px 24px;"></div>
+        </div>
 
     {# Top compass marker ── #}
-    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-base-content/10 to-transparent"></div>
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-base-content/10 bg-base-100 px-3">
-        {% icon "compass" size=18 %}
-    </div>
+        <div class="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-base-content/10 to-transparent"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-base-content/10 bg-base-100 px-3">
+            {% icon "compass" size=18 %}
+        </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {# ── CSS Grid: rails + content ── #}
-        <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_1fr_auto] gap-0 lg:gap-12 items-start">
+            <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_1fr_auto] gap-0 lg:gap-12 items-start">
 
             {# Left constellation rail ── #}
-            <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
-                <div class="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-base-content/10 to-transparent"></div>
-                <div class="absolute top-8 text-primary/25">{% icon "star" size=6 %}</div>
-                <div class="absolute top-16 text-primary/30">{% icon "orbit" size=10 %}</div>
-                <div class="absolute top-24 text-primary/20">{% icon "sparkles" size=5 %}</div>
-                <div class="absolute top-1/3 text-base-content/15">{% icon "infinity" size=8 %}</div>
-                <div class="absolute top-1/3 ml-2 text-primary/15">{% icon "sparkles" size=4 %}</div>
-                <div class="absolute top-2/3 text-primary/20">{% icon "orbit" size=8 %}</div>
-                <div class="absolute top-3/4 text-primary/25">{% icon "star" size=6 %}</div>
-                <div class="absolute bottom-12 text-primary/15">{% icon "gem" size=8 %}</div>
-            </div>
+                <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
+                    <div class="absolute top-0 bottom-0 w-px bg-linear-to-b from-transparent via-base-content/10 to-transparent"></div>
+                    <div class="absolute top-8 text-primary/25">{% icon "star" size=6 %}</div>
+                    <div class="absolute top-16 text-primary/30">{% icon "orbit" size=10 %}</div>
+                    <div class="absolute top-24 text-primary/20">{% icon "sparkles" size=5 %}</div>
+                    <div class="absolute top-1/3 text-base-content/15">{% icon "infinity" size=8 %}</div>
+                    <div class="absolute top-1/3 ml-2 text-primary/15">{% icon "sparkles" size=4 %}</div>
+                    <div class="absolute top-2/3 text-primary/20">{% icon "orbit" size=8 %}</div>
+                    <div class="absolute top-3/4 text-primary/25">{% icon "star" size=6 %}</div>
+                    <div class="absolute bottom-12 text-primary/15">{% icon "gem" size=8 %}</div>
+                </div>
 
             {# Center: article content ── #}
-            <article class="relative w-full max-w-4xl mx-auto">
+                <article class="relative w-full max-w-4xl mx-auto">
 
                 {# ── Back Link ── #}
-                <div class="mb-8" data-aos="fade-in" data-aos-delay="50">
-                    <a href="{% pageurl page.get_parent %}" class="group inline-flex items-center gap-3 text-sm font-medium text-base-content/40 hover:text-primary transition-colors">
-                        <span class="relative inline-flex items-center gap-2">
-                            {% icon "arrow-left" size=16 %}
-                            <span>Back to blog</span>
-                        </span>
-                        <span class="w-8 h-px bg-base-content/20 group-hover:bg-primary/50 group-hover:w-16 transition-all duration-300"></span>
-                        <span class="text-base-content/20 group-hover:text-primary/50 transition-colors">{% icon "sparkles" size=8 %}</span>
-                    </a>
-                </div>
+                    <div class="mb-8" data-aos="fade-in" data-aos-delay="50">
+                        <a href="{% pageurl page.get_parent %}" class="group inline-flex items-center gap-3 text-sm font-medium text-base-content/40 hover:text-primary transition-colors">
+                            <span class="relative inline-flex items-center gap-2">
+                                {% icon "arrow-left" size=16 %}
+                                <span>Back to blog</span>
+                            </span>
+                            <span class="w-8 h-px bg-base-content/20 group-hover:bg-primary/50 group-hover:w-16 transition-all duration-300"></span>
+                            <span class="text-base-content/20 group-hover:text-primary/50 transition-colors">{% icon "sparkles" size=8 %}</span>
+                        </a>
+                    </div>
 
                 {# ── Header ── #}
-                <header class="mb-16 relative">
+                    <header class="mb-16 relative">
 
                     {# Mood badge with dotted constellation frame ── #}
-                    <div class="flex justify-center mb-10" data-aos="fade-up" data-aos-delay="100">
-                        <div class="relative p-5">
-                            <div class="absolute inset-0 border border-dotted border-primary/20 rounded-xl"></div>
-                            <div class="absolute -top-1 -left-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
-                            <div class="absolute -top-1 -right-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
-                            <div class="absolute -bottom-1 -left-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
-                            <div class="absolute -bottom-1 -right-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
-                            <div class="absolute -top-1 left-1/2 -translate-x-1/2 text-primary/20">{% icon "star" size=4 %}</div>
-                            <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-primary/20">{% icon "star" size=4 %}</div>
-                            <div class="relative">
-                                {% mood_badge page.mood %}
+                        <div class="flex justify-center mb-10" data-aos="fade-up" data-aos-delay="100">
+                            <div class="relative p-5">
+                                <div class="absolute inset-0 border border-dotted border-primary/20 rounded-xl"></div>
+                                <div class="absolute -top-1 -left-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
+                                <div class="absolute -top-1 -right-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
+                                <div class="absolute -bottom-1 -left-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
+                                <div class="absolute -bottom-1 -right-1 text-primary/30">{% icon "sparkles" size=5 %}</div>
+                                <div class="absolute -top-1 left-1/2 -translate-x-1/2 text-primary/20">{% icon "star" size=4 %}</div>
+                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-primary/20">{% icon "star" size=4 %}</div>
+                                <div class="relative">
+                                    {% mood_badge page.mood %}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                     {# Title with ornamental rails ── #}
-                    <div class="relative mb-8" data-aos="fade-up" data-aos-delay="150">
-                        <div class="absolute -left-4 top-0 bottom-0 w-8 hidden xl:flex flex-col items-center justify-center gap-1">
-                            <div class="w-px h-6 bg-gradient-to-b from-transparent via-primary/30 to-transparent"></div>
-                            <div class="text-primary/40">{% icon "star" size=6 %}</div>
-                            <div class="w-px h-2 bg-primary/15"></div>
-                            <div class="text-primary/30">{% icon "orbit" size=8 %}</div>
-                            <div class="w-px h-2 bg-primary/15"></div>
-                            <div class="text-primary/40">{% icon "star" size=6 %}</div>
-                            <div class="w-px h-6 bg-gradient-to-b from-transparent via-primary/30 to-transparent"></div>
+                        <div class="relative mb-8" data-aos="fade-up" data-aos-delay="150">
+                            <div class="absolute -left-4 top-0 bottom-0 w-8 hidden xl:flex flex-col items-center justify-center gap-1">
+                                <div class="w-px h-6 bg-linear-to-b from-transparent via-primary/30 to-transparent"></div>
+                                <div class="text-primary/40">{% icon "star" size=6 %}</div>
+                                <div class="w-px h-2 bg-primary/15"></div>
+                                <div class="text-primary/30">{% icon "orbit" size=8 %}</div>
+                                <div class="w-px h-2 bg-primary/15"></div>
+                                <div class="text-primary/40">{% icon "star" size=6 %}</div>
+                                <div class="w-px h-6 bg-linear-to-b from-transparent via-primary/30 to-transparent"></div>
+                            </div>
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold tracking-tight text-center text-base-content/90 leading-snug">
+                                {{ page.title }}
+                            </h1>
+                            <div class="absolute -right-4 top-0 bottom-0 w-8 hidden xl:flex flex-col items-center justify-center gap-1">
+                                <div class="w-px h-6 bg-linear-to-b from-transparent via-primary/30 to-transparent"></div>
+                                <div class="text-primary/40">{% icon "star" size=6 %}</div>
+                                <div class="w-px h-2 bg-primary/15"></div>
+                                <div class="text-primary/30">{% icon "orbit" size=8 %}</div>
+                                <div class="w-px h-2 bg-primary/15"></div>
+                                <div class="text-primary/40">{% icon "star" size=6 %}</div>
+                                <div class="w-px h-6 bg-linear-to-b from-transparent via-primary/30 to-transparent"></div>
+                            </div>
                         </div>
-                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold tracking-tight text-center text-base-content/90 leading-snug">
-                            {{ page.title }}
-                        </h1>
-                        <div class="absolute -right-4 top-0 bottom-0 w-8 hidden xl:flex flex-col items-center justify-center gap-1">
-                            <div class="w-px h-6 bg-gradient-to-b from-transparent via-primary/30 to-transparent"></div>
-                            <div class="text-primary/40">{% icon "star" size=6 %}</div>
-                            <div class="w-px h-2 bg-primary/15"></div>
-                            <div class="text-primary/30">{% icon "orbit" size=8 %}</div>
-                            <div class="w-px h-2 bg-primary/15"></div>
-                            <div class="text-primary/40">{% icon "star" size=6 %}</div>
-                            <div class="w-px h-6 bg-gradient-to-b from-transparent via-primary/30 to-transparent"></div>
-                        </div>
-                    </div>
 
                     {# Ornamental divider ── #}
-                    <div class="flex items-center justify-center gap-2 mb-8" data-aos="fade-in" data-aos-delay="180">
-                        <div class="w-16 h-px bg-gradient-to-r from-transparent to-primary/20"></div>
-                        <div class="text-primary/25">{% icon "gem" size=6 %}</div>
-                        <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
-                        <div class="w-6 h-px bg-primary/15"></div>
-                        <div class="text-primary/30">{% icon "prism" size=8 %}</div>
-                        <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
-                        <div class="text-primary/25">{% icon "gem" size=6 %}</div>
-                        <div class="w-16 h-px bg-gradient-to-l from-transparent to-primary/20"></div>
-                    </div>
+                        <div class="flex items-center justify-center gap-2 mb-8" data-aos="fade-in" data-aos-delay="180">
+                            <div class="w-16 h-px bg-linear-to-r from-transparent to-primary/20"></div>
+                            <div class="text-primary/25">{% icon "gem" size=6 %}</div>
+                            <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                            <div class="w-6 h-px bg-primary/15"></div>
+                            <div class="text-primary/30">{% icon "prism" size=8 %}</div>
+                            <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                            <div class="text-primary/25">{% icon "gem" size=6 %}</div>
+                            <div class="w-16 h-px bg-linear-to-l from-transparent to-primary/20"></div>
+                        </div>
 
                     {# Tags ── #}
-                    {% if page.tags.all %}
-                        <div class="flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-up" data-aos-delay="200">
-                            {% for tag in page.tags.all %}
-                                {% if not forloop.first %}
-                                    <span class="text-primary/20 self-center">{% icon "sparkles" size=4 %}</span>
-                                {% endif %}
-                                <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-ghost badge-sm text-base-content/60 hover:text-primary hover:border-primary/30 transition-all">#{{ tag }}</a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {# Author + Meta ── #}
-                    <div class="relative" data-aos="fade-up" data-aos-delay="250">
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 text-base-content/50 text-sm">
-                            <div class="flex items-center gap-3">
-                                <div class="avatar online relative">
-                                    <div class="w-10 rounded-full ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100 overflow-hidden">
-                                        {% if page.author_avatar_url %}
-                                        <img src="{{ page.author_avatar_url }}" alt="Author" class="w-full h-full object-cover">
-                                        {% else %}
-                                        <div class="w-full h-full bg-primary/10 flex items-center justify-center">
-                                            <span class="text-primary/40">{% icon "crown" size=14 %}</span>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="font-medium text-base-content/70">
-                                        {% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username }}{% else %}Author{% endif %}
-                                    </span>
-                                    <span class="text-xs text-base-content/40">Author</span>
-                                </div>
+                        {% if page.tags.all %}
+                            <div class="flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-up" data-aos-delay="200">
+                                {% for tag in page.tags.all %}
+                                    {% if not forloop.first %}
+                                        <span class="text-primary/20 self-center">{% icon "sparkles" size=4 %}</span>
+                                    {% endif %}
+                                    <a href="{% pageurl page.get_parent %}?tag={{ tag }}" class="badge badge-ghost badge-sm text-base-content/60 hover:text-primary hover:border-primary/30 transition-all">#{{ tag }}</a>
+                                {% endfor %}
                             </div>
-
-                            <div class="hidden sm:flex items-center gap-2">
-                                <span class="text-primary/20">{% icon "sparkles" size=3 %}</span>
-                                <span class="w-8 h-px bg-base-content/15"></span>
-                                <span class="text-primary/20">{% icon "sparkles" size=3 %}</span>
-                            </div>
-
-                            <time datetime="{{ page.date|date:'Y-m-d' }}" class="text-sm text-base-content/40 font-mono">
-                                {{ page.date|date:"F j, Y" }}
-                            </time>
-
-                            <span class="text-primary/20">{% icon "sparkles" size=5 %}</span>
-
-                            <span class="text-sm text-base-content/40 font-mono">{{ page.reading_time }}</span>
-                        </div>
-
-                        {# Bottom ornamental line ── #}
-                        <div class="mt-8 flex items-center justify-center gap-2">
-                            <div class="w-12 h-px bg-gradient-to-r from-transparent to-base-content/15"></div>
-                            <div class="text-primary/20">{% icon "cross" size=8 %}</div>
-                            <div class="text-primary/30">{% icon "gem" size=6 %}</div>
-                            <div class="text-primary/20">{% icon "cross" size=8 %}</div>
-                            <div class="w-12 h-px bg-gradient-to-l from-transparent to-base-content/15"></div>
-                        </div>
-                    </div>
-                </header>
-
-                {# ── Cover Image ── #}
-                {% if page.feed_image %}
-                    <figure class="relative mb-16" data-aos="fade-up" data-aos-delay="300">
-                        <div class="absolute -inset-1 border border-dotted border-primary/15 rounded-2xl"></div>
-                        <div class="absolute -inset-2 border border-dotted border-primary/8 rounded-2xl"></div>
-                        <div class="absolute -top-3 -left-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
-                        <div class="absolute -top-3 -right-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
-                        <div class="absolute -bottom-3 -left-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
-                        <div class="absolute -bottom-3 -right-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
-                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 text-primary/15">{% icon "star" size=4 %}</div>
-                        <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 text-primary/15">{% icon "star" size=4 %}</div>
-                        <div class="absolute top-1/2 -left-3 -translate-y-1/2 text-primary/15">{% icon "star" size=4 %}</div>
-                        <div class="absolute top-1/2 -right-3 -translate-y-1/2 text-primary/15">{% icon "star" size=4 %}</div>
-                        <figure class="relative w-full aspect-video overflow-hidden bg-base-200 rounded-2xl border border-dotted border-base-300/40">
-                            {% image page.feed_image fill-1400x788 class="w-full h-full object-cover" %}
-                        </figure>
-                    </figure>
-                {% endif %}
-
-                {# ── Content Grid: TOC + Body ── #}
-                <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-12">
-
-                    {# TOC Sidebar ── #}
-                    <aside class="hidden lg:block" data-aos="fade-right" data-aos-delay="350">
-                        <div class="sticky top-8">
-                            <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                <span class="text-primary/20">{% icon "orbit" size=10 %}</span>
-                                <span>On this page</span>
-                                <span class="w-4 h-px bg-base-content/15"></span>
-                            </div>
-                            {% with headings=page.get_toc_headings %}
-                                {% if headings|length >= 2 %}
-                                    <nav id="toc-nav" class="toc-rail relative">
-                                        <div class="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-primary/20 via-primary/10 to-transparent"></div>
-                                        <ul class="space-y-2 border-l border-dotted border-base-300/50 pl-4">
-                                            {% for h in headings %}
-                                                <li class="relative">
-                                                    <div class="absolute -left-[17px] top-1/2 -translate-y-1/2 text-primary/20">{% icon "sparkles" size=3 %}</div>
-                                                    <a href="#{{ h.id }}" class="toc-link block py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l {% if h.level == 'h3' %}ml-4{% endif %}"
-                                                       data-target="{{ h.id }}">
-                                                        {{ h.text }}
-                                                    </a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </nav>
-                                {% endif %}
-                            {% endwith %}
-                        </div>
-                    </aside>
-
-                    {# ── Article Body ── #}
-                    <div class="min-w-0">
-                        {% if page.intro %}
-                            <p class="text-lg text-base-content/60 font-normal leading-snug mb-8 border-l-2 border-primary/30 pl-4 italic relative"
-                               data-aos="fade-up" data-aos-delay="400">
-                                {{ page.intro }}
-                                <span class="absolute -bottom-3 right-0 flex gap-1">
-                                    <span class="text-primary/25">{% icon "sparkles" size=3 %}</span>
-                                    <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
-                                    <span class="text-primary/10">{% icon "sparkles" size=3 %}</span>
-                                </span>
-                            </p>
                         {% endif %}
 
-                        <div id="article-content" class="prose prose-md max-w-none
-                            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content/85
-                            prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-4
-                            prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-3
-                            prose-p:text-base prose-p:leading-relaxed prose-p:text-base-content/70
-                            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                            prose-strong:text-base-content/80 prose-strong:font-semibold
-                            prose-code:text-primary/80 prose-code:bg-base-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:border prose-code:border-dotted prose-code:border-base-300/50 prose-code:text-sm
-                            prose-pre:text-base-content/80 prose-pre:bg-base-200/80 prose-pre:border prose-pre:border-dotted prose-pre:border-base-300/50 prose-pre:rounded-xl prose-pre:p-4
-                            prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-dotted prose-img:border-base-300/50
-                            prose-blockquote:border-l-primary/50 prose-blockquote:bg-base-200/30 prose-blockquote:py-3 prose-blockquote:px-4 prose-blockquote:text-base-content/60
-                            prose-li:text-base-content/70
-                            prose-hr:border-dotted prose-hr:border-base-300/50 prose-hr:my-10
-                            prose-table:text-base-content/70 prose-th:text-base-content/80 prose-th:bg-base-200/50 prose-td:text-base-content/70
-                            prose-tr:border-base-300/30 prose-th:border-base-300/30 prose-td:border-base-300/30"
-                             data-aos="fade-up" data-aos-delay="450">
-                            {% for block in page.body %}
-                                {% include_block block %}
-                            {% endfor %}
-                        </div>
+                    {# Author + Meta ── #}
+                        <div class="relative" data-aos="fade-up" data-aos-delay="250">
+                            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 text-base-content/50 text-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar online relative">
+                                        <div class="w-10 rounded-full ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100 overflow-hidden">
+                                            {% if page.author_avatar_url %}
+                                                <img src="{{ page.author_avatar_url }}" alt="Author" class="w-full h-full object-cover">
+                                            {% else %}
+                                                <div class="w-full h-full bg-primary/10 flex items-center justify-center">
+                                                    <span class="text-primary/40">{% icon "crown" size=14 %}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-medium text-base-content/70">
+                                            {% if page.owner %}{{ page.owner.get_full_name|default:page.owner.username }}{% else %}Author{% endif %}
+                                        </span>
+                                        <span class="text-xs text-base-content/40">Author</span>
+                                    </div>
+                                </div>
 
-                        {# ── Bottom end marker ── #}
-                        <div class="mt-20 pt-8 border-t border-dotted border-base-300/50 relative" data-aos="fade-in">
-                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 text-primary/15 bg-base-100 px-2">
-                                {% icon "crown" size=14 %}
+                                <div class="hidden sm:flex items-center gap-2">
+                                    <span class="text-primary/20">{% icon "sparkles" size=3 %}</span>
+                                    <span class="w-8 h-px bg-base-content/15"></span>
+                                    <span class="text-primary/20">{% icon "sparkles" size=3 %}</span>
+                                </div>
+
+                                <time datetime="{{ page.date|date:'Y-m-d' }}" class="text-sm text-base-content/40 font-mono">
+                                    {{ page.date|date:"F j, Y" }}
+                                </time>
+
+                                <span class="text-primary/20">{% icon "sparkles" size=5 %}</span>
+
+                                <span class="text-sm text-base-content/40 font-mono">{{ page.reading_time }}</span>
                             </div>
 
-                            <div class="flex flex-col items-center gap-3">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-16 h-px bg-gradient-to-r from-transparent to-base-content/15"></div>
-                                    <div class="text-primary/20">{% icon "gem" size=6 %}</div>
-                                    <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
-                                    <div class="text-primary/25">{% icon "prism" size=8 %}</div>
-                                    <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
-                                    <div class="text-primary/20">{% icon "gem" size=6 %}</div>
-                                    <div class="w-16 h-px bg-gradient-to-l from-transparent to-base-content/15"></div>
+                        {# Bottom ornamental line ── #}
+                            <div class="mt-8 flex items-center justify-center gap-2">
+                                <div class="w-12 h-px bg-linear-to-r from-transparent to-base-content/15"></div>
+                                <div class="text-primary/20">{% icon "cross" size=8 %}</div>
+                                <div class="text-primary/30">{% icon "gem" size=6 %}</div>
+                                <div class="text-primary/20">{% icon "cross" size=8 %}</div>
+                                <div class="w-12 h-px bg-linear-to-l from-transparent to-base-content/15"></div>
+                            </div>
+                        </div>
+                    </header>
+
+                {# ── Cover Image ── #}
+                    {% if page.feed_image %}
+                        <figure class="relative mb-16" data-aos="fade-up" data-aos-delay="300">
+                            <div class="absolute -inset-1 border border-dotted border-primary/15 rounded-2xl"></div>
+                            <div class="absolute -inset-2 border border-dotted border-primary/8 rounded-2xl"></div>
+                            <div class="absolute -top-3 -left-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
+                            <div class="absolute -top-3 -right-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
+                            <div class="absolute -bottom-3 -left-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
+                            <div class="absolute -bottom-3 -right-3 text-primary/25">{% icon "sparkles" size=7 %}</div>
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 text-primary/15">{% icon "star" size=4 %}</div>
+                            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 text-primary/15">{% icon "star" size=4 %}</div>
+                            <div class="absolute top-1/2 -left-3 -translate-y-1/2 text-primary/15">{% icon "star" size=4 %}</div>
+                            <div class="absolute top-1/2 -right-3 -translate-y-1/2 text-primary/15">{% icon "star" size=4 %}</div>
+                            <figure class="relative w-full aspect-video overflow-hidden bg-base-200 rounded-2xl border border-dotted border-base-300/40">
+                                {% image page.feed_image fill-1400x788 class="w-full h-full object-cover" %}
+                            </figure>
+                        </figure>
+                    {% endif %}
+
+                {# ── Content Grid: TOC + Body ── #}
+                    <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-12">
+
+                    {# TOC Sidebar ── #}
+                        <aside class="hidden lg:block" data-aos="fade-right" data-aos-delay="350">
+                            <div class="sticky top-8">
+                                <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <span class="text-primary/20">{% icon "orbit" size=10 %}</span>
+                                    <span>On this page</span>
+                                    <span class="w-4 h-px bg-base-content/15"></span>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-base-content/15">{% icon "sparkles" size=3 %}</span>
-                                    <span class="text-base-content/20">{% icon "sparkles" size=3 %}</span>
-                                    <span class="text-primary/25">{% icon "star" size=5 %}</span>
-                                    <span class="text-base-content/20">{% icon "sparkles" size=3 %}</span>
-                                    <span class="text-base-content/15">{% icon "sparkles" size=3 %}</span>
+                                {% with headings=page.get_toc_headings %}
+                                    {% if headings|length >= 2 %}
+                                        <nav id="toc-nav" class="toc-rail relative">
+                                            <div class="absolute left-0 top-0 bottom-0 w-px bg-linear-to-b from-primary/20 via-primary/10 to-transparent"></div>
+                                            <ul class="space-y-2 border-l border-dotted border-base-300/50 pl-4">
+                                                {% for h in headings %}
+                                                    <li class="relative">
+                                                        <div class="absolute -left-4.25 top-1/2 -translate-y-1/2 text-primary/20">{% icon "sparkles" size=3 %}</div>
+                                                        <a href="#{{ h.id }}" class="toc-link block py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l {% if h.level == 'h3' %}ml-4{% endif %}"
+                                                           data-target="{{ h.id }}">
+                                                            {{ h.text }}
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </nav>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </aside>
+
+                    {# ── Article Body ── #}
+                        <div class="min-w-0">
+                            {% if page.intro %}
+                                <p class="text-lg text-base-content/60 font-normal leading-snug mb-8 border-l-2 border-primary/30 pl-4 italic relative"
+                                   data-aos="fade-up" data-aos-delay="400">
+                                    {{ page.intro }}
+                                    <span class="absolute -bottom-3 right-0 flex gap-1">
+                                        <span class="text-primary/25">{% icon "sparkles" size=3 %}</span>
+                                        <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
+                                        <span class="text-primary/10">{% icon "sparkles" size=3 %}</span>
+                                    </span>
+                                </p>
+                            {% endif %}
+
+                            <div id="article-content" class="prose prose-md max-w-none
+                                                             prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-base-content/85
+                                                             prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-4
+                                                             prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-3
+                                                             prose-p:text-base prose-p:leading-relaxed prose-p:text-base-content/70
+                                                             prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                                                             prose-strong:text-base-content/80 prose-strong:font-semibold
+                                                             prose-code:text-primary/80 prose-code:bg-base-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:border prose-code:border-dotted prose-code:border-base-300/50 prose-code:text-sm
+                                                             prose-pre:text-base-content/80 prose-pre:bg-base-200/80 prose-pre:border prose-pre:border-dotted prose-pre:border-base-300/50 prose-pre:rounded-xl prose-pre:p-4
+                                                             prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-dotted prose-img:border-base-300/50
+                                                             prose-blockquote:border-l-primary/50 prose-blockquote:bg-base-200/30 prose-blockquote:py-3 prose-blockquote:px-4 prose-blockquote:text-base-content/60
+                                                             prose-li:text-base-content/70
+                                                             prose-hr:border-dotted prose-hr:border-base-300/50 prose-hr:my-10
+                                                             prose-table:text-base-content/70 prose-th:text-base-content/80 prose-th:bg-base-200/50 prose-td:text-base-content/70
+                                                             prose-tr:border-base-300/30 prose-th:border-base-300/30 prose-td:border-base-300/30"
+                                 data-aos="fade-up" data-aos-delay="450">
+                                {% for block in page.body %}
+                                    {% include_block block %}
+                                {% endfor %}
+                            </div>
+
+                        {# ── Bottom end marker ── #}
+                            <div class="mt-20 pt-8 border-t border-dotted border-base-300/50 relative" data-aos="fade-in">
+                                <div class="absolute -top-4 left-1/2 -translate-x-1/2 text-primary/15 bg-base-100 px-2">
+                                    {% icon "crown" size=14 %}
                                 </div>
+
+                                <div class="flex flex-col items-center gap-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-16 h-px bg-linear-to-r from-transparent to-base-content/15"></div>
+                                        <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+                                        <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                                        <div class="text-primary/25">{% icon "prism" size=8 %}</div>
+                                        <div class="text-primary/15">{% icon "sparkles" size=4 %}</div>
+                                        <div class="text-primary/20">{% icon "gem" size=6 %}</div>
+                                        <div class="w-16 h-px bg-linear-to-l from-transparent to-base-content/15"></div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-base-content/15">{% icon "sparkles" size=3 %}</span>
+                                        <span class="text-base-content/20">{% icon "sparkles" size=3 %}</span>
+                                        <span class="text-primary/25">{% icon "star" size=5 %}</span>
+                                        <span class="text-base-content/20">{% icon "sparkles" size=3 %}</span>
+                                        <span class="text-base-content/15">{% icon "sparkles" size=3 %}</span>
+                                    </div>
                                 {# License badge #}
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
-                                    <span class="text-xs text-base-content/30 font-mono uppercase tracking-wider">Licensed Under</span>
-                                    <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
+                                        <span class="text-xs text-base-content/30 font-mono uppercase tracking-wider">Licensed Under</span>
+                                        <span class="text-primary/15">{% icon "sparkles" size=3 %}</span>
+                                    </div>
+                                    {% license_badge page.license_type %}
+                                    <p class="text-xs text-base-content/20 font-mono tracking-widest uppercase mt-4">End of article</p>
                                 </div>
-                                {% license_badge page.license_type %}
-                                <p class="text-xs text-base-content/20 font-mono tracking-widest uppercase mt-4">End of article</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </article>
+                </article>
 
             {# Right constellation rail ── #}
-            <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
-                <div class="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-base-content/10 to-transparent"></div>
-                <div class="absolute top-8 text-primary/20">{% icon "sparkles" size=5 %}</div>
-                <div class="absolute top-16 text-primary/25">{% icon "star" size=6 %}</div>
-                <div class="absolute top-24 text-primary/30">{% icon "orbit" size=10 %}</div>
-                <div class="absolute top-1/3 text-primary/15">{% icon "gem" size=8 %}</div>
-                <div class="absolute top-1/2 text-base-content/15">{% icon "infinity" size=8 %}</div>
-                <div class="absolute top-2/3 text-primary/30">{% icon "orbit" size=8 %}</div>
-                <div class="absolute top-3/4 text-primary/25">{% icon "star" size=6 %}</div>
-                <div class="absolute bottom-12 text-primary/15">{% icon "sparkles" size=5 %}</div>
+                <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
+                    <div class="absolute top-0 bottom-0 w-px bg-linear-to-b from-transparent via-base-content/10 to-transparent"></div>
+                    <div class="absolute top-8 text-primary/20">{% icon "sparkles" size=5 %}</div>
+                    <div class="absolute top-16 text-primary/25">{% icon "star" size=6 %}</div>
+                    <div class="absolute top-24 text-primary/30">{% icon "orbit" size=10 %}</div>
+                    <div class="absolute top-1/3 text-primary/15">{% icon "gem" size=8 %}</div>
+                    <div class="absolute top-1/2 text-base-content/15">{% icon "infinity" size=8 %}</div>
+                    <div class="absolute top-2/3 text-primary/30">{% icon "orbit" size=8 %}</div>
+                    <div class="absolute top-3/4 text-primary/25">{% icon "star" size=6 %}</div>
+                    <div class="absolute bottom-12 text-primary/15">{% icon "sparkles" size=5 %}</div>
+                </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 
 {% endblock %}

@@ -1,21 +1,21 @@
 {% load site_tags %}
 <div class="my-8">
-  {% with vertical=self.block.value.vertical active=self.block.value.active_step %}
-  <ul class="steps {% if vertical %}steps-vertical{% else %}steps-horizontal{% endif %} w-full">
-    {% for step in self.block.value.steps %}
-      {% if forloop.counter <= active %}
-        <li class="step step-primary">
-      {% else %}
-        <li class="step">
-      {% endif %}
-        <div class="w-full">
-          <h3 class="font-semibold text-base-content/90">{{ step.title }}</h3>
-          {% if step.description %}
-            <p class="text-sm text-base-content/60">{{ step.description }}</p>
-          {% endif %}
-        </div>
-      </li>
-    {% endfor %}
-  </ul>
-  {% endwith %}
+    {% with vertical=self.block.value.vertical active=self.block.value.active_step %}
+        <ul class="steps {% if vertical %}steps-vertical{% else %}steps-horizontal{% endif %} w-full">
+            {% for step in self.block.value.steps %}
+                {% if forloop.counter <= active %}
+                    <li class="step step-primary">
+                {% else %}
+                    <li class="step">
+                {% endif %}
+                <div class="w-full">
+                    <h3 class="font-semibold text-base-content/90">{{ step.title }}</h3>
+                    {% if step.description %}
+                        <p class="text-sm text-base-content/60">{{ step.description }}</p>
+                    {% endif %}
+                </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endwith %}
 </div>

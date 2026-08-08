@@ -1,26 +1,26 @@
 {% load site_tags %}
 <div class="my-8">
-  {% with compact=self.block.value.compact %}
-  <ul class="timeline {% if compact %}timeline-compact{% endif %} timeline-vertical">
-    {% for item in self.block.value.items %}
-      <li>
-        <div class="timeline-start text-right pr-8">
-          <h3 class="font-semibold text-base-content/90">{{ item.title }}</h3>
-          <p class="text-sm text-base-content/60">{{ item.description }}</p>
-        </div>
-        <div class="timeline-middle text-primary">
-          {% icon "circle" size=12 %}
-        </div>
-        <div class="timeline-end pl-8">
-          {% if item.timestamp %}
-            <span class="text-xs font-mono text-base-content/40">{{ item.timestamp }}</span>
-          {% endif %}
-        </div>
-        {% if not forloop.last %}
-        <hr class="bg-base-300" />
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-  {% endwith %}
+    {% with compact=self.block.value.compact %}
+        <ul class="timeline {% if compact %}timeline-compact{% endif %} timeline-vertical">
+            {% for item in self.block.value.items %}
+                <li>
+                    <div class="timeline-start text-right pr-8">
+                        <h3 class="font-semibold text-base-content/90">{{ item.title }}</h3>
+                        <p class="text-sm text-base-content/60">{{ item.description }}</p>
+                    </div>
+                    <div class="timeline-middle text-primary">
+                        {% icon "circle" size=12 %}
+                    </div>
+                    <div class="timeline-end pl-8">
+                        {% if item.timestamp %}
+                            <span class="text-xs font-mono text-base-content/40">{{ item.timestamp }}</span>
+                        {% endif %}
+                    </div>
+                    {% if not forloop.last %}
+                        <hr class="bg-base-300" />
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endwith %}
 </div>

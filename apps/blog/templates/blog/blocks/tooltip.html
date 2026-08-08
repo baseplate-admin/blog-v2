@@ -1,10 +1,10 @@
 {% load site_tags %}
 {% with placement=self.block.value.placement variant=self.block.value.variant %}
-<div class="my-4 inline-block">
-  <div class="tooltip tooltip-{{ placement }} {% if variant != 'default' %}tooltip-{{ variant }}{% endif %}" data-tip="{{ self.block.value.tooltip_text }}">
-    <span class="text-base font-medium text-base-content/80 underline decoration-dashed decoration-primary/50 cursor-help">
-      {{ self.block.value.inner_text }}
-    </span>
-  </div>
-</div>
+    <div class="my-4 inline-block">
+        <div class="tooltip tooltip-{{ placement }} {% if variant != 'default' %}tooltip-{{ variant }}{% endif %}" data-tip="{{ self.block.value.tooltip_text }}">
+            <span class="text-base font-medium text-base-content/80 underline decoration-dashed decoration-primary/50 cursor-help">
+                {{ self.block.value.inner_text }}
+            </span>
+        </div>
+    </div>
 {% endwith %}

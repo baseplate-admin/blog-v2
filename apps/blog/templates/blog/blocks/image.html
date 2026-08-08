@@ -1,7 +1,7 @@
 {% load wagtailimages_tags %}
 <figure class="my-8">
-  {% image self.block.value.image fill-1200x600 class="w-full rounded-xl border border-base-300/50 shadow-lg" %}
-  {% if self.block.value.caption %}
-    <figcaption class="text-center text-sm text-base-content/40 mt-3">{{ self.block.value.caption }}</figcaption>
-  {% endif %}
+    {% image self.block.value.image fill-1200x600 class="w-full rounded-xl border border-base-300/50 shadow-lg" %}
+    {% if self.block.value.caption %}
+        <figcaption class="text-center text-sm text-base-content/40 mt-3">{{ self.block.value.caption }}</figcaption>
+    {% endif %}
 </figure>

@@ -1,18 +1,18 @@
 {% load site_tags %}
 <div class="alert border border-base-300/50 bg-base-200/50 my-6">
-  {% with variant=self.block.value.variant %}
-    {% if variant == "warning" %}
-      <span class="text-warning">{% icon "lightning-bolt" %}</span>
-    {% elif variant == "success" %}
-      <span class="text-success">{% icon "shield" %}</span>
-    {% elif variant == "error" %}
-      <span class="text-error">{% icon "x" %}</span>
-    {% else %}
-      <span class="text-info">{% icon "info" %}</span>
-    {% endif %}
-    <div class="flex-1">
-      <h4 class="font-semibold text-base-content/80">{{ self.block.value.title }}</h4>
-      <p class="text-sm text-base-content/60 whitespace-pre-line">{{ self.block.value.body }}</p>
-    </div>
-  {% endwith %}
+    {% with variant=self.block.value.variant %}
+        {% if variant == "warning" %}
+            <span class="text-warning">{% icon "lightning-bolt" %}</span>
+        {% elif variant == "success" %}
+            <span class="text-success">{% icon "shield" %}</span>
+        {% elif variant == "error" %}
+            <span class="text-error">{% icon "x" %}</span>
+        {% else %}
+            <span class="text-info">{% icon "info" %}</span>
+        {% endif %}
+        <div class="flex-1">
+            <h4 class="font-semibold text-base-content/80">{{ self.block.value.title }}</h4>
+            <p class="text-sm text-base-content/60 whitespace-pre-line">{{ self.block.value.body }}</p>
+        </div>
+    {% endwith %}
 </div>

@@ -1,11 +1,11 @@
 {% load site_tags %}
 <div class="my-8">
-  {% with variant=self.block.value.variant %}
-  <div role="alert" class="alert alert-{{ variant }} rounded-2xl border border-base-300/50 shadow-lg">
-    <div class="text-base-content/90">
-      <div class="font-bold text-base">{{ self.block.value.title }}</div>
-      <div class="text-sm text-base-content/70 whitespace-pre-line">{{ self.block.value.message }}</div>
-    </div>
-  </div>
-  {% endwith %}
+    {% with variant=self.block.value.variant %}
+        <div role="alert" class="alert alert-{{ variant }} rounded-2xl border border-base-300/50 shadow-lg">
+            <div class="text-base-content/90">
+                <div class="font-bold text-base">{{ self.block.value.title }}</div>
+                <div class="text-sm text-base-content/70 whitespace-pre-line">{{ self.block.value.message }}</div>
+            </div>
+        </div>
+    {% endwith %}
 </div>

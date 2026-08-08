@@ -1,10 +1,8 @@
 from pygments import highlight as pygments_highlight
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_by_name, ClassNotFound
+from pygments.lexers import ClassNotFound, get_lexer_by_name
 from pygments.styles import get_style_by_name
-
 from wagtail import blocks
-
 
 # Language choices for code blocks derived from Pygments lexers
 CODE_LANGUAGES: list[tuple[str, str]] = [
