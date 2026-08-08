@@ -72,14 +72,15 @@
                     </div>
                     {% with headings=page.get_toc_headings %}
                         {% if headings|length >= 2 %}
-                            <nav id="toc-nav" class="toc-rail relative">
-                                <div class="absolute left-0 top-0 bottom-0 w-px bg-linear-to-b from-primary/20 via-primary/10 to-transparent"></div>
-                                <ul class="space-y-2 border-l border-dotted border-base-300/50 pl-4">
+                            <nav id="toc-nav" class="toc-rail relative flex flex-col">
+                                <ul class="space-y-2" id="toc-list">
                                     {% for h in headings %}
-                                        <li class="relative">
-                                            <div class="absolute -left-4.25 top-1/2 -translate-y-1/2 text-primary/20">{% icon "sparkles" size=3 %}</div>
-                                            <a href="#{{ h.id }}" class="toc-link block py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l {% if h.level == 'h3' %}ml-4{% endif %}"
-                                               data-target="{{ h.id }}">
+                                        <li data-toc-item="">
+                                            <a href="#{{ h.id }}"
+                                               class="toc-link relative block py-1.5 text-xs text-base-content/40 hover:text-primary transition-colors"
+                                               style="padding-inline-start: 20px;"
+                                               data-target="{{ h.id }}"
+                                               data-level="{{ h.level }}">
                                                 {{ h.text }}
                                             </a>
                                         </li>

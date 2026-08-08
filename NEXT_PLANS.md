@@ -19,7 +19,8 @@
 - [x] TOC redesigned to match Takumi docs style — clean minimal links, data-active attribute, mask gradient fade animation, hidden scrollbar, H2/H3 indentation
 - [x] TOC restructured to true Takumi docs layout — left-column sticky sidebar (self-start aside + inner sticky div), JS height sync, overflow-hidden removed from wrapper
 - [x] TOC vertically aligned with first heading — JS measures offset and adds paddingTop to aside, first h2 skipped from TOC (page title)
-- [x] TOC vertically aligned with first heading — JS measures offset and adds paddingTop to aside, first h2 skipped from TOC (page title)
+- [x] TOC slug animation — Takumi docs-style sliding dot + clipped SVG track segment, follows active heading on scroll
+- [x] TOC slug track dynamically grows/shrinks to cover all visible headings — IntersectionObserver tracks visible range, dot slides to active item
 
 ## Pending
 
