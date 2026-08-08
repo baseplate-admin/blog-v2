@@ -31,7 +31,7 @@
 
 {% block inner_content %}
 
-    <div class="relative overflow-hidden">
+    <div class="relative">
 
     {# Background dot grid ── #}
         <div class="absolute inset-0 pointer-events-none">
@@ -47,7 +47,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {# ── CSS Grid: rails + content ── #}
-            <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_1fr_auto] gap-0 lg:gap-12 items-start">
+            <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_auto_1fr_auto] gap-0 lg:gap-12 items-start lg:items-start">
 
             {# Left constellation rail ── #}
                 <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
@@ -61,6 +61,35 @@
                     <div class="absolute top-3/4 text-primary/25">{% icon "star" size=6 %}</div>
                     <div class="absolute bottom-12 text-primary/15">{% icon "gem" size=8 %}</div>
                 </div>
+
+            {# TOC Sidebar ── #}
+                <aside class="hidden lg:block self-start" data-aos="fade-right" data-aos-delay="350">
+                    <div class="sticky top-8">
+                    <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <span class="text-primary/20">{% icon "orbit" size=10 %}</span>
+                        <span>On this page</span>
+                        <span class="w-4 h-px bg-base-content/15"></span>
+                    </div>
+                    {% with headings=page.get_toc_headings %}
+                        {% if headings|length >= 2 %}
+                            <nav id="toc-nav" class="toc-rail relative">
+                                <div class="absolute left-0 top-0 bottom-0 w-px bg-linear-to-b from-primary/20 via-primary/10 to-transparent"></div>
+                                <ul class="space-y-2 border-l border-dotted border-base-300/50 pl-4">
+                                    {% for h in headings %}
+                                        <li class="relative">
+                                            <div class="absolute -left-4.25 top-1/2 -translate-y-1/2 text-primary/20">{% icon "sparkles" size=3 %}</div>
+                                            <a href="#{{ h.id }}" class="toc-link block py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l {% if h.level == 'h3' %}ml-4{% endif %}"
+                                               data-target="{{ h.id }}">
+                                                {{ h.text }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    {% endwith %}
+                    </div>
+                </aside>
 
             {# Center: article content ── #}
                 <article class="relative w-full max-w-4xl mx-auto">
@@ -213,38 +242,6 @@
                         </figure>
                     {% endif %}
 
-                {# ── Content Grid: TOC + Body ── #}
-                    <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-12">
-
-                    {# TOC Sidebar ── #}
-                        <aside class="hidden lg:block" data-aos="fade-right" data-aos-delay="350">
-                            <div class="sticky top-8">
-                                <div class="text-[10px] font-semibold text-base-content/30 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <span class="text-primary/20">{% icon "orbit" size=10 %}</span>
-                                    <span>On this page</span>
-                                    <span class="w-4 h-px bg-base-content/15"></span>
-                                </div>
-                                {% with headings=page.get_toc_headings %}
-                                    {% if headings|length >= 2 %}
-                                        <nav id="toc-nav" class="toc-rail relative">
-                                            <div class="absolute left-0 top-0 bottom-0 w-px bg-linear-to-b from-primary/20 via-primary/10 to-transparent"></div>
-                                            <ul class="space-y-2 border-l border-dotted border-base-300/50 pl-4">
-                                                {% for h in headings %}
-                                                    <li class="relative">
-                                                        <div class="absolute -left-4.25 top-1/2 -translate-y-1/2 text-primary/20">{% icon "sparkles" size=3 %}</div>
-                                                        <a href="#{{ h.id }}" class="toc-link block py-1 text-xs text-base-content/40 hover:text-primary transition-colors border-l {% if h.level == 'h3' %}ml-4{% endif %}"
-                                                           data-target="{{ h.id }}">
-                                                            {{ h.text }}
-                                                        </a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </nav>
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
-                        </aside>
-
                     {# ── Article Body ── #}
                         <div class="min-w-0">
                             {% if page.intro %}
@@ -314,7 +311,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </article>
 
             {# Right constellation rail ── #}

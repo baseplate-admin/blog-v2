@@ -119,7 +119,7 @@ blog/
 - **github.blog:** colored mood badges (purple=tech, sky=personal, red=politics, etc.)
 - **Sidebar TOC:** Takumi docs style — left-border dotted rail with sparkles markers, scroll-spy, H2/H3 nesting
 - **Blog index:** MakerKit alternating rows, ornamental decorative separators, AOS fade-up on scroll, background dot grid, constellation rails (left/right) with stars/orbits/gems
-- **Blog page:** CSS Grid layout (`grid-cols-[auto_1fr_auto]` for rails+content, `grid-cols-[auto_1fr]` for TOC+body), dotted borders on all frames, ornamental corner sparkles, crown end marker
+- **Blog page:** CSS Grid layout (`grid-cols-[auto_auto_1fr_auto]` for left rail + TOC + content + right rail), dotted borders on all frames, ornamental corner sparkles, crown end marker
 - **Feminine icon set:** `sparkles` (decorative dots), `infinity` (ornamental curves), `gem` (crystalline), `star` (celestial), `compass` (navigation), `cross` (ornamental), `prism` (crystalline), `orbit` (planetary), `crown` (regal)
 - **Color palette:** deep dark (#080809), purple primary, orange accent
 - **Typography:** Plus Jakarta Sans (headings/body), Inter (body), Hind Siliguri (Bengali), JetBrains Mono (code)
@@ -132,7 +132,7 @@ blog/
 - **HTMX boost** wraps `<main>` only, navbar/footer persist across swaps
 - **Tailwind loaded first** in head to prevent flash of unstyled content
 - **Mobile menu** uses vanilla JS dropdown (no popover API), click-outside to close, animate-in fade
-- **TOC** rendered server-side via `page.get_toc_headings()`, hybrid JS scroll-spy + smooth-scroll
+- **TOC** rendered server-side via `page.get_toc_headings()` (skips first h2 — page title), Takumi docs style: left-column sticky sidebar (`self-start` aside + inner `sticky top-8` div), JS sets aside height to match article height AND adds paddingTop equal to the offset between article top and first heading so TOC aligns vertically with the first heading, scroll-spy via `data-active` attribute, dotted left border rail with sparkles markers, H2/H3 nesting (H3 indented `ml-4`), `transition-colors` for smooth color change. Grid layout: `lg:grid-cols-[auto_auto_1fr_auto]` (left rail, TOC, content, right rail). Wrapper div must NOT have `overflow-hidden` or sticky breaks.
 - **Reading progress bar** fixed at top of blog pages, updates on scroll
 - **Theme transition** via `@apply transition-colors` on all key elements
 - **Error pages** (404, 500) styled with AOS animations, centered layout
