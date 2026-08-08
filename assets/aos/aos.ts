@@ -25,9 +25,9 @@ function init() {
 // Fire immediately if DOM is ready, otherwise wait for DOMContentLoaded
 // CSS loads before JS in <head>, so animations start as soon as the DOM is painted
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    requestAnimationFrame(init);
+    init();
 } else {
-    document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(init));
+    document.addEventListener('DOMContentLoaded', init);
 }
 
 // After HTMX swaps, re-init AOS for new elements

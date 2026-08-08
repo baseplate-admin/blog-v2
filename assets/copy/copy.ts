@@ -56,7 +56,7 @@ function initCopyButtons() {
 if (document.readyState !== 'complete') {
     document.addEventListener('DOMContentLoaded', initCopyButtons);
 } else {
-    requestAnimationFrame(initCopyButtons);
+    initCopyButtons();
 }
 
 // Re-init after HTMX swaps

@@ -58,7 +58,7 @@ function initToc() {
 if (document.readyState !== 'complete') {
     document.addEventListener('DOMContentLoaded', initToc);
 } else {
-    requestAnimationFrame(initToc);
+    initToc();
 }
 
 // Re-init after HTMX swaps
