@@ -102,6 +102,11 @@ blog/
 - **Homepage hero:** uses DaisyUI `hero` + `hero-content`
 - **RichTextField:** all have explicit `feature_names` restriction
 - **WAGTAILADMIN_RICH_TEXT_FEATURES:** global feature config set
+- **Font names:** `@fontsource-variable` packages declare `Inter Variable`, `Plus Jakarta Sans Variable`, `JetBrains Mono Variable` in `@font-face`. Body CSS references these exact variable names (not the non-variable names).
+- **Dot-grid utilities:** `dot-grid`, `dot-grid-light`, `dot-grid-subtle` in `tailwind.css` replace inline SVG data-URI background styles.
+- **NProgress bar:** `#nprogress-bar` styles in `tailwind.css`, NOT injected via JS. HTMX module only creates the bar element.
+- **Vite entry naming:** all entries are `index.ts` in their parent dir (e.g. `assets/copy/index.ts`, `assets/htmx/htmx.ts`).
+- **window.htmx typing:** `declare global { interface Window { htmx: typeof htmx } }` in `htmx.ts`, no `window as any` casts elsewhere.
 - **Custom image model:** `tags.BlogImage` via `WAGTAILIMAGES_IMAGE_MODEL = "tags.BlogImage"`. Extends `AbstractImage` with auto palette extraction (modern_colorthief) on save. Palette cached as `palette_json` (JSONField) and `dominant_color_hex` (CharField).
 - **Image security:** `WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000` (~12MP)
 - **No `XFrameOptionsMiddleware`** — removed since Wagtail 4.0+ doesn't need it

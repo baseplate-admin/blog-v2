@@ -25,6 +25,7 @@
 - [x] TOC rootMargin fixed — '0px 0px -10% 0px' so slug track covers all visible headings
 - [x] TOC scroll-spy rewritten to match Takumi docs — threshold-based algorithm (last heading whose top <= 100px is active), parent H2 propagation (H3 active also highlights preceding H2), first heading active on page load even when below viewport
 - [x] TOC sticky fix — removed `lg:items-stretch` from grid (was: grid row stretch broke sticky positioning), set aside height to `auto` with `align-self: start`
+- [x] Code cleanup pass — font names, nprogress-bar CSS, inline styles in templates, `window as any`, file renaming
 - [x] Reading time icon — added `clock` icon beside reading time text (all templates: blog page, index, partial)
 - [x] Date icon — added `calendar` icon beside publish date
 - [x] Last updated indicator — shows "Updated M j, Y" when `last_published_at` differs from `date`, with `history` icon

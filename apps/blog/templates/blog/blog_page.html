@@ -35,7 +35,7 @@
 
     {# Background dot grid ── #}
         <div class="absolute inset-0 pointer-events-none">
-            <div class="absolute inset-0 text-base-content" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;0.75&quot; fill=&quot;%23a1a1aa&quot; opacity=&quot;0.06&quot;/%3E%3C/svg%3E'); background-size: 24px 24px;"></div>
+            <div class="absolute inset-0 dot-grid"></div>
         </div>
 
     {# Top compass marker ── #}
@@ -50,7 +50,7 @@
             <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_1fr_auto_auto] gap-0 lg:gap-12 items-start">
 
             {# Left constellation rail ── #}
-                <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
+                <div class="hidden lg:flex flex-col items-center relative h-full">
                     <div class="absolute top-0 bottom-0 w-px bg-linear-to-b from-transparent via-base-content/10 to-transparent"></div>
                     <div class="absolute top-8 text-primary/25">{% icon "star" size=6 %}</div>
                     <div class="absolute top-16 text-primary/30">{% icon "orbit" size=10 %}</div>
@@ -296,7 +296,7 @@
                 </article>
 
             {# Right constellation rail ── #}
-                <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
+                <div class="hidden lg:flex flex-col items-center relative h-full">
                     <div class="absolute top-0 bottom-0 w-px bg-linear-to-b from-transparent via-base-content/10 to-transparent"></div>
                     <div class="absolute top-8 text-primary/20">{% icon "sparkles" size=5 %}</div>
                     <div class="absolute top-16 text-primary/25">{% icon "star" size=6 %}</div>
@@ -309,7 +309,7 @@
                 </div>
 
                 {# TOC Sidebar — right side, Takumi docs style ── #}
-                <aside class="hidden lg:block" id="toc-wrapper" style="align-self: start;">
+                <aside class="hidden lg:block self-start" id="toc-wrapper">
                     <div class="sticky top-8">
                         <div class="flex items-center gap-1.5 text-xs text-base-content/30 mb-3">
                             {% icon "list" size=14 %}
@@ -317,20 +317,18 @@
                         </div>
                         {% with headings=page.get_toc_headings %}
                             {% if headings|length >= 2 %}
-                                <div class="relative" style="max-height: calc(100vh - 8rem);">
+                                <div class="relative max-h-[calc(100vh-8rem)]">
                                     <nav id="toc-nav" class="toc-rail relative flex flex-col">
                                         <div id="toc-list" class="relative flex flex-col">
                                             {% for h in headings %}
                                                 <div class="relative flex flex-col" data-toc-item="">
                                                     <a href="#"
-                                                       class="toc-link relative py-1.5 text-xs text-base-content/40 hover:text-primary transition-colors data-[active=true]:text-primary"
-                                                       style="padding-inline-start: {% if h.level == 'h3' %}32px{% else %}20px{% endif %};"
+                                                       class="{% if h.level == 'h3' %}ps-8{% else %}ps-5{% endif %} toc-link relative py-1.5 text-xs text-base-content/40 hover:text-primary transition-colors data-[active=true]:text-primary"
                                                        data-target="{{ h.id }}"
                                                        data-level="{{ h.level }}"
                                                        data-active="false">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
-                                                             class="absolute -top-1.5 inset-s-0 -z-10 h-[calc(100%+0.375rem)] bottom-1.5"
-                                                             style="width: {% if h.level == 'h3' %}25px{% else %}17px{% endif %};"
+                                                             class="{% if h.level == 'h3' %}w-6{% else %}w-4{% endif %} absolute -top-1.5 inset-s-0 -z-10 h-[calc(100%+0.375rem)] bottom-1.5"
                                                              data-rail-svg="">
                                                             <line x1="{% if h.level == 'h3' %}16.5{% else %}8.5{% endif %}" y1="6" x2="{% if h.level == 'h3' %}16.5{% else %}8.5{% endif %}" y2="100%"
                                                                    stroke-width="1"

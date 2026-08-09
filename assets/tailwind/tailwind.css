@@ -116,10 +116,10 @@
     @apply antialiased;
   }
   body {
-    font-family: "Plus Jakarta Sans", "Inter", "Hind Siliguri";
+    font-family: "Plus Jakarta Sans Variable", "Inter Variable", "Hind Siliguri";
   }
   code, pre, kbd, [class*="font-mono"], pre.line-numbers code {
-    font-family: "JetBrains Mono" !important;
+    font-family: "JetBrains Mono Variable" !important;
   }
   /* Smooth theme transitions */
   body, nav, article, dialog, .modal-box, .menu, footer {
@@ -198,4 +198,32 @@
 .mask-tb {
   -webkit-mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
   mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
+}
+
+/* ── NProgress-style bar for HTMX boosted navigation ── */
+#nprogress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0.25rem;
+  z-index: 9999;
+  background: linear-gradient(to right, oklch(var(--p)), oklch(var(--s)));
+  transform-origin: left;
+  width: 0%;
+  opacity: 0;
+}
+
+/* ── Dot-grid background patterns ── */
+.dot-grid {
+  background-size: 24px 24px;
+  background-image: url('data:image/svg+xml,%3Csvg width="24" height="24" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="12" cy="12" r="0.75" fill="%23a1a1aa" opacity="0.06"/%3E%3C/svg%3E');
+}
+.dot-grid-light {
+  background-size: 24px 24px;
+  background-image: url('data:image/svg+xml,%3Csvg width="24" height="24" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="12" cy="12" r="0.6" fill="%23a1a1aa" opacity="0.05"/%3E%3C/svg%3E');
+}
+.dot-grid-subtle {
+  background-size: 24px 24px;
+  background-image: url('data:image/svg+xml,%3Csvg width="24" height="24" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="12" cy="12" r="0.5" fill="%23a1a1aa" opacity="0.04"/%3E%3C/svg%3E');
 }

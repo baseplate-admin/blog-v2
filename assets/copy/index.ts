@@ -60,7 +60,7 @@ if (document.readyState !== 'complete') {
 }
 
 // Re-init after HTMX swaps
-if ((window as any).htmx) {
+if (window.htmx) {
     document.body.addEventListener('htmx:after:swap', () => {
         requestAnimationFrame(initCopyButtons);
     });

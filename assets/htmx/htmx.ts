@@ -51,17 +51,8 @@ document.body.addEventListener('htmx:after:request', ((evt: Event) => {
     if (isBoosted) hideProgress();
 }) as EventListener);
 
-// Progress bar CSS
-const style = document.createElement('style');
-style.textContent = `
-    #nprogress-bar {
-        position: fixed; top: 0; left: 0; width: 100%; height: 0.25rem; z-index: 9999;
-        background: linear-gradient(to right, oklch(var(--p)), oklch(var(--s)));
-        transform-origin: left;
-        width: 0%; opacity: 0;
-    }
-`;
-document.head.appendChild(style);
-
 // Expose globally
-(window as any).htmx = htmx;
+declare global {
+  interface Window { htmx: typeof htmx }
+}
+window.htmx = htmx;
