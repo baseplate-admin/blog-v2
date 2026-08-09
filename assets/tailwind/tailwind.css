@@ -193,3 +193,9 @@
   & .bp { @apply text-success italic; }
   & .w { @apply text-accent/40; }
 }
+
+/* ── TOC mask: fade at top/bottom for smooth scroll edges ── */
+.mask-tb {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
+}

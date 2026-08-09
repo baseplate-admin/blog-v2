@@ -21,6 +21,8 @@
 - [x] TOC vertically aligned with first heading — JS measures offset and adds paddingTop to aside, first h2 skipped from TOC (page title)
 - [x] TOC slug animation — Takumi docs-style sliding dot + clipped SVG track segment, follows active heading on scroll
 - [x] TOC slug track dynamically grows/shrinks to cover all visible headings — IntersectionObserver tracks visible range, dot slides to active item
+- [x] TOC active heading logic fixed — picks lowest heading still in viewport (largest top >= 0), last heading becomes active at bottom of page
+- [x] TOC rootMargin fixed — '0px 0px -10% 0px' so slug track covers all visible headings
 
 ## Pending
 

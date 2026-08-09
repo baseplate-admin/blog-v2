@@ -7,16 +7,35 @@ interface TocHeading {
 
 let slugObserver: IntersectionObserver | null = null;
 
-function buildPathD(itemMids: number[], totalHeight: number): string {
-    const cx = 8.5;
-    let d = `M ${cx} 0 L ${cx} ${itemMids[0]}`;
-    for (const mid of itemMids) {
-        d += ` C ${cx} ${(mid - 4).toFixed(1)} ${cx} ${(mid + 4).toFixed(1)} ${cx} ${(mid + 8).toFixed(1)}`;
+/* ── SVG rail path builder ─────────────────────────────────────── */
+// Builds a smooth path that runs down the H2 column (x=8.5), curves into
+// the H3 column (x=16.5) at H3 items, and back to H2 at H2 items.
+function buildRailPath(
+    levels: string[],
+    itemMids: number[],
+    totalHeight: number,
+): string {
+    let d = `M 8.5 0 L 8.5 ${itemMids[0]}`;
+
+    for (let i = 0; i < levels.length; i++) {
+        const mid = itemMids[i];
+        const isH3 = levels[i] === 'h3';
+
+        if (isH3) {
+            // Curve from H2 column (8.5) to H3 column (16.5)
+            d += ` C 8.5 ${(mid - 4).toFixed(1)} 16.5 ${(mid - 1).toFixed(1)} 16.5 ${(mid + 2).toFixed(1)}`;
+            d += ` L 16.5 ${(mid + 6).toFixed(1)}`;
+        } else {
+            // Stay on H2 column
+            d += ` C 8.5 ${(mid - 4).toFixed(1)} 8.5 ${(mid + 4).toFixed(1)} 8.5 ${(mid + 8).toFixed(1)}`;
+        }
     }
-    d += ` L ${cx} ${totalHeight}`;
+
+    d += ` L 8.5 ${totalHeight}`;
     return d;
 }
 
+/* ── Slug (colored track + dot) animation ──────────────────────── */
 function createSlugAnimation(
     nav: HTMLElement,
     tocItems: HTMLElement[],
@@ -25,10 +44,15 @@ function createSlugAnimation(
     const list = nav.querySelector('#toc-list');
     if (!list) return;
 
-    const pathWidth = 16.5;
+    const levels = headings.map((h) => h.level);
+    const pathWidth = levels.some((l) => l === 'h3') ? 24.5 : 16.5;
 
-    // --- Compute item positions from DOM ---
-    function getItemPositions(): { top: number; mid: number; bottom: number }[] {
+    // Compute item positions from DOM
+    function getItemPositions(): {
+        top: number;
+        mid: number;
+        bottom: number;
+    }[] {
         const positions: { top: number; mid: number; bottom: number }[] = [];
         let cumulativeTop = 0;
         for (const item of tocItems) {
@@ -46,11 +70,14 @@ function createSlugAnimation(
     const positions = getItemPositions();
     const totalHeight = positions[positions.length - 1].bottom;
     const itemMids = positions.map((p) => p.mid);
-    const pathD = buildPathD(itemMids, totalHeight);
+    const pathD = buildRailPath(levels, itemMids, totalHeight);
 
-    // --- Slug overlay container ---
+    // Slug overlay container
     const slugContainer = document.createElement('div');
-    slugContainer.setAttribute('class', 'absolute top-0 inset-s-0 origin-center');
+    slugContainer.setAttribute(
+        'class',
+        'absolute top-0 inset-s-0 origin-center',
+    );
     slugContainer.style.width = `${pathWidth}px`;
     slugContainer.style.height = `${totalHeight}px`;
     slugContainer.style.setProperty('--track-top', '0px');
@@ -58,7 +85,7 @@ function createSlugAnimation(
     slugContainer.style.setProperty('--offset-distance', '0px');
     slugContainer.style.setProperty('--opacity', '0');
 
-    // --- Clipped SVG track ---
+    // Clipped SVG track
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', `0 0 ${pathWidth} ${totalHeight}`);
     svg.setAttribute('width', String(pathWidth));
@@ -67,7 +94,10 @@ function createSlugAnimation(
     svg.style.clipPath =
         'polygon(0 var(--track-top,0), 100% var(--track-top,0), 100% var(--track-bottom,0), 0 var(--track-bottom,0))';
 
-    const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const pathEl = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path',
+    );
     pathEl.setAttribute('d', pathD);
     pathEl.setAttribute('stroke-width', '1');
     pathEl.setAttribute('fill', 'none');
@@ -75,7 +105,7 @@ function createSlugAnimation(
     svg.appendChild(pathEl);
     slugContainer.appendChild(svg);
 
-    // --- Sliding dot ---
+    // Sliding dot
     const dot = document.createElement('div');
     dot.setAttribute('class', 'absolute left-0 rounded-full');
     dot.style.width = '4px';
@@ -89,12 +119,9 @@ function createSlugAnimation(
 
     nav.appendChild(slugContainer);
 
-    // --- Active index tracking ---
+    // Active index tracking
     let activeIndex = 0;
 
-    // --- Update slug position ---
-    // The track segment spans from the first visible heading's TOC item
-    // to the last visible heading's TOC item. The dot sits at activeIndex.
     function updateSlug(
         firstVisibleIndex: number,
         lastVisibleIndex: number,
@@ -109,35 +136,11 @@ function createSlugAnimation(
         slugContainer.style.setProperty('--opacity', '1');
     }
 
-    // --- Track which headings are visible via IntersectionObserver ---
-    // We use the scroll-spy observer (slugObserver) to know the active heading.
-    // Additionally, we track all intersecting headings to compute the visible range.
-    const visibleHeadingIds = new Set<string>();
-
-    function computeVisibleRange(): { first: number; last: number } {
-        if (!visibleHeadingIds.size) {
-            return { first: 0, last: headings.length - 1 };
-        }
-        let first = 0;
-        let last = headings.length - 1;
-        for (let i = 0; i < headings.length; i++) {
-            if (visibleHeadingIds.has(headings[i].id)) {
-                first = i;
-                break;
-            }
-        }
-        for (let i = headings.length - 1; i >= 0; i--) {
-            if (visibleHeadingIds.has(headings[i].id)) {
-                last = i;
-                break;
-            }
-        }
-        return { first, last };
-    }
-
-    // Wire up toc:active-change to update dot + track
     nav.addEventListener('toc:active-change', (e: Event) => {
-        const detail = (e as CustomEvent).detail as { index: number; visibleRange?: { first: number; last: number } };
+        const detail = (e as CustomEvent).detail as {
+            index: number;
+            visibleRange?: { first: number; last: number };
+        };
         activeIndex = detail.index;
         if (detail.visibleRange) {
             updateSlug(detail.visibleRange.first, detail.visibleRange.last);
@@ -146,29 +149,62 @@ function createSlugAnimation(
         }
     });
 
-    // --- Expose visibleHeadingIds for the scroll-spy to use ---
-    (nav as HTMLElement).dataset.slugVisibleIds = 'true';
-
-    // --- Initial setup ---
+    // Initial setup
     const hashId = location.hash.slice(1);
     const initialIndex = hashId
         ? headings.findIndex((h) => h.id === hashId)
         : 0;
     activeIndex = initialIndex >= 0 ? initialIndex : 0;
 
-    // Initially all headings are considered visible
-    for (const h of headings) {
-        visibleHeadingIds.add(h.id);
-    }
-
-    nav.dispatchEvent(new CustomEvent('toc:active-change', {
-        detail: {
-            index: activeIndex,
-            visibleRange: { first: 0, last: headings.length - 1 },
-        },
-    }));
+    nav.dispatchEvent(
+        new CustomEvent('toc:active-change', {
+            detail: {
+                index: activeIndex,
+                visibleRange: { first: 0, last: headings.length - 1 },
+            },
+        }),
+    );
 }
 
+/* ── Curved SVG paths for H3 items that follow H2 ──────────────── */
+function injectH3Curves(nav: HTMLElement): void {
+    const links = Array.from(nav.querySelectorAll('.toc-link')) as HTMLAnchorElement[];
+    for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        const level = link.getAttribute('data-level') ?? 'h2';
+        if (level !== 'h3') continue;
+
+        // Check if previous heading was an H2
+        const prevLevel = (links[i - 1]?.getAttribute('data-level') ?? 'h2');
+        if (prevLevel !== 'h2') continue;
+
+        // Replace the straight line with a curve + line
+        const svg = link.querySelector<SVGSVGElement>('svg[data-rail-svg]');
+        if (!svg) continue;
+
+        // Clear existing content and add curve + vertical line
+        svg.innerHTML = '';
+        const ns = 'http://www.w3.org/2000/svg';
+
+        const curve = document.createElementNS(ns, 'path');
+        curve.setAttribute('d', 'M 8.5 0 C 8.5 8 16.5 4 16.5 12');
+        curve.setAttribute('stroke-width', '1');
+        curve.setAttribute('fill', 'none');
+        curve.setAttribute('class', 'stroke-base-content/10');
+        svg.appendChild(curve);
+
+        const line = document.createElementNS(ns, 'line');
+        line.setAttribute('x1', '16.5');
+        line.setAttribute('y1', '12');
+        line.setAttribute('x2', '16.5');
+        line.setAttribute('y2', '100%');
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('class', 'stroke-base-content/10');
+        svg.appendChild(line);
+    }
+}
+
+/* ── Main init ─────────────────────────────────────────────────── */
 function initToc(): void {
     const content = document.getElementById('article-content');
     const nav = document.getElementById('toc-nav');
@@ -191,12 +227,6 @@ function initToc(): void {
         return;
     }
 
-    // Assign IDs to headings that don't have one
-    let idx = 0;
-    headers.forEach((h) => {
-        if (!h.id) h.id = `section-${idx++}`;
-    });
-
     const tocLinks = Array.from(
         nav.querySelectorAll('.toc-link'),
     ) as HTMLAnchorElement[];
@@ -205,15 +235,36 @@ function initToc(): void {
         nav.querySelectorAll('[data-toc-item]'),
     ) as HTMLElement[];
 
-    // Build heading lookup maps
-    const headingById = new Map<string, HTMLElement>(
-        headers.map((h) => [h.id, h]),
-    );
+    // Inject curved SVG paths for H3 items that follow H2
+    injectH3Curves(nav);
 
-    // Wire up link hrefs from data-target
+    // Match TOC links to content headings by text content
+    const headingMap = new Map<string, HTMLElement>();
+    const usedHeadings = new Set<number>();
+
+    tocLinks.forEach((link) => {
+        const targetId = link.getAttribute('data-target') ?? '';
+        const linkText = link.textContent.trim();
+        let matchedIndex = -1;
+        for (let i = 0; i < headers.length; i++) {
+            if (usedHeadings.has(i)) continue;
+            if (headers[i].textContent.trim() === linkText) {
+                matchedIndex = i;
+                break;
+            }
+        }
+        if (matchedIndex >= 0) {
+            const h = headers[matchedIndex];
+            if (!h.id) h.id = targetId;
+            headingMap.set(targetId, h);
+            usedHeadings.add(matchedIndex);
+        }
+    });
+
+    // Wire up link hrefs
     tocLinks.forEach((link) => {
         const targetId = link.getAttribute('data-target');
-        const target = headingById.get(targetId ?? '');
+        const target = headingMap.get(targetId ?? '');
         if (target) {
             link.setAttribute('href', `#${target.id}`);
         }
@@ -225,7 +276,7 @@ function initToc(): void {
             const href = link.getAttribute('href');
             if (!href) return;
             const id = href.slice(1);
-            const target = headingById.get(id);
+            const target = headingMap.get(id);
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -237,11 +288,11 @@ function initToc(): void {
     // Build structured heading list for scroll-spy
     const headings: TocHeading[] = tocLinks
         .map((link) => {
-            const targetId = link.getAttribute('data-target');
-            const element = headingById.get(targetId ?? '');
+            const targetId = link.getAttribute('data-target') ?? '';
+            const element = headingMap.get(targetId);
             if (!element) return null;
             return {
-                id: targetId ?? '',
+                id: targetId,
                 element,
                 link,
                 level: link.getAttribute('data-level') ?? 'h2',
@@ -252,68 +303,64 @@ function initToc(): void {
     // Create slug animation
     createSlugAnimation(nav, tocItems, headings);
 
-    // --- Scroll-spy: track visible headings and active heading ---
-    const visibleHeadingIds = new Set<string>();
-    let activeIndex = 0;
+    // Scroll-spy: track visible headings and active heading
+    let rafId: number | null = null;
 
-    slugObserver = new IntersectionObserver(
-        (entries) => {
-            for (const entry of entries) {
-                if (entry.isIntersecting) {
-                    visibleHeadingIds.add(entry.target.id);
-                } else {
-                    visibleHeadingIds.delete(entry.target.id);
-                }
+    function updateScrollSpy(): void {
+        const viewportTop = 0;
+        const viewportBottom = window.innerHeight;
+
+        const visibleHeadings: TocHeading[] = [];
+        for (const h of headings) {
+            const rect = h.element.getBoundingClientRect();
+            const center = rect.top + rect.height / 2;
+            if (center >= viewportTop && center <= viewportBottom) {
+                visibleHeadings.push(h);
             }
+        }
 
-            // Find active heading — the one with the largest top value >= 0
-            // (i.e., the lowest heading whose top is still in the viewport)
-            const intersectingHeadings = headings.filter(
-                (h) => visibleHeadingIds.has(h.id),
+        if (visibleHeadings.length) {
+            const inView = visibleHeadings.filter(
+                (h) => h.element.getBoundingClientRect().top >= 0,
             );
-            if (intersectingHeadings.length) {
-                const inView = intersectingHeadings.filter(
-                    (h) => h.element.getBoundingClientRect().top >= 0,
-                );
-                const candidates = inView.length ? inView : intersectingHeadings;
-                const newActive = candidates.reduce((best, h) => {
-                    const rect = h.element.getBoundingClientRect();
-                    const bestRect = best.element.getBoundingClientRect();
-                    return rect.top > bestRect.top ? h : best;
-                });
-                const newIndex = headings.indexOf(newActive);
+            const candidates = inView.length ? inView : visibleHeadings;
+            const newActive = candidates.reduce((best, h) => {
+                const rect = h.element.getBoundingClientRect();
+                const bestRect = best.element.getBoundingClientRect();
+                return rect.top > bestRect.top ? h : best;
+            });
+            const newIndex = headings.indexOf(newActive);
 
-                // Update active state on links
-                headings.forEach((h, i) => {
-                    h.link.setAttribute('data-active', String(i === newIndex));
-                });
+            // Update data-active attribute on all links
+            headings.forEach((h, i) => {
+                h.link.setAttribute('data-active', String(i === newIndex));
+            });
 
-                // Compute visible range
-                let firstVisible = headings.length - 1;
-                let lastVisible = 0;
-                for (let i = 0; i < headings.length; i++) {
-                    if (visibleHeadingIds.has(headings[i].id)) {
-                        firstVisible = i;
-                        break;
-                    }
-                }
-                for (let i = headings.length - 1; i >= 0; i--) {
-                    if (visibleHeadingIds.has(headings[i].id)) {
-                        lastVisible = i;
-                        break;
-                    }
-                }
+            const firstVisible = headings.indexOf(visibleHeadings[0]);
+            const lastVisible = headings.indexOf(
+                visibleHeadings[visibleHeadings.length - 1],
+            );
 
-                activeIndex = newIndex;
-                nav.dispatchEvent(new CustomEvent('toc:active-change', {
+            nav.dispatchEvent(
+                new CustomEvent('toc:active-change', {
                     detail: {
                         index: newIndex,
-                        visibleRange: { first: firstVisible, last: lastVisible },
+                        visibleRange: {
+                            first: firstVisible,
+                            last: lastVisible,
+                        },
                     },
-                }));
-            }
+                }),
+            );
+        }
+    }
+
+    slugObserver = new IntersectionObserver(
+        () => {
+            if (rafId !== null) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(updateScrollSpy);
         },
-        { rootMargin: '0px 0px -10% 0px', threshold: [0, 0.05, 0.2, 0.5, 1] },
+        { rootMargin: '-40% 0px -20% 0px', threshold: [0] },
     );
 
     headings.forEach((h) => {
@@ -322,7 +369,10 @@ function initToc(): void {
         }
     });
 
-    // Set initial active state from hash or first heading
+    // Initial call
+    updateScrollSpy();
+
+    // Set initial active state from hash
     const hashId = location.hash.slice(1);
     const initialIndex = hashId
         ? headings.findIndex((h) => h.id === hashId)
@@ -333,28 +383,9 @@ function initToc(): void {
             h.link.setAttribute('data-active', String(i === initialIndex));
         });
     }
-
-    // Make TOC aside as tall as the article so sticky works
-    const aside = document.querySelector<HTMLElement>(
-        'aside[data-aos="fade-right"]',
-    );
-    const article = document.querySelector<HTMLElement>('article');
-    if (aside && article) {
-        const articleRect = article.getBoundingClientRect();
-        aside.style.height = articleRect.height + 'px';
-
-        // Align TOC with the first heading by adding top padding
-        const firstHeading = content.querySelector('h2, h3');
-        if (firstHeading) {
-            const articleTop = article.getBoundingClientRect().top;
-            const headingTop = firstHeading.getBoundingClientRect().top;
-            const offset = Math.max(0, headingTop - articleTop);
-            aside.style.paddingTop = offset + 'px';
-        }
-    }
 }
 
-// Initial render — use DOMContentLoaded if document not yet complete
+// Initial render
 if (document.readyState !== 'complete') {
     document.addEventListener('DOMContentLoaded', initToc);
 } else {
@@ -364,6 +395,6 @@ if (document.readyState !== 'complete') {
 // Re-init after HTMX swaps
 if ((window as any).htmx) {
     document.body.addEventListener('htmx:after:swap', () => {
-        requestAnimationFrame(initToc);
+        setTimeout(initToc, 100);
     });
 }
