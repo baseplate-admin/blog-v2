@@ -1,0 +1,33 @@
+{
+  "activeLinkText": "Stylesheets",
+  "activeLinkClass": "prose relative py-1.5 text-sm scroll-m-4 text-fd-muted-foreground hover:text-fd-accent-foreground transition-colors wrap-anywhere data-[active=true]:text-fd-primary pt-0",
+  "activeLinkDataAttrs": [
+    {
+      "name": "data-active",
+      "value": "true"
+    },
+    {
+      "name": "href",
+      "value": "#stylesheets"
+    },
+    {
+      "name": "class",
+      "value": "prose relative py-1.5 text-sm scroll-m-4 text-fd-muted-foreground hover:text-fd-accent-foreground transition-colors wrap-anywhere data-[active=true]:text-fd-primary pt-0"
+    },
+    {
+      "name": "style",
+      "value": "padding-inline-start:20px"
+    }
+  ],
+  "activeLinkStyle": "padding-inline-start: 20px;",
+  "computedBorderStart": "0px solid rgba(0, 0, 0, 0.08)",
+  "computedBorderColor": "rgba(0, 0, 0, 0.08)",
+  "computedColor": "rgb(225, 29, 72)",
+  "siblings": [
+    {
+      "tag": "DIV",
+      "class": "relative flex flex-col",
+      "childCount": 5
+    }
+  ]
+}

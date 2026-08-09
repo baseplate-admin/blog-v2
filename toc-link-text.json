@@ -1,0 +1,12 @@
+[
+  {
+    "rawText": "\n                                                        Investigation\n                                                    ",
+    "trimmedText": "Investigation",
+    "dataTarget": "section-0"
+  },
+  {
+    "rawText": "\n                                                        Verdict\n                                                    ",
+    "trimmedText": "Verdict",
+    "dataTarget": "section-1"
+  }
+]

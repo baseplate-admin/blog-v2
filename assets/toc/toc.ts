@@ -117,7 +117,7 @@ function createSlugAnimation(
     dot.style.transition = 'opacity 0.25s ease, offset-distance 0.25s ease';
     slugContainer.appendChild(dot);
 
-    nav.appendChild(slugContainer);
+    list.appendChild(slugContainer);
 
     // Active index tracking
     let activeIndex = 0;
@@ -211,8 +211,11 @@ function initToc(): void {
     if (!content || !nav) return;
 
     // Clean up previous slug animation and observer
-    const existingSlug = nav.querySelector('div.absolute.top-0.inset-s-0');
-    if (existingSlug) existingSlug.remove();
+    const listEl = nav.querySelector('#toc-list');
+    if (listEl) {
+        const existingSlug = listEl.querySelector('div.absolute.top-0.inset-s-0');
+        if (existingSlug) existingSlug.remove();
+    }
     if (slugObserver) {
         slugObserver.disconnect();
         slugObserver = null;
