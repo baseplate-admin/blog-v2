@@ -47,7 +47,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {# ── CSS Grid: left-rail + article + right-rail + TOC ── #}
-            <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_1fr_auto_auto] gap-0 lg:gap-12 items-start lg:items-start">
+            <div class="grid grid-cols-[1fr] lg:grid-cols-[auto_1fr_auto_auto] gap-0 lg:gap-12 items-start">
 
             {# Left constellation rail ── #}
                 <div class="hidden lg:flex flex-col items-center" style="position:relative; height:100%;">
@@ -174,13 +174,24 @@
                                     <span class="text-primary/20">{% icon "sparkles" size=3 %}</span>
                                 </div>
 
-                                <time datetime="{{ page.date|date:'Y-m-d' }}" class="text-sm text-base-content/40 font-mono">
-                                    {{ page.date|date:"F j, Y" }}
+                                <time datetime="{{ page.date|date:'Y-m-d' }}" class="text-sm text-base-content/40 font-mono inline-flex items-center gap-1.5">
+                                    <span class="text-base-content/30">{% icon "calendar" size=14 %}</span>
+                                    <span>{{ page.date|date:"F j, Y" }}</span>
                                 </time>
+
+                                {% if page.last_published_at and page.last_published_at|date:"U" != page.date|date:"U" %}
+                                <span class="text-xs text-base-content/25 font-mono inline-flex items-center gap-1.5">
+                                    <span class="text-base-content/20">{% icon "history" size=12 %}</span>
+                                    <span>Updated {{ page.last_published_at|date:"M j, Y" }}</span>
+                                </span>
+                                {% endif %}
 
                                 <span class="text-primary/20">{% icon "sparkles" size=5 %}</span>
 
-                                <span class="text-sm text-base-content/40 font-mono">{{ page.reading_time }}</span>
+                                <span class="text-sm text-base-content/40 font-mono inline-flex items-center gap-1.5">
+                                    <span class="text-base-content/30">{% icon "clock" size=14 %}</span>
+                                    <span>{{ page.reading_time }}</span>
+                                </span>
                             </div>
 
                         {# Bottom ornamental line ── #}
@@ -298,7 +309,7 @@
                 </div>
 
                 {# TOC Sidebar — right side, Takumi docs style ── #}
-                <aside class="hidden lg:block self-start" data-aos="fade-left" data-aos-delay="350">
+                <aside class="hidden lg:block" id="toc-wrapper" style="align-self: start;">
                     <div class="sticky top-8">
                         <div class="flex items-center gap-1.5 text-xs text-base-content/30 mb-3">
                             {% icon "list" size=14 %}
@@ -306,7 +317,7 @@
                         </div>
                         {% with headings=page.get_toc_headings %}
                             {% if headings|length >= 2 %}
-                                <div class="relative min-h-0 overflow-y-auto mask-tb" style="max-height: calc(100vh - 8rem);">
+                                <div class="relative" style="max-height: calc(100vh - 8rem);">
                                     <nav id="toc-nav" class="toc-rail relative flex flex-col">
                                         <div id="toc-list" class="relative flex flex-col">
                                             {% for h in headings %}
