@@ -1,7 +1,9 @@
-
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from django.contrib.auth.models import BaseUserManager
+
+if TYPE_CHECKING:
+    from .models import User
 
 
 class MyUserManager(BaseUserManager):
@@ -11,7 +13,7 @@ class MyUserManager(BaseUserManager):
         email: str,
         password: str | None = None,
         **extra_fields: Any,
-    ) -> "User":
+    ) -> User:
         if not username:
             raise ValueError("The Username field must be set")
         if not email:
@@ -29,7 +31,7 @@ class MyUserManager(BaseUserManager):
         email: str,
         password: str | None = None,
         **extra_fields: Any,
-    ) -> "User":
+    ) -> User:
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)

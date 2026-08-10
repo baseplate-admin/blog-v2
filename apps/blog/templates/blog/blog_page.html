@@ -40,7 +40,7 @@
 
     {# Top compass marker ── #}
         <div class="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-base-content/10 to-transparent"></div>
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-base-content/10 bg-base-100 px-3">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-base-content/10 px-3">
             {% icon "compass" size=18 %}
         </div>
 
@@ -328,7 +328,7 @@
                                                        data-level="{{ h.level }}"
                                                        data-active="false">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
-                                                             class="{% if h.level == 'h3' %}w-6{% else %}w-4{% endif %} absolute -top-1.5 inset-s-0 -z-10 h-[calc(100%+0.375rem)] bottom-1.5"
+                                                             class="{% if h.level == 'h3' %}w-6{% else %}w-4{% endif %} absolute -top-1.5 inset-s-0 -z-10 h-[calc(100%+0.375rem)] bottom-1.5 toc-rail-svg"
                                                              data-rail-svg="">
                                                             <line x1="{% if h.level == 'h3' %}16.5{% else %}8.5{% endif %}" y1="6" x2="{% if h.level == 'h3' %}16.5{% else %}8.5{% endif %}" y2="100%"
                                                                    stroke-width="1"

@@ -30,6 +30,12 @@
 - [x] Date icon — added `calendar` icon beside publish date
 - [x] Last updated indicator — shows "Updated M j, Y" when `last_published_at` differs from `date`, with `history` icon
 
+## Completed
+- [x] Font migration — removed @fontsource npm packages, self-hosted fonts in public/fonts/ subdirectories (twemoji approach), full unicode-range @font-face in tailwind.css
+- [x] TOC SVG rail path rewritten — sharp quadratic curves matching Takumi docs style (H2 straight vertical, H3 curve out/in), slug track uses stroke-dasharray/dashoffset on SVG path (follows exact rail curve)
+- [x] Fonts split from tailwind.css — @font-face declarations moved to assets/tailwind/fonts.css, imported via @import
+- [x] TypeScript fix — htmx.ts progress bar functions cast querySelector to HTMLElement for .style access
+
 ## Pending
 
 ### Content

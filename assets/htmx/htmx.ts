@@ -1,7 +1,7 @@
 import htmx from 'htmx.org';
 
 // -- HTMX 4.x config --
-Object.assign((htmx as any).config, {
+Object.assign(htmx.config, {
     history: true,
     defaultTimeout: 10000,
     noSwap: [204, 304, '4xx', '5xx'],
@@ -17,7 +17,7 @@ document.body.addEventListener('htmx:after:request', () => {
 
 // Progress bar for boosted navigation
 const showProgress = () => {
-    const bar = document.querySelector('#nprogress-bar');
+    const bar = document.querySelector<HTMLElement>('#nprogress-bar');
     if (!bar) return;
     bar.style.width = '0%';
     bar.style.opacity = '1';
@@ -27,7 +27,7 @@ const showProgress = () => {
     });
 };
 const hideProgress = () => {
-    const bar = document.querySelector('#nprogress-bar');
+    const bar = document.querySelector<HTMLElement>('#nprogress-bar');
     if (!bar) return;
     bar.style.transition = 'width 0.3s ease, opacity 0.5s ease';
     bar.style.width = '100%';
@@ -53,6 +53,8 @@ document.body.addEventListener('htmx:after:request', ((evt: Event) => {
 
 // Expose globally
 declare global {
-  interface Window { htmx: typeof htmx }
+    interface Window {
+        htmx: typeof htmx;
+    }
 }
 window.htmx = htmx;

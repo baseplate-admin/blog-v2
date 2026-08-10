@@ -71,7 +71,8 @@ blog/
 │   ├── aos/aos.ts           # AOS init (fade-up), DOMContentLoaded + HTMX swap refresh
 │   ├── mermaid/mermaid.ts   # Mermaid.js init + lazy-render handler (window.__mermaidRender)
 │   ├── tailwind/
-│   │   ├── tailwind.css     # Tailwind 4 + DaisyUI themes, fonts, @utility grid-bg
+│   │   ├── tailwind.css     # Tailwind 4 + DaisyUI themes, @utility grid-bg, imports fonts.css
+│   │   ├── fonts.css        # @font-face declarations for all fonts (Inter, Jakarta Sans, JetBrains Mono, Hind Siliguri)
 │   │   └── tailwind.ts
 │   └── app.ts               # Minimal inline scripts (theme toggle, keyboard shortcuts)
 ├── search/                  # Wagtail search view
@@ -102,7 +103,7 @@ blog/
 - **Homepage hero:** uses DaisyUI `hero` + `hero-content`
 - **RichTextField:** all have explicit `feature_names` restriction
 - **WAGTAILADMIN_RICH_TEXT_FEATURES:** global feature config set
-- **Font names:** `@fontsource-variable` packages declare `Inter Variable`, `Plus Jakarta Sans Variable`, `JetBrains Mono Variable` in `@font-face`. Body CSS references these exact variable names (not the non-variable names).
+- **Font names:** `@fontsource-variable` packages declare `Inter Variable`, `Plus Jakarta Sans Variable`, `JetBrains Mono Variable` in `@font-face`. Body CSS references these exact variable names (not the non-variable names). Font declarations in `assets/tailwind/fonts.css` (imported by `tailwind.css`).
 - **Dot-grid utilities:** `dot-grid`, `dot-grid-light`, `dot-grid-subtle` in `tailwind.css` replace inline SVG data-URI background styles.
 - **NProgress bar:** `#nprogress-bar` styles in `tailwind.css`, NOT injected via JS. HTMX module only creates the bar element.
 - **Vite entry naming:** all entries are `index.ts` in their parent dir (e.g. `assets/copy/index.ts`, `assets/htmx/htmx.ts`).
@@ -122,13 +123,13 @@ blog/
 - **Ghost blog:** centered article card, generous whitespace, clean typography
 - **Genshin Impact / anime aesthetic:** constellation rails (connected dots + stars), ornamental dividers (gem + prism + sparkles), crown ornaments, crystal frames, dotted borders (`border-dotted`), celestial markers (orbit, compass, infinity)
 - **github.blog:** colored mood badges (purple=tech, sky=personal, red=politics, etc.)
-- **Sidebar TOC:** Takumi docs style — right-column sticky sidebar. Scroll-spy: threshold-based (last heading whose top <= 100px is active), parent H2 propagation (H3 active also highlights preceding H2). `data-active` attribute (`"true"`/`"false"`) styled via `data-[active=true]:text-primary`. Slug animation: sliding dot + clipped SVG track, track covers all visible headings. Clean links, H2/H3 indentation, curved SVG rails for H3 items.
+- **Sidebar TOC:** Takumi docs style — right-column sticky sidebar. Scroll-spy: threshold-based (last heading whose top <= 100px is active), parent H2 propagation (H3 active also highlights preceding H2). `data-active` attribute (`"true"`/`"false"`) styled via `data-[active=true]:text-primary`. Slug animation: sliding dot + SVG track via stroke-dasharray/dashoffset (follows exact rail curve), track covers all visible headings. Rail path: quadratic curves (H2 straight vertical at x=8.5, H3 curves out to x=16.5 and back). Clean links, H2/H3 indentation, curved SVG rails for H3 items.
 - **Blog index:** MakerKit alternating rows, ornamental decorative separators, AOS fade-up on scroll, background dot grid, constellation rails (left/right) with stars/orbits/gems
 - **Blog page:** CSS Grid layout (`grid-cols-[auto_auto_1fr_auto]` for left rail + TOC + content + right rail), dotted borders on all frames, ornamental corner sparkles, crown end marker
 - **Feminine icon set:** `sparkles` (decorative dots), `infinity` (ornamental curves), `gem` (crystalline), `star` (celestial), `compass` (navigation), `cross` (ornamental), `prism` (crystalline), `orbit` (planetary), `crown` (regal)
 - **Color palette:** deep dark (#080809), purple primary, orange accent
 - **Typography:** Plus Jakarta Sans (headings/body), Inter (body), Hind Siliguri (Bengali), JetBrains Mono (code)
-- **Fonts:** all via npm (@fontsource), bundled through Vite, zero CDN, no fallback fonts
+- **Fonts:** @fontsource npm packages, font files copied to `public/fonts/`, `@font-face` rules in `assets/tailwind/fonts.css` (imported by `tailwind.css`) pointing to `/static/fonts/`, zero CDN, no fallback fonts
 
 ### Base Template
 - **Nav URLs** resolved once via `{% wagtail_url_from_model_slug %}`, passed through `{% with %}` to navbar, mobile menu, footer
@@ -137,7 +138,7 @@ blog/
 - **HTMX boost** wraps `<main>` only, navbar/footer persist across swaps
 - **Tailwind loaded first** in head to prevent flash of unstyled content
 - **Mobile menu** uses vanilla JS dropdown (no popover API), click-outside to close, animate-in fade
-- **TOC** rendered server-side via `page.get_toc_headings()`, Takumi docs style: right-column sticky sidebar (`align-self: start` aside + inner `sticky top-8` div). Scroll-spy algorithm: threshold-based (last heading whose `getBoundingClientRect().top <= 100px` is active), first heading active on page load even when below viewport. Parent H2 propagation: when H3 active, preceding H2 also highlighted. `data-active` attribute set to `"true"`/`"false"` string values, styled via `data-[active=true]:text-primary` Tailwind selector. Slug animation: sliding dot + clipped SVG track segment, track dynamically grows/shrinks to cover all visible headings via IntersectionObserver. Clean links with `padding-inline-start: 20px` (H2) / `32px` (H3), curved SVG rails for H3 items following H2. JS assigns IDs to content headings by text-matching TOC links. Smooth scroll on TOC click via `scrollIntoView({ behavior: 'smooth', block: 'start' })`. Re-initializes on HTMX `htmx:after:swap`. Grid layout: `lg:grid-cols-[auto_1fr_auto_auto]` (left rail, content, right rail, TOC sidebar). Grid uses `items-start` (NO `items-stretch` — stretch breaks sticky positioning). Aside height set to `auto` via JS.
+- **TOC** rendered server-side via `page.get_toc_headings()`, Takumi docs style: right-column sticky sidebar (`align-self: start` aside + inner `sticky top-8` div). Scroll-spy algorithm: threshold-based (last heading whose `getBoundingClientRect().top <= 100px` is active), first heading active on page load even when below viewport. Parent H2 propagation: when H3 active, preceding H2 also highlighted. `data-active` attribute set to `"true"`/`"false"` string values, styled via `data-[active=true]:text-primary` Tailwind selector. Slug animation: sliding dot + SVG track via stroke-dasharray/dashoffset on the path element (follows exact rail curve), track dynamically grows/shrinks to cover all visible headings via IntersectionObserver. Rail path uses quadratic curves: H2 straight vertical at x=8.5, H3 curves out to x=16.5 and back. Clean links with `padding-inline-start: 20px` (H2) / `32px` (H3), curved SVG rails for H3 items following H2. JS assigns IDs to content headings by text-matching TOC links. Smooth scroll on TOC click via `scrollIntoView({ behavior: 'smooth', block: 'start' })`. Re-initializes on HTMX `htmx:after:swap` via `document.addEventListener` with capture (`true`) — HTMX 4.x events don't bubble to body. Grid layout: `lg:grid-cols-[auto_1fr_auto_auto]` (left rail, content, right rail, TOC sidebar). Grid uses `items-start` (NO `items-stretch` — stretch breaks sticky positioning). Aside height set to `auto` via JS.
 - **Reading progress bar** fixed at top of blog pages, updates on scroll
 - **Theme transition** via `@apply transition-colors` on all key elements
 - **Error pages** (404, 500) styled with AOS animations, centered layout

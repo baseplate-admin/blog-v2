@@ -1,8 +1,5 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter/index.css";
-@import "@fontsource-variable/plus-jakarta-sans/index.css";
-@import "@fontsource-variable/jetbrains-mono/index.css";
-@import "@fontsource/hind-siliguri/index.css";
+@import "fonts.css";
 
 @plugin "@tailwindcss/typography";
 
@@ -112,14 +109,18 @@
 }
 
 @layer theme {
+  :root {
+    --font-sans: "Plus Jakarta Sans Variable", "Inter Variable", "Hind Siliguri";
+    --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
   html {
     @apply antialiased;
   }
   body {
-    font-family: "Plus Jakarta Sans Variable", "Inter Variable", "Hind Siliguri";
+    @apply font-sans;
   }
   code, pre, kbd, [class*="font-mono"], pre.line-numbers code {
-    font-family: "JetBrains Mono Variable" !important;
+    @apply font-mono;
   }
   /* Smooth theme transitions */
   body, nav, article, dialog, .modal-box, .menu, footer {

@@ -31,7 +31,7 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 }
 
 // After HTMX swaps, re-init AOS for new elements
-document.body.addEventListener('htmx:after:swap', () => {
+document.addEventListener('htmx:after:swap', () => {
     requestAnimationFrame(() => {
         AOS.init(AOS_OPTIONS);
         AOS.refresh();
@@ -42,4 +42,4 @@ document.body.addEventListener('htmx:after:swap', () => {
             }
         });
     });
-});
+}, true);

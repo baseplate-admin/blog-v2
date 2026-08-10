@@ -15,6 +15,7 @@ export default defineConfig({
                 // CSS
                 tailwind: resolve('./assets/tailwind/index.ts'),
                 // JavaScript
+                themeInit: resolve('./assets/theme/theme-init.ts'),
                 htmx: resolve('./assets/htmx/htmx.ts'),
                 aos: resolve('./assets/aos/aos.ts'),
                 toc: resolve('./assets/toc/toc.ts'),

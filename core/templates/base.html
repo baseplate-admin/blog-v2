@@ -53,15 +53,14 @@
             {% if request.in_preview_panel %}
                 <base target="_blank">
             {% endif %}
-            <script>
-                (function(){try{var t=localStorage.getItem("theme");if(t&&t!=="tanstack-dark")document.documentElement.dataset.theme=t;}catch(e){}})();
-            </script>
+            {# Theme init — must run before Tailwind loads #}
+            {% vite_asset 'assets/theme/theme-init.ts' %}
             {# Vite: HTMX (bundles Tailwind CSS), AOS #}
             {% vite_asset "assets/tailwind/index.ts" %}
             {% vite_asset 'assets/htmx/htmx.ts' %}
             {% vite_asset 'assets/aos/aos.ts' %}
             {% vite_asset 'assets/toc/toc.ts' %}
-            {% vite_asset 'assets/copy/copy.ts' %}
+            {% vite_asset 'assets/copy/index.ts' %}
             {% vite_asset 'assets/mermaid/mermaid.ts' %}
 
             {% block head %}{% endblock %}

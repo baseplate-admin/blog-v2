@@ -7,31 +7,52 @@ interface TocHeading {
 
 let slugObserver: IntersectionObserver | null = null;
 
-/* ── SVG rail path builder ─────────────────────────────────────── */
+/* ── SVG rail path builder — sharp curves matching Takumi docs ────
+ * H2 items: straight vertical line at x=8.5
+ * H3 items: quadratic curve from x=8.5 to x=16.5 at the H2→H3 boundary,
+ *           straight vertical at x=16.5 for all consecutive H3s,
+ *           quadratic curve back to x=8.5 at the H3→H2 boundary
+ * ──────────────────────────────────────────────────────────────── */
 function buildRailPath(
     levels: string[],
     itemMids: number[],
     totalHeight: number,
 ): string {
-    let d = `M 8.5 0 L 8.5 ${itemMids[0]}`;
+    // Build a single continuous path.
+    // H2 items at x=8.5, H3 items at x=16.5.
+    // Track current X so the path never jumps.
+    // Column switches happen BETWEEN items, not on the item itself.
+    let d = `M 8.5 0`;
+    let curX = 8.5;
+    let prevBottom = 0;
 
     for (let i = 0; i < levels.length; i++) {
         const mid = itemMids[i];
         const isH3 = levels[i] === 'h3';
+        const targetX = isH3 ? 16.5 : 8.5;
+        const itemBottom = mid + 6;
 
-        if (isH3) {
-            d += ` C 8.5 ${(mid - 4).toFixed(1)} 16.5 ${(mid - 1).toFixed(1)} 16.5 ${(mid + 2).toFixed(1)}`;
-            d += ` L 16.5 ${(mid + 6).toFixed(1)}`;
-        } else {
-            d += ` C 8.5 ${(mid - 4).toFixed(1)} 8.5 ${(mid + 4).toFixed(1)} 8.5 ${(mid + 8).toFixed(1)}`;
+        // If switching columns, curve between previous item and current item
+        if (curX !== targetX) {
+            const curveY = (prevBottom + mid) / 2;
+            d += ` L ${curX} ${curveY}`;
+            d += ` Q ${curX} ${(curveY - 2).toFixed(1)} ${targetX} ${(curveY + 2).toFixed(1)}`;
+            curX = targetX;
         }
+
+        // Move vertically to the item's bottom
+        d += ` L ${curX} ${itemBottom}`;
+        prevBottom = itemBottom;
     }
 
     d += ` L 8.5 ${totalHeight}`;
     return d;
 }
 
-/* ── Slug (colored track + dot) animation ──────────────────────── */
+/* ── Slug (colored track + dot) animation ────────────────────────
+ * Clip-path polygon for the track (sharp rectangular corners).
+ * CSS offset-path for the sliding dot along the rail.
+ * ──────────────────────────────────────────────────────────────── */
 function createSlugAnimation(
     nav: HTMLElement,
     tocItems: HTMLElement[],
@@ -43,6 +64,7 @@ function createSlugAnimation(
     const levels = headings.map((h) => h.level);
     const pathWidth = levels.some((l) => l === 'h3') ? 24.5 : 16.5;
 
+    // Compute item positions from DOM
     function getItemPositions(): {
         top: number;
         mid: number;
@@ -67,20 +89,17 @@ function createSlugAnimation(
     const itemMids = positions.map((p) => p.mid);
     const pathD = buildRailPath(levels, itemMids, totalHeight);
 
+    // Slug overlay container
     const slugContainer = document.createElement('div');
-    slugContainer.setAttribute(
-        'class',
-        'absolute inset-s-0 origin-center',
-    );
+    slugContainer.setAttribute('class', 'absolute top-0 inset-s-0');
     slugContainer.style.width = `${pathWidth}px`;
     slugContainer.style.height = `${totalHeight}px`;
-    slugContainer.style.top = '0';
     slugContainer.style.setProperty('--track-top', '0px');
     slugContainer.style.setProperty('--track-bottom', '0px');
     slugContainer.style.setProperty('--offset-distance', '0px');
     slugContainer.style.setProperty('--opacity', '0');
 
-
+    // Clipped SVG track — sharp rectangular clip
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', `0 0 ${pathWidth} ${totalHeight}`);
     svg.setAttribute('width', String(pathWidth));
@@ -89,77 +108,64 @@ function createSlugAnimation(
     svg.style.clipPath =
         'polygon(0 var(--track-top,0), 100% var(--track-top,0), 100% var(--track-bottom,0), 0 var(--track-bottom,0))';
 
-    const pathEl = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path',
-    );
+    const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     pathEl.setAttribute('d', pathD);
     pathEl.setAttribute('stroke-width', '1');
     pathEl.setAttribute('fill', 'none');
+    pathEl.setAttribute('stroke-linejoin', 'round');
+    pathEl.setAttribute('stroke-linecap', 'round');
     pathEl.setAttribute('class', 'stroke-primary');
     svg.appendChild(pathEl);
+
+    // Dot inside SVG — gets clipped by the same clip-path as the track
+    const dotCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dotCircle.setAttribute('r', '2');
+    dotCircle.setAttribute('fill', 'var(--color-primary)');
+    dotCircle.style.opacity = 'var(--opacity, 0)';
+    svg.appendChild(dotCircle);
+
     slugContainer.appendChild(svg);
-
-    const dot = document.createElement('div');
-    dot.setAttribute('class', 'absolute left-0 rounded-full');
-    dot.style.width = '4px';
-    dot.style.height = '4px';
-    dot.style.backgroundColor = 'var(--color-primary)';
-    dot.style.offsetPath = `path("${pathD}")`;
-    dot.style.offsetDistance = 'var(--offset-distance, 0px)';
-    dot.style.opacity = 'var(--opacity, 0)';
-    dot.style.transition = 'opacity 0.25s ease, offset-distance 0.25s ease';
-    slugContainer.appendChild(dot);
-
     list.appendChild(slugContainer);
 
+    // Compute total path length for dot positioning
+    const pathLen = pathEl.getTotalLength();
+
+    // Active index tracking
     let activeIndex = 0;
 
     function updateSlug(
         firstVisibleIndex: number,
         lastVisibleIndex: number,
-        centerIndex: number,
     ): void {
         const trackTop = positions[firstVisibleIndex].top;
         const trackBottom = positions[lastVisibleIndex].bottom;
+        // Clamp dot Y to stay within slider bounds
+        let dotY = positions[activeIndex].mid;
+        dotY = Math.max(trackTop, Math.min(trackBottom, dotY));
 
-        // Dot follows scroll position within the slider range.
-        // At page top → dot at start, at page bottom → dot at end.
-        const atTop = window.scrollY <= 5;
-        const atBottom = window.scrollY >= document.documentElement.scrollHeight - window.innerHeight - 5;
-        let dotPos: number;
-        if (atTop) {
-            dotPos = trackTop;
-        } else if (atBottom) {
-            dotPos = trackBottom;
-        } else {
-            const clampedIndex = Math.max(firstVisibleIndex, Math.min(lastVisibleIndex, centerIndex));
-            const range = lastVisibleIndex - firstVisibleIndex;
-            const progress = range > 0 ? (clampedIndex - firstVisibleIndex) / range : 0;
-            dotPos = trackTop + Math.max(0, Math.min(1, progress)) * (trackBottom - trackTop);
-        }
+        // Map Y to path-length offset using binary search on the path
+        const dotOffset = yToPathOffset(pathEl, dotY);
 
         slugContainer.style.setProperty('--track-top', `${trackTop}px`);
         slugContainer.style.setProperty('--track-bottom', `${trackBottom}px`);
-        slugContainer.style.setProperty('--offset-distance', `${dotPos}px`);
         slugContainer.style.setProperty('--opacity', '1');
+
+        // Position dot at the path-length offset
+        const pt = pathEl.getPointAtLength(dotOffset);
+        dotCircle.setAttribute('cx', String(pt.x));
+        dotCircle.setAttribute('cy', String(pt.y));
     }
 
     nav.addEventListener('toc:active-change', (e: Event) => {
         const detail = (e as CustomEvent).detail as {
             index: number;
-            centerIndex?: number;
             visibleRange?: { first: number; last: number };
         };
         activeIndex = detail.index;
         if (detail.visibleRange) {
-            if (detail.centerIndex !== undefined) {
-                updateSlug(detail.visibleRange.first, detail.visibleRange.last, detail.centerIndex);
-            } else {
-                updateSlug(detail.visibleRange.first, detail.visibleRange.last, activeIndex);
-            }
+            updateSlug(detail.visibleRange.first, detail.visibleRange.last);
         } else {
-            updateSlug(activeIndex, activeIndex, activeIndex);
+            updateSlug(activeIndex, activeIndex);
         }
     });
 
@@ -178,6 +184,20 @@ function createSlugAnimation(
             },
         }),
     );
+}
+
+/* Map a Y-coordinate to the nearest path-length offset by binary search */
+function yToPathOffset(path: SVGPathElement, targetY: number): number {
+    const total = path.getTotalLength();
+    let lo = 0;
+    let hi = total;
+    while (hi - lo > 0.5) {
+        const mid = (lo + hi) / 2;
+        const pt = path.getPointAtLength(mid);
+        if (pt.y < targetY) lo = mid;
+        else hi = mid;
+    }
+    return (lo + hi) / 2;
 }
 
 /* ── Curved SVG paths for H3 items that follow H2 ──────────────── */
@@ -239,6 +259,11 @@ function initToc(): void {
         slugObserver.disconnect();
         slugObserver = null;
     }
+
+    // Hide individual rail SVGs — the slug animation replaces them
+    nav.querySelectorAll('.toc-rail-svg').forEach((svg) => {
+        svg.style.display = 'none';
+    });
 
     const headers = Array.from(
         content.querySelectorAll('h2, h3'),
@@ -359,20 +384,6 @@ function initToc(): void {
         const firstVisible = visibleHeadings.length ? visibleHeadings[0] : 0;
         const lastVisible = visibleHeadings.length ? visibleHeadings[visibleHeadings.length - 1] : headings.length - 1;
 
-        // Find the heading closest to the center of the viewport for smooth dot tracking.
-        const viewportCenter = window.innerHeight / 2;
-        let centerIndex = firstVisible;
-        let centerDist = Infinity;
-        for (const i of visibleHeadings) {
-            const rect = headings[i].element.getBoundingClientRect();
-            const center = rect.top + rect.height / 2;
-            const dist = Math.abs(center - viewportCenter);
-            if (dist < centerDist) {
-                centerDist = dist;
-                centerIndex = i;
-            }
-        }
-
         // Highlight all headings covered by the slider (from parent H2 up to last visible)
         let highlightEnd = lastVisible;
 
@@ -386,7 +397,6 @@ function initToc(): void {
             new CustomEvent('toc:active-change', {
                 detail: {
                     index: activeIdx,
-                    centerIndex: centerIndex,
                     visibleRange: { first: firstVisible, last: lastVisible },
                 },
             }),
@@ -443,8 +453,6 @@ if (document.readyState !== 'complete') {
 }
 
 // Re-init after HTMX swaps
-if (window.htmx) {
-    document.body.addEventListener('htmx:after:swap', () => {
-        setTimeout(initToc, 100);
-    });
-}
+document.addEventListener('htmx:after:swap', () => {
+    setTimeout(initToc, 200);
+}, true);
