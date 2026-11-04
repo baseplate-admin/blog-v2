@@ -10,6 +10,7 @@ export default defineConfig({
     build: {
         manifest: 'manifest.json',
         outDir: resolve('./static'),
+        sourcemap: true,
         rollupOptions: {
             input: {
                 // CSS

@@ -228,3 +228,97 @@
   background-size: 24px 24px;
   background-image: url('data:image/svg+xml,%3Csvg width="24" height="24" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="12" cy="12" r="0.5" fill="%23a1a1aa" opacity="0.04"/%3E%3C/svg%3E');
 }
+
+/* ── Radial gradient glows (MakerKit-inspired background aesthetic) ── */
+
+/* Top glow — soft light at the top edge of a section */
+.bg-glow-top {
+  position: relative;
+}
+.bg-glow-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% -20%, oklch(var(--p) / 0.08), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Bottom glow — soft light at the bottom edge of a section */
+.bg-glow-bottom {
+  position: relative;
+}
+.bg-glow-bottom::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 120%, oklch(var(--s) / 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Center glow — ambient radial glow behind content */
+.bg-glow-center {
+  position: relative;
+}
+.bg-glow-center::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 30%, oklch(var(--p) / 0.05), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dual glow — primary at top, secondary at bottom */
+.bg-glow-dual {
+  position: relative;
+}
+.bg-glow-dual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, oklch(var(--p) / 0.08), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% 120%, oklch(var(--s) / 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Accent glow — warm accent color, for hero sections */
+.bg-glow-accent {
+  position: relative;
+}
+.bg-glow-accent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 40% at 50% 20%, oklch(var(--ac) / 0.04), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Edge fade — subtle vignette that fades edges to the base color */
+.bg-edge-fade {
+  position: relative;
+}
+.bg-edge-fade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent, oklch(var(--b1) / 0.4) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Border glow — radial gradient at the bottom edge (like MakerKit header/footer divider) */
+.border-glow-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: radial-gradient(60% 100% at 50% 100%, oklch(var(--p) / 0.15), transparent 100%);
+  pointer-events: none;
+}
