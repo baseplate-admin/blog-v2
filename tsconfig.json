@@ -10,11 +10,15 @@
         "skipLibCheck": true,
         "isolatedModules": true,
         "allowJs": true,
-        "strictNullChecks": true,
-        "types": ["vite/client", "node"]
+        "strict": true,
+        "types": ["vite/client", "node"],
+        "paths": {
+            "$lib": ["./web/src/lib"],
+            "$lib/*": ["./web/src/lib/*"]
+        }
     },
     "include": [
-        "assets/**/*",
+        "web/src/**/*",
         "vite.config.ts"
     ],
     "exclude": ["node_modules", "static", "dist"]

@@ -1,102 +1,12 @@
-{% load django_vite wagtailcore_tags wagtailuserbar wagtail_tags site_tags %}
-
-{# Resolve nav URLs once — all nav links resolved from Wagtail #}
-{% wagtail_url_from_model_slug 'blog.BlogIndexPage' as blog_url %}
-{% wagtail_url_from_model_slug 'projects.ProjectIndexPage' as projects_url %}
-{% wagtail_url_from_model_slug 'wagtailcore.Page' 'about' as about_url %}
-{% wagtail_url_from_model_slug 'wagtailcore.Page' 'contact' as contact_url %}
-
-{# Nav items + current path — used in navbar, mobile menu, footer #}
-{% with about=about_url blog=blog_url projects=projects_url contact=contact_url current_path=request.path %}
-    <!DOCTYPE html>
-    <html lang="en" data-theme="tanstack-dark">
-        <head>
-            {% vite_hmr_client %}
-            <meta charset="utf-8">
-            <title>
-                {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-                {% wagtail_site as current_site %}
-                {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-            </title>
-            {% if page.search_description %}
-                <meta name="description" content="{{ page.search_description }}">
-            {% endif %}
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-
-            {# RSS feed link #}
-            <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed/">
-
-            {# Open Graph meta tags #}
-            {% if page %}
-                {% with title=page.seo_title|default:page.title description=page.search_description site_name=current_site.site_name|default:"The Tinkerer" %}
-                    {% wagtail_site as site %}
-                    {% with og_url=site.root_url|add:page.url %}
-                        <meta property="og:title" content="{{ title }}">
-                        <meta property="og:description" content="{{ description }}">
-                        <meta property="og:url" content="{{ og_url }}">
-                        <meta property="og:site_name" content="{{ site_name }}">
-                        <meta property="og:type" content="{% if page.content_type.app_label == 'blog' %}article{% else %}website{% endif %}">
-                        {% if page.feed_image %}
-                            {% with image=page.feed_image %}
-                                <meta property="og:image" content="{{ site.root_url }}{{ image.file.url }}">
-                                <meta property="og:image:alt" content="{{ title }}">
-                            {% endwith %}
-                        {% endif %}
-                        {# Twitter Card #}
-                        <meta name="twitter:card" content="summary_large_image">
-                        <meta name="twitter:title" content="{{ title }}">
-                        <meta name="twitter:description" content="{{ description }}">
-                    {% endwith %}
-                {% endwith %}
-            {% endif %}
-
-            {% if request.in_preview_panel %}
-                <base target="_blank">
-            {% endif %}
-            {# Theme init — must run before Tailwind loads #}
-            {% vite_asset 'assets/theme/theme-init.ts' %}
-            {# Vite: HTMX (bundles Tailwind CSS), AOS #}
-            {% vite_asset "assets/tailwind/index.ts" %}
-            {% vite_asset 'assets/htmx/htmx.ts' %}
-            {% vite_asset 'assets/aos/aos.ts' %}
-            {% vite_asset 'assets/toc/toc.ts' %}
-            {% vite_asset 'assets/copy/index.ts' %}
-            {% vite_asset 'assets/mermaid/mermaid.ts' %}
-
-            {% block head %}{% endblock %}
-        </head>
-
-        <body class="bg-base-100 font-sans text-base-content antialiased transition-colors duration-300 min-h-screen">
-            {% if not request.is_htmx %}{% wagtailuserbar %}{% endif %}
-
-            {# Navigation progress bar (nprogress-style) #}
-            <div id="nav-progress" class="fixed top-0 left-0 w-full h-0.5 z-70 pointer-events-none overflow-hidden">
-                <div class="progress-bar h-full bg-linear-to-r from-primary to-accent w-0 transition-all duration-300 ease-in-out"></div>
-            </div>
-
-            <div class="page-shell min-h-screen flex flex-col">
-
-                {# ── Navbar (navbar + mobile menu + search dialog + inline scripts) ── #}
-                {% include "components/navbar.html" %}
-
-                {# ── HTMX boost: swaps only <main>, navbar/footer persist ── #}
-                <div class="boost-root flex-1"
-                     hx-boost:inherited="true"
-                     hx-target:inherited="main"
-                     hx-select:inherited="main"
-                     hx-swap:inherited="innerHTML">
-                    <main class="page-main">
-                        {% block inner_content %}
-                            {% block content %}{% endblock %}
-                        {% endblock %}
-                    </main>
-                </div>
-
-                {# ── Footer (sticks to bottom via flexbox) ─────────── #}
-                {% include "components/footer.html" with about=about blog=blog projects=projects contact=contact %}
-
-            </div>
-
-        </body>
-    </html>
-{% endwith %}
+{% load django_vite %}<!DOCTYPE html>
+<html lang="en" data-theme="tanstack-dark">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {# Vite bundle (Svelte + Tailwind + Inertia client). Title/OG managed by serverHead in main.ts #}
+        {% vite_asset 'web/src/main.ts' %}
+    </head>
+    <body>
+        {% block inertia %}{% endblock %}
+    </body>
+</html>

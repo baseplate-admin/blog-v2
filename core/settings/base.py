@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "inertia",
 ]
 
 MIDDLEWARE = [
@@ -70,8 +71,8 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "core.middleware.HtmxDetectMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "inertia.middleware.InertiaMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -204,6 +205,11 @@ WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000  # ~12MP default
 WAGTAILIMAGES_IMAGE_MODEL = "tags.BlogImage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Inertia (https://inertiajs.github.io/inertia-django/)
+INERTIA_LAYOUT = "base.html"
+INERTIA_VERSION = "1.0"
+INERTIA_SSR_ENABLED = False
 
 # Rich text editor features - global control
 # https://docs.wagtail.org/en/stable/topics/rich_text.html#feature-configuration

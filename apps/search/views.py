@@ -1,36 +1,27 @@
+"""Search view: renders the Inertia search modal.
+
+The search "page" is not a Wagtail Page - it is a thin view that renders the
+Inertia search component directly. The post list is preloaded once; the modal
+filters it client-side.
+"""
+
+from __future__ import annotations
+
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views.decorators.cache import cache_page
-from wagtail.search import query as search_query
+from wagtail.models import Page, Site
 
-from apps.blog.models import BlogPage
-
-MIN_QUERY_LEN: int = 1
-MAX_RESULTS: int = 10
+from apps.search.serializers import serialize_search
+from mixins.inertia.base import render_inertia
 
 
-@cache_page(60)
+def _root_page() -> Page | None:
+    site = Site.objects.filter(is_default_site=True).first() or Site.objects.first()
+    return site.root_page if site else Page.objects.live().first()
+
+
 def search_view(request: HttpRequest) -> HttpResponse:
-    """Search blog pages by title, intro and body. Returns partial for HTMX swap."""
-    query_string: str = request.GET.get("q", "").strip()
-    results: list[BlogPage] = []
-
-    if query_string and len(query_string) >= MIN_QUERY_LEN:
-        page_qs = (
-            BlogPage.objects.live()
-            .public()
-            .search(
-                search_query.Query(query_string),
-                search_fields=["title", "intro", "body"],
-            )
-        )
-        results = list(page_qs.specific()[:MAX_RESULTS])
-
-    return render(
-        request,
-        "search/_partial/search_results.html",
-        {
-            "query": query_string,
-            "results": results,
-        },
-    )
+    """Render the search modal (Inertia component: SearchPage)."""
+    # Pass the site root page so shared chrome (nav/site/meta) resolves.
+    page: Page | None = _root_page()
+    props = serialize_search(page, {"q": request.GET.get("q", "").strip()})
+    return render_inertia(request, "SearchPage", props, page=page)

@@ -1,10 +1,11 @@
 from typing import Any
 
 from django.db import models
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+from mixins.inertia.base import InertiaMixin
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList
 from wagtail.fields import RichTextField
 from wagtail.models import Page
@@ -14,7 +15,9 @@ from apps.home.models import HomePage
 from apps.projects.github import fetch_repo_data, format_time_ago
 
 
-class ProjectIndexPage(Page):
+class ProjectIndexPage(Page, InertiaMixin):
+    component = "ProjectIndex"
+
     intro: RichTextField = RichTextField(
         blank=True,
         features=["bold", "italic", "link"],
@@ -38,10 +41,6 @@ class ProjectIndexPage(Page):
     subpage_types: list[str] = ["ProjectPage"]
     parent_page_types: list[type[Page]] = [HomePage]
 
-    @method_decorator(cache_page(300))
-    def serve(self, request: HttpRequest) -> HttpResponse:
-        return super().serve(request)
-
     def get_context(self, request: HttpRequest) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context(request)
         # Get live project pages
@@ -51,7 +50,9 @@ class ProjectIndexPage(Page):
         return context
 
 
-class ProjectPage(Page):
+class ProjectPage(Page, InertiaMixin):
+    component = "ProjectPage"
+
     description: RichTextField = RichTextField(
         features=["h2", "h3", "bold", "italic", "link", "image"],
         help_text="Detailed description of the project.",
@@ -136,10 +137,6 @@ class ProjectPage(Page):
 
     parent_page_types: list[type[Page]] = [ProjectIndexPage]
     subpage_types: list[str] = []
-
-    @method_decorator(cache_page(300))
-    def serve(self, request: HttpRequest) -> HttpResponse:
-        return super().serve(request)
 
     def on_publish(self) -> None:
         super().on_publish()

@@ -1,0 +1,8 @@
+# Taste — Command Code
+- Prefers `frozenset` over `set`/tuple for module-level constant collections (e.g. skip-field or key sets). Confidence: 0.75
+- In Svelte, prefers `$derived.by(() => { ... })` with early returns over nested ternaries. Confidence: 0.7
+- Rejects hacky shims/stubs as a fix for toolchain errors (e.g. a fake module aliased over a types-only package export); wants the supported, documented config option or a real upstream fix instead. Confidence: 0.6
+- In Inertia apps, expects internal navigation to go through Inertia's `Link` (e.g. `Link` from `@inertiajs/svelte`) for true SPA visits, keeping plain `<a>` only for external and in-page hash links. Confidence: 0.65
+- Prefers cross-cutting behaviour encapsulated once in a generic base class/mixin that pages simply inherit, so individual models need minimal boilerplate and "just work"; and keeps such shared modules free of project-specific models/hardcoded types (app-specific logic lives in the app that owns it). Confidence: 0.7
+- Wants the Inertia UI layer in React (`@inertiajs/react`), explicitly rejecting Svelte for it; prefers lining up the whole toolchain (vite plugin, lucide-react, React UI primitives) with that choice rather than keeping Svelte pieces around. Confidence: 0.75
+- Accepts a large single main bundle over code-splitting/lazy-loading when the simpler approach is more straightforward ("ballooned main is ok"); does not want bundle-size optimisation prioritised for this personal project. Confidence: 0.6

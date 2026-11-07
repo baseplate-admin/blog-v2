@@ -1,10 +1,11 @@
 from typing import Any
 
 from django.db import models
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+from mixins.inertia.base import InertiaMixin
 from wagtail.admin.panels import FieldPanel, ObjectList
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
@@ -30,7 +31,9 @@ from apps.blog.blocks import (
 )
 
 
-class HomePage(Page):
+class HomePage(Page, InertiaMixin):
+    component = "Home"
+
     max_count: int = 1
     parent_page_types: list[str] = ["wagtailcore.Page"]
 
@@ -100,10 +103,6 @@ class HomePage(Page):
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ]
-
-    @method_decorator(cache_page(300))
-    def serve(self, request: HttpRequest) -> HttpResponse:
-        return super().serve(request)
 
     def get_context(self, request: HttpRequest) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context(request)

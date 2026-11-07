@@ -10,7 +10,8 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.images.views.serve import ServeView
 
 from apps.blog.feeds import BlogRSSFeed
-from apps.blog.views import author_avatar, blog_page_partial
+from apps.blog.views import author_avatar
+from apps.search.views import search_view
 
 api_router = api_router_module.WagtailAPIRouter("api")
 api_router.register_endpoint("pages", PagesAPIViewSet)
@@ -24,13 +25,12 @@ urlpatterns = [
     path("sitemap.xml", sitemap),
     path("feed/", BlogRSSFeed(), name="rss_feed"),
     path("rss/", BlogRSSFeed(), name="rss_feed"),
-    path("blog/load-more/", blog_page_partial, name="blog_page_partial"),
     path("avatar/<int:id>/", author_avatar, name="author_avatar"),
+    path("search/", search_view, name="search"),
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("api/", api_router.urls),
-    path("search/", include("apps.search.urls")),
 ]
 
 if settings.DEBUG:
