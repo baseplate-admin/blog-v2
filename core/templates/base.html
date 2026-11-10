@@ -1,12 +1,20 @@
-{% load django_vite %}<!DOCTYPE html>
-<html lang="en" data-theme="tanstack-dark">
+{% load render_bundle from webpack_loader %}<!DOCTYPE html>
+<html lang="en" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        {# Vite bundle (Svelte + Tailwind + Inertia client). Title/OG managed by serverHead in main.ts #}
-        {% vite_asset 'web/src/main.ts' %}
+        {# Server-rendered SEO tags (title, description, OG/Twitter) for crawlers #}
+        {% block inertia_head %}
+            {% for tag in seo_tags %}
+                {{ tag|safe }}
+            {% endfor %}
+        {% endblock inertia_head %}
+        {# Webpack bundle CSS (React + Tailwind + Inertia client) #}
+        {% render_bundle 'main' 'css' %}
     </head>
     <body>
         {% block inertia %}{% endblock %}
+        {# Webpack bundle JS (loaded at end of body for React + Inertia client) #}
+        {% render_bundle 'main' 'js' %}
     </body>
 </html>

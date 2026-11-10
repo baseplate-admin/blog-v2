@@ -3,7 +3,7 @@ name = "blog"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = [
     # Core Wagtail Dependencies
     "django>=5.2,<6.0",
@@ -16,8 +16,8 @@ dependencies = [
     "redis[hiredis]>=8.1.0",
     # storage
     "django-storages[s3]>=1.14",
-    # Vite
-    "django-vite>=3.1.0",
+    # Webpack
+    "django-webpack-loader>=3.2.4",
     # Color/Readtime optimization
     "modern-colorthief>=0.2.1",
     "readtime>=3.0.0",
@@ -34,3 +34,24 @@ dependencies = [
 
 [dependency-groups]
 dev = ["django-debug-toolbar>=6.2.0", "djhtml>=3.0.10"]
+
+[tool.ruff.lint]
+select = [
+    "F",    # pyflakes
+    "I",    # isort
+    "RUF",  # ruff-specific
+    "BLE",  # blind-except
+    "DTZ",  # datetime
+    "SIM",  # simplification
+    "FURB", # pyupgrade
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Migrations are auto-generated; ignore mutable-class-attr and ambiguous-unicode warnings.
+"*/migrations/*.py" = ["RUF012", "RUF001"]
+
+# Wagtail/Django model class attributes (search_fields, panels, etc.) are idiomatic.
+"apps/*/models.py" = ["RUF012"]
+
+# Django settings use star imports from base by design.
+"core/settings/*.py" = ["F403", "F405"]

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
-    "django_vite",
+    "webpack_loader",
     "django_filters",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -225,8 +226,7 @@ WAGTAILADMIN_RICH_TEXT_FEATURES = [
 import re
 
 
-# WhiteNoise: treat Vite-hashed assets as immutable for max-age caching
-# https://github.com/MrBin99/django-vite#whitenoise
+# WhiteNoise: treat webpack-hashed assets as immutable for max-age caching
 def _immutable_file_test(path: str, url: str) -> bool:
     return bool(re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url))
 

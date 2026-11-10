@@ -16,6 +16,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS += [
     "debug_toolbar",
 ]
+
 MIDDLEWARE += [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
@@ -23,9 +24,14 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DJANGO_VITE = {
-    "default": {
-        "dev_mode": True,
+# django-webpack-loader: dev mode polls webpack-stats.json (written by the
+# webpack dev server on :5173) so the bundle tags point at the live dev URL.
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "assets/",
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "CACHE": False,
+        "POLL_INTERVAL": 0.1,
     }
 }
 # Database
@@ -41,7 +47,7 @@ DATABASES = {
 WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 
 
-try:
-    from .local import *
-except ImportError:
-    pass
+from contextlib import suppress
+
+with suppress(ImportError):
+    from .local import *  # pyrefly: ignore[missing-import]

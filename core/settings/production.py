@@ -1,13 +1,20 @@
 import os
+from contextlib import suppress
+
 from django.core.exceptions import ImproperlyConfigured
+
 from .base import *
 
 DEBUG = False
 
-# django-vite: disable dev mode in production, use manifest
-DJANGO_VITE = {
-    "default": {
-        "dev_mode": False,
+# django-webpack-loader: production uses the pre-built bundle from static/
+# and reads asset URLs from webpack-stats.json.
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "assets/",
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "CACHE": not DEBUG,
+        "POLL_INTERVAL": 0,
     }
 }
 
@@ -95,7 +102,5 @@ DATABASES = {
 }
 
 
-try:
-    from .local import *
-except ImportError:
-    pass
+with suppress(ImportError):
+    from .local import *  # pyrefly: ignore[missing-import]
