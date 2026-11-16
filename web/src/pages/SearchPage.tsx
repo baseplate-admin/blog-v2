@@ -132,7 +132,7 @@ export default function SearchPage({ posts = [], nav }: Props) {
                                                 {post.intro}
                                             </p>
                                         )}
-                                        <p className="mt-1 font-mono text-[10px] text-foreground/40">
+                                        <p className="mt-1 font-mono text-[10px] text-foreground/55">
                                             {post.date}
                                         </p>
                                     </button>
@@ -140,7 +140,7 @@ export default function SearchPage({ posts = [], nav }: Props) {
                             ))}
                         </ul>
                     ) : (
-                        <div className="py-6 text-center text-xs text-foreground/30 font-mono">
+                        <div className="py-6 text-center text-xs text-foreground/55 font-mono">
                             {query
                                 ? `No results for "${query}"`
                                 : 'Start typing to search...'}

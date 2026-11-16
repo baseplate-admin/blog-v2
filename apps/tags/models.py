@@ -22,7 +22,10 @@ class BlogImage(AbstractImage):
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)
-        self._extract_palette()
+        # _extract_palette() saves with update_fields; skip it on that write so
+        # palette extraction does not recurse into save() forever.
+        if kwargs.get("update_fields") is None:
+            self._extract_palette()
 
     def _extract_palette(self) -> None:
         """Extract color palette using modern_colorthief and persist to DB."""

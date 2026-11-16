@@ -7,17 +7,20 @@ export default function Timeline({ block }: { block: TimelineBlock }) {
     return (
         <ol className="relative my-8 ml-4 space-y-8 border-l border-border pl-8">
             {items.map((item, i) => (
-                <AOS key={item.title} animation="fade-up" delay={i * 80}>
-                    <li className="relative">
-                        <span className="absolute -left-[41px] flex size-8 items-center justify-center rounded-full border border-primary/40 bg-card font-mono text-[10px] text-primary">
-                            {item.timestamp || '•'}
-                        </span>
+                <li key={item.title} className="relative">
+                    <span className="absolute -left-[41px] top-1.5 size-3 rounded-full border-2 border-background bg-primary" />
+                    <AOS animation="fade-up" delay={i * 80}>
+                        {item.timestamp && (
+                            <div className="mb-1 font-mono text-[11px] uppercase tracking-wide text-primary/70">
+                                {item.timestamp}
+                            </div>
+                        )}
                         <h4 className="font-semibold text-foreground">{item.title}</h4>
                         {item.description && (
-                            <p className="mt-1 text-sm leading-relaxed text-foreground/60"><EmojiText html={item.description} /></p>
+                            <div className="mt-1 text-sm leading-relaxed text-foreground/60"><EmojiText html={item.description} /></div>
                         )}
-                    </li>
-                </AOS>
+                    </AOS>
+                </li>
             ))}
         </ol>
     );

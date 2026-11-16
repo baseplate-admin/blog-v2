@@ -5,8 +5,7 @@ from pygments.styles import get_style_by_name
 from wagtail import blocks
 
 # Language choices for code blocks derived from Pygments lexers
-CODE_LANGUAGES: list[tuple[str, str]] = frozenset(
-    [
+CODE_LANGUAGES: list[tuple[str, str]] = [
         ("python", "Python"),
         ("javascript", "JavaScript"),
         ("typescript", "TypeScript"),
@@ -58,8 +57,7 @@ CODE_LANGUAGES: list[tuple[str, str]] = frozenset(
         ("vim", "Vim Script"),
         ("git", "Git"),
         ("protobuf", "Protocol Buffers"),
-    ]
-)
+]
 
 
 def highlight_code(code: str, language: str) -> str:

@@ -298,3 +298,20 @@ User praised the MakerKit blog's color contrast ("superb") and asked to match it
 #### Build / verification
 - [x] `npx tsc --noEmit` clean (0 errors).
 - [x] Browser: `/blog/` index and `/blog/django-tips/` article both verified - text hierarchy is now crisper, meta/tags clearly legible, headings at full white.
+
+## Full audit + fixes (2026-11-16)
+
+See `improvement.md` for the complete report. Summary:
+
+- [x] **Emoji sizing** - wrapper was `inline`, so `h-[1.2em] w-[1.2em]` was ignored and SVGs rendered at 768x768. Now `inline-block`, verified 19x19.
+- [x] **Rich text tags** - `EmojiText.tsx` flattened every element to `<span>` (loss of `<strong>`, `<em>`, `<code>`, links, lists, headings). Rewrote with an allowlisted `createElement` walker.
+- [x] **Timeline/Steps** - timestamps overflowed the fixed `size-8` badge; `AOS` put a `<div>` inside `<ol>`. Timestamp is now a label above the title, dot on the rail, AOS inside `<li>`.
+- [x] **TOC** - replaced the flickering multi-active IntersectionObserver with a stable reading-line active state, sliding indicator bar, smooth anchor scroll, and a TanStack-style mobile `<details>` TOC (`TocMobile.tsx`).
+- [x] **Contrast** - added `prose-invert` (the typography default gray-700 was leaking into Tabs/tooltips/project descriptions), raised code-token and footer/license colors, darkened `--primary-foreground` in dark mode. Canvas WCAG audit: 0 failures on `/`, `/blog/`, `/blog/kitchen-sink/`, `/projects/blog-engine/`, `/search/`.
+- [x] **RSS** - `/feed/` and `/rss/` were 500s: `self.request` does not exist on `Feed`, and `item_pubdate` returned a `date`. Both fixed, now 200.
+- [x] **Image palette recursion** - `BlogImage.save()` -> `_extract_palette()` -> `save(update_fields=...)` recursed forever. Guarded on `update_fields`; verified with a real upload.
+- [x] **Migration instability** - `CODE_LANGUAGES` was a `frozenset` (randomized string order), so every `makemigrations` produced a new `AlterField`. Now an ordered list; `makemigrations --check` is clean.
+- [x] **Test discovery** - added the missing `apps/__init__.py`; fixed the stale `home.models` import and removed-template assertion. `manage.py test` now runs 3/3 tests.
+- [x] `tsc`, `ruff`, `manage.py check`, migrations check, and `npm run build` all pass.
+
+Remaining priorities (details in `improvement.md`): Docker Python 3.14 vs `requires-python >=3.15`; `COPY --chown=app:app` with no `app` user; production `collectstatic` needing AWS env at build; hardcoded `SECRET_KEY` / ignored `DJANGO_SECRET_KEY`; `ALLOWED_HOSTS="*"`; 10.48 MB main bundle from eager Twemoji + wildcard Lucide imports.

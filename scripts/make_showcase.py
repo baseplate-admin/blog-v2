@@ -83,7 +83,7 @@ else:
         intro="Every StreamField block this blog supports, in one post - headings, code, callouts, stats, cards, tabs, timelines, steps, tooltips, quotes, and Mermaid diagrams.",
         body=BODY,
         mood="tech",
-        date=datetime.date.today(),
+        date=datetime.datetime.now(tz=datetime.timezone.utc).date(),
     )
     blog_index.add_child(instance=page)
     page.save_revision().publish()

@@ -198,7 +198,7 @@ export default function BlogIndex({
                 )}
 
                 {/* Post count */}
-                <div className="mt-12 text-center text-xs text-foreground/30 font-mono">
+                <div className="mt-12 text-center text-xs text-foreground/55 font-mono">
                     {total} post{total !== 1 ? 's' : ''}
                 </div>
             </div>

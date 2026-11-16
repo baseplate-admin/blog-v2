@@ -52,13 +52,16 @@ interface EmojiProps {
     value?: string;
     /** Hex codepoint string, e.g. "1f600" or "1f1e8-1f1f3". */
     codepoint?: string;
+    /** Native glyph to show when the codepoint has no bundled SVG. */
+    fallback?: string;
     className?: string;
 }
 
 export default function Emoji({
     value,
     codepoint,
-    className = 'inline h-[1.2em] w-[1.2em] align-[-0.15em]',
+    fallback,
+    className = 'inline-block h-[1.2em] w-[1.2em] align-[-0.15em]',
 }: EmojiProps) {
     // Resolve to a lowercase hex codepoint string, or '' if neither given.
     const cp =
@@ -75,7 +78,6 @@ export default function Emoji({
         const content = isValidElement(Comp) ? (
             Comp
         ) : (
-            // @ts-expect-error -- Comp is a ComponentType here, not an element.
             <Comp className="h-full w-full" />
         );
         return (
@@ -89,7 +91,7 @@ export default function Emoji({
     }
     return (
         <span aria-hidden="true" className={className}>
-            {cp ? '?' : ''}
+            {fallback ?? (cp ? '?' : '')}
         </span>
     );
 }

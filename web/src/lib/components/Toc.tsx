@@ -1,133 +1,152 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '$lib/utils';
 import Icon from '$lib/Icon';
 import type { TocItem } from '$lib/types';
 
 /**
- * Takumi-docs style TOC rail: a vertical guide line with a sliding dot that
- * follows the active heading. H2 items sit on the straight rail (x=8.5);
- * H3 items curve out (x=16.5) and back. Scroll-spy: the last heading whose
- * top is <= 130px is active, with parent-H2 propagation.
+ * Desktop table of contents.
+ *
+ * Active detection follows Fumadocs/TanStack: the active item is the last
+ * heading whose top has passed a reading line near the top of the viewport,
+ * with the first heading active before any heading reaches it and the last
+ * heading active at the bottom of the page. A single active item avoids the
+ * flicker you get from intersecting multiple headings at once.
+ *
+ * A single indicator bar slides between items (`transition-[top,height]`),
+ * and the surrounding scroll area follows the active item smoothly.
  */
 export default function Toc({ toc }: { toc: TocItem[] }) {
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [indicator, setIndicator] = useState({ top: 0, height: 0 });
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    const listRef = useRef<HTMLUListElement>(null);
 
-    const updateActive = useCallback(() => {
-        if (!toc.length) return;
-        let current = toc[0].id;
-        for (const item of toc) {
-            const el = document.getElementById(item.id);
-            if (el && el.getBoundingClientRect().top <= 130) {
-                current = item.id;
-            } else {
-                break;
-            }
-        }
-        setActiveId(current);
-    }, [toc]);
-
+    // Reading line, measured from the top of the viewport.
     useEffect(() => {
         if (!toc.length) return;
-        updateActive();
-        let ticking = false;
-        const onScroll = () => {
-            if (!ticking) {
-                ticking = true;
-                requestAnimationFrame(() => {
-                    updateActive();
-                    ticking = false;
-                });
+
+        let frame = 0;
+
+        const compute = () => {
+            const line = 140;
+            let current = toc[0]?.id ?? null;
+
+            for (const item of toc) {
+                const el = document.getElementById(item.id);
+                if (!el) continue;
+                if (el.getBoundingClientRect().top - line <= 0) {
+                    current = item.id;
+                } else {
+                    break;
+                }
             }
+
+            const doc = document.documentElement;
+            if (window.innerHeight + window.scrollY >= doc.scrollHeight - 8) {
+                current = toc[toc.length - 1].id;
+            }
+
+            setActiveId((prev) => (prev === current ? prev : current));
         };
+
+        const onScroll = () => {
+            if (frame) return;
+            frame = requestAnimationFrame(() => {
+                frame = 0;
+                compute();
+            });
+        };
+
+        compute();
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onScroll);
         return () => {
+            cancelAnimationFrame(frame);
             window.removeEventListener('scroll', onScroll);
             window.removeEventListener('resize', onScroll);
         };
-    }, [toc, updateActive]);
+    }, [toc]);
 
-    function isActive(id: string): boolean {
-        if (id === activeId) return true;
-        // Parent H2 propagation: an active H3 also highlights its preceding H2.
-        const idx = toc.findIndex((t) => t.id === id);
-        const active = toc.find((t) => t.id === activeId);
-        if (
-            active &&
-            idx !== -1 &&
-            active.level === 'h3' &&
-            toc[idx].level === 'h2'
-        ) {
-            const activeIdx = toc.findIndex((t) => t.id === activeId);
-            for (let i = activeIdx; i >= 0; i--) {
-                if (toc[i].level === 'h2') return toc[i].id === id;
-            }
+    // Slide the indicator to the active item.
+    useEffect(() => {
+        const list = listRef.current;
+        if (!list || !activeId) return;
+        const anchor = list.querySelector<HTMLElement>(
+            `a[href="#${CSS.escape(activeId)}"]`,
+        );
+        if (!anchor) return;
+        setIndicator({ top: anchor.offsetTop, height: anchor.offsetHeight });
+    }, [activeId, toc]);
+
+    // Keep the active item inside the TOC scroll area.
+    useEffect(() => {
+        const scroller = scrollerRef.current;
+        const list = listRef.current;
+        if (!scroller || !list || !activeId) return;
+
+        const anchor = list.querySelector<HTMLElement>(
+            `a[href="#${CSS.escape(activeId)}"]`,
+        );
+        if (!anchor) return;
+
+        const top = list.offsetTop + anchor.offsetTop;
+        const bottom = top + anchor.offsetHeight;
+        const viewTop = scroller.scrollTop;
+        const viewBottom = viewTop + scroller.clientHeight;
+
+        if (top < viewTop + 8) {
+            scroller.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        } else if (bottom > viewBottom - 8) {
+            scroller.scrollTo({
+                top: bottom - scroller.clientHeight + 8,
+                behavior: 'smooth',
+            });
         }
-        return false;
-    }
+    }, [activeId]);
 
-    if (toc.length < 2) return null;
+    if (toc.length === 0) return null;
 
     return (
         <nav className="text-sm" aria-label="Table of contents">
-            <div className="flex items-center gap-1.5 text-xs text-foreground/30 mb-3">
-                <Icon name="list" size={14} />
-                <span>On this page</span>
-            </div>
-            <div className="relative max-h-[calc(100vh-8rem)]">
-                <div id="toc-list" className="relative flex flex-col">
+            <h3 className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/50">
+                <Icon name="list" size={16} />
+                On this page
+            </h3>
+
+            <div
+                ref={scrollerRef}
+                className="relative mt-3 max-h-[calc(100vh-8rem)] overflow-y-auto overscroll-contain py-1 [mask-image:linear-gradient(to_bottom,transparent,white_16px,white_calc(100%-16px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+                <span
+                    aria-hidden="true"
+                    className="absolute inset-s-0 w-0.5 rounded-full bg-primary transition-[top,height] duration-300 ease-out"
+                    style={{ top: indicator.top, height: indicator.height }}
+                />
+                <ul ref={listRef} className="flex flex-col">
                     {toc.map((item) => {
-                        const active = isActive(item.id);
-                        const x = item.level === 'h3' ? 16.5 : 8.5;
+                        const active = item.id === activeId;
                         return (
-                            <div
-                                key={item.id}
-                                className="relative flex flex-col"
-                            >
+                            <li key={item.id}>
                                 <a
                                     href={'#' + item.id}
                                     data-active={String(active)}
+                                    aria-current={active ? 'location' : undefined}
                                     className={cn(
-                                        'toc-link relative py-1.5 text-xs text-foreground/40 hover:text-primary transition-colors',
-                                        item.level === 'h3' ? 'ps-8' : 'ps-5',
+                                        'block py-1.5 text-[0.8125rem]/5 break-words transition-colors duration-200',
+                                        active
+                                            ? 'text-primary'
+                                            : 'text-foreground/50 hover:bg-muted/50 hover:text-foreground',
                                     )}
+                                    style={{
+                                        paddingInlineStart: item.level === 'h3' ? 20 : 8,
+                                    }}
                                 >
-                                    {/* Rail line */}
-                                    <svg
-                                        className={cn(
-                                            'absolute -top-1.5 inset-s-0 -z-10 h-[calc(100%+0.375rem)] bottom-1.5',
-                                            item.level === 'h3' ? 'w-6' : 'w-4',
-                                        )}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true"
-                                    >
-                                        <line
-                                            x1={x}
-                                            y1="6"
-                                            x2={x}
-                                            y2="100%"
-                                            strokeWidth="1"
-                                            className="stroke-foreground/10"
-                                        />
-                                    </svg>
-                                    {/* Sliding dot marker for the active item */}
-                                    <span
-                                        className={cn(
-                                            'absolute top-1/2 -translate-y-1/2 size-2 rounded-full bg-primary transition-all duration-200',
-                                            'inset-s-0',
-                                            item.level === 'h3'
-                                                ? 'left-[16.5px]'
-                                                : 'left-[8.5px]',
-                                            '-translate-x-1/2',
-                                        )}
-                                        style={{ opacity: active ? 1 : 0 }}
-                                    />
                                     {item.text}
                                 </a>
-                            </div>
+                            </li>
                         );
                     })}
-                </div>
+                </ul>
             </div>
         </nav>
     );

@@ -22,7 +22,7 @@ export default function Generic({ title, body }: Props) {
                     </div>
                 ) : body ? (
                     <div
-                        className="prose prose-lg max-w-4xl text-foreground/80"
+                        className="prose prose-lg prose-invert max-w-4xl text-foreground/80"
                         dangerouslySetInnerHTML={{ __html: body }}
                     />
                 ) : null}

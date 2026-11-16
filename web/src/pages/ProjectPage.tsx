@@ -39,7 +39,7 @@ export default function ProjectPage({
         <div className="relative flex-1">
             <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
             <div className="max-w-7xl mx-auto px-4 md:px-12 py-16 md:py-24 relative z-10">
-                <div className="text-secondary font-mono mb-4 text-sm tracking-widest">
+                <div className="text-primary font-mono mb-4 text-sm tracking-widest">
                     <a href={parentUrl} className="hover:underline">BACK TO PROJECTS</a>
                 </div>
 
@@ -98,7 +98,7 @@ export default function ProjectPage({
                 )}
 
                 <div
-                    className="prose prose-lg md:prose-xl max-w-4xl mx-auto"
+                    className="prose prose-lg prose-invert md:prose-xl max-w-4xl mx-auto"
                     dangerouslySetInnerHTML={{ __html: description }}
                 />
 

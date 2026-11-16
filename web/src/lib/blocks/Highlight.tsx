@@ -16,9 +16,9 @@ export default function Highlight({ block }: { block: AOSHighlightBlock }) {
         <AOS animation={value.animation} delay={Number(value.delay)}>
             <div className={cn('my-8 flex items-start gap-3 rounded-xl border p-5', styles[value.variant] ?? styles.default)}>
                 <Icon name="sparkles" className="mt-0.5 size-5 shrink-0 text-primary" />
-                <p className="text-base font-medium leading-relaxed">
+                <div className="text-base font-medium leading-relaxed">
                     <EmojiText html={value.text} />
-                </p>
+                </div>
             </div>
         </AOS>
     );

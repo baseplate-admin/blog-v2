@@ -21,7 +21,7 @@ export default function CardGrid({ block }: { block: CardGridBlock }) {
                                 <Icon name={card.icon} className="size-5" />
                             </div>
                             <h3 className="text-lg font-semibold">{card.title}</h3>
-                            <p className="mt-1 text-sm text-foreground/60"><EmojiText html={card.description} /></p>
+                            <div className="mt-1 text-sm text-foreground/60"><EmojiText html={card.description} /></div>
                         </div>
                     </div>
                 </AOS>

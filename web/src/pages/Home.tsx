@@ -272,7 +272,7 @@ export default function Home({
                 </div>
                 <div className="max-w-7xl mx-auto px-4 md:px-12 py-24 relative z-10">
                     <div className="mb-16 border-b border-border pb-8">
-                        <div className="text-secondary font-mono mb-2 flex items-center gap-2">
+                        <div className="text-violet-300 font-mono mb-2 flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-secondary/30"></span>
                             02. WORK
                         </div>
@@ -307,7 +307,7 @@ export default function Home({
                                                         {project.demo_url || ''}
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-center items-center bg-background aspect-video relative overflow-hidden text-foreground/10 font-black text-6xl select-none">
+                                                <div className="flex justify-center items-center bg-background aspect-video relative overflow-hidden text-foreground/40 font-black text-6xl select-none">
                                                     {project.image?.url ? (
                                                         <img
                                                             src={

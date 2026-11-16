@@ -1,3 +1,5 @@
+from datetime import UTC, datetime, time
+
 from django.contrib.syndication.views import Feed
 from django.utils.html import strip_tags
 from wagtail.models import Site
@@ -13,9 +15,15 @@ class BlogRSSFeed(Feed):
         super().__init__()
         self._site: object = None
 
+    def get_feed(self, obj, request):
+        # Django's syndication view does not expose the request on the feed
+        # instance, so resolve the site here while it is still in scope.
+        self._site = Site.find_for_request(request) or Site.objects.filter(
+            is_default_site=True
+        ).first()
+        return super().get_feed(obj, request)
+
     def _get_site(self) -> object:
-        if self._site is None:
-            self._site = Site.find_for_request(self.request)
         return self._site
 
     def link(self) -> str:
@@ -39,8 +47,10 @@ class BlogRSSFeed(Feed):
     def item_link(self, item: BlogPage) -> str:
         return f"{self._get_site().root_url}{item.url}"
 
-    def item_pubdate(self, item: BlogPage) -> object:
-        return item.date
+    def item_pubdate(self, item: BlogPage) -> datetime:
+        # Django's feed framework requires an aware datetime, while BlogPage
+        # stores a plain date.
+        return datetime.combine(item.date, time.min, tzinfo=UTC)
 
     def item_categories(self, item: BlogPage) -> tuple[str, ...]:
         return tuple(tag.name for tag in item.tags.all())

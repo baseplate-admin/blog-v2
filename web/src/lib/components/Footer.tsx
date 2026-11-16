@@ -33,7 +33,7 @@ export default function Footer({ nav, site }: { nav: Nav; site: Site }) {
                         ) : null
                     )}
                 </div>
-                <div className="mt-4 md:mt-0 md:ml-auto text-xs text-foreground/40">
+                <div className="mt-4 md:mt-0 md:ml-auto text-xs text-foreground/60">
                     <span>Copyright {year}</span>
                     <br />
                     <span>All rights reserved</span>

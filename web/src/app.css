@@ -102,7 +102,7 @@
 
   /* Vibrant Purple Primary */
   --primary: oklch(62% 0.22 295);
-  --primary-foreground: oklch(98% 0.01 290);
+  --primary-foreground: oklch(16% 0.02 290);
 
   /* Deep Purple Secondary */
   --secondary: oklch(55% 0.18 310);
@@ -126,7 +126,7 @@
 /* ── Base element styles ──────────────────────────────────────────────── */
 @layer base {
   html {
-    @apply antialiased;
+    @apply scroll-smooth antialiased motion-reduce:scroll-auto;
   }
   body {
     @apply bg-background text-foreground font-sans;
@@ -295,7 +295,7 @@
   }
 
   & .linenos {
-    @apply inline-block select-none text-foreground/20 text-right;
+    @apply inline-block select-none text-foreground/50 text-right;
     min-width: 2.5rem;
     width: 2.5rem;
     max-width: 2.5rem;
@@ -307,37 +307,37 @@
     margin-right: 0.75rem;
   }
 
-  & .normal { @apply text-foreground/30; }
+  & .normal { @apply text-foreground/50; }
   & .hll { @apply bg-muted; }
   & .c, & .cm, & .cpf, & .c1, & .cs { @apply text-foreground/50 italic; }
-  & .ch { @apply text-secondary/80 italic; }
-  & .cp { @apply text-secondary; }
+  & .ch { @apply text-purple-300/90 italic; }
+  & .cp { @apply text-purple-300; }
   & .err { @apply bg-destructive/30 text-destructive; }
   & .k, & .kn, & .kp, & .kr { @apply text-primary font-semibold; }
   & .kd, & .kt { @apply text-primary italic font-semibold; }
   & .kc { @apply text-foreground/60 italic; }
-  & .o, & .ow, & .pm, & .p, & .gh, & .go, & .gp, & .gu { @apply text-foreground/40; }
+  & .o, & .ow, & .pm, & .p, & .gh, & .go, & .gp, & .gu { @apply text-foreground/60; }
   & .gd, & .gr { @apply text-destructive; }
   & .ge { @apply italic; }
   & .ges { @apply italic font-bold; }
-  & .gi { @apply text-secondary; }
+  & .gi { @apply text-purple-300; }
   & .gs { @apply font-bold; }
   & .gt { @apply text-primary; }
   & .m, & .mb, & .mf, & .mh, & .mi, & .mo, & .il, & .sa { @apply text-foreground/60; }
   & .s, & .sb, & .s2, & .sh, & .s1, & .ss { @apply text-accent/80; }
-  & .sc { @apply text-primary/80; }
+  & .sc { @apply text-primary; }
   & .dl, & .fm, & .vm, & .sd { @apply text-accent/80 italic; }
-  & .se { @apply text-secondary; }
+  & .se { @apply text-purple-300; }
   & .si { @apply text-accent/80 underline; }
-  & .sx, & .sr { @apply text-primary/80; }
-  & .na, & .nb, & .nl, & .nn { @apply text-secondary; }
-  & .nc, & .nd { @apply text-primary/80; }
+  & .sx, & .sr { @apply text-primary; }
+  & .na, & .nb, & .nl, & .nn { @apply text-purple-300; }
+  & .nc, & .nd { @apply text-violet-300; }
   & .no, & .nf { @apply text-accent/80; }
-  & .ni { @apply text-secondary/80; }
+  & .ni { @apply text-purple-300; }
   & .ne { @apply text-destructive/80; }
   & .nt { @apply text-primary font-semibold; }
   & .nv, & .vc, & .vi { @apply text-foreground/70; }
   & .vg { @apply text-destructive/70; }
-  & .bp { @apply text-secondary italic; }
-  & .w { @apply text-accent/40; }
+  & .bp { @apply text-purple-300 italic; }
+  & .w { @apply text-accent/70; }
 }

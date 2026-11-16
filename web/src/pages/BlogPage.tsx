@@ -4,6 +4,7 @@ import Icon from '$lib/Icon';
 import MoodBadge from '$lib/components/MoodBadge';
 import LicenseBadge from '$lib/components/LicenseBadge';
 import Toc from '$lib/components/Toc';
+import TocMobile from '$lib/components/TocMobile';
 import BlockRenderer from '$lib/blocks/BlockRenderer';
 import { formatDate, readingTime } from '$lib/utils';
 import type {
@@ -30,7 +31,7 @@ interface Props {
     nav: Nav;
 }
 
-const PROSE = `prose prose-lg max-w-none
+const PROSE = `prose prose-lg prose-invert max-w-none
     prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground
     prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-4 prose-h2:scroll-mt-24
     prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-3 prose-h3:scroll-mt-24
@@ -215,6 +216,9 @@ export default function BlogPage({
                         {/* Divider before body */}
                         <div className="mt-10 h-px w-full bg-linear-to-r from-border via-border to-transparent" />
 
+                        {/* Mobile TOC (desktop TOC is the sticky sidebar) */}
+                        <TocMobile toc={toc} />
+
                         {/* Article body */}
                         <div id="article-content" className={'mt-8 ' + PROSE}>
                             {body.map((block, i) => (
@@ -249,7 +253,7 @@ export default function BlogPage({
                         <div className="mt-16 pt-8 border-t border-border/50">
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-foreground/40 font-mono uppercase tracking-wider">
+                                    <span className="text-xs text-foreground/60 font-mono uppercase tracking-wider">
                                         Licensed Under
                                     </span>
                                     <LicenseBadge license={license_type} />

@@ -20,7 +20,7 @@ export default function Callout({ block }: { block: CalloutBlock }) {
                 <Icon name={v.icon} className="mt-0.5 size-5 shrink-0" />
                 <div className="min-w-0">
                     <p className="font-semibold text-foreground">{value.title}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-foreground/80"><EmojiText html={value.body} /></p>
+                    <div className="mt-1 text-sm leading-relaxed text-foreground/80"><EmojiText html={value.body} /></div>
                 </div>
             </div>
         </AOS>

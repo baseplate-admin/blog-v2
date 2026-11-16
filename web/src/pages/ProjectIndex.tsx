@@ -59,7 +59,7 @@ export default function ProjectIndex({ intro = '', projects = [], nav }: Props) 
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-foreground/10 font-black text-6xl select-none bg-muted/50">PROJECT</div>
+                                                        <div className="w-full h-full flex items-center justify-center text-foreground/40 font-black text-6xl select-none bg-muted/50">PROJECT</div>
                                                     )}
                                                 </div>
                                                 <div className="absolute inset-0 bg-background/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
@@ -70,7 +70,7 @@ export default function ProjectIndex({ intro = '', projects = [], nav }: Props) 
 
                                         <div className="w-full lg:w-2/5 space-y-8 relative z-10">
                                             <div className="space-y-4">
-                                                <h2 className="text-4xl md:text-5xl font-bold leading-tight group-hover:text-secondary transition-colors duration-300">
+                                                <h2 className="text-4xl md:text-5xl font-bold leading-tight group-hover:text-primary transition-colors duration-300">
                                                     <Link href={project.url}>{project.title}</Link>
                                                 </h2>
                                                 <div className="w-12 h-1 bg-secondary rounded-full"></div>
@@ -82,7 +82,7 @@ export default function ProjectIndex({ intro = '', projects = [], nav }: Props) 
                                                 </div>
                                             )}
                                             <div
-                                                className="prose prose-lg text-foreground/80"
+                                                className="prose prose-lg prose-invert text-foreground/80"
                                                 dangerouslySetInnerHTML={{ __html: project.description }}
                                             />
                                             <div className="flex flex-wrap gap-4 items-center">

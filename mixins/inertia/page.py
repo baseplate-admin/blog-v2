@@ -97,7 +97,7 @@ def _meta_props(page: Any) -> dict[str, Any]:
 
     seo_title = page.seo_title or page.specific_deferred.title
     site_name = _site_name(page)
-    root_url = (site := _get_site(page)) and site.root_url or ""
+    root_url = ((site := _get_site(page)) and site.root_url) or ""
 
     og_image: str | None = None
     og_image_alt: str | None = None
