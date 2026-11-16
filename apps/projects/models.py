@@ -1,11 +1,7 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from django.db import models
 from django.http import HttpRequest
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-
-from mixins.inertia.base import InertiaMixin
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList
 from wagtail.fields import RichTextField
 from wagtail.models import Page
@@ -13,6 +9,7 @@ from wagtail.search import index
 
 from apps.home.models import HomePage
 from apps.projects.github import fetch_repo_data, format_time_ago
+from mixins.inertia.page import InertiaMixin
 
 
 class ProjectIndexPage(Page, InertiaMixin):
@@ -25,21 +22,17 @@ class ProjectIndexPage(Page, InertiaMixin):
     )
     max_count: int = 1
 
-    search_fields: list[index.SearchField] = Page.search_fields + [
-        index.SearchField("intro"),
-    ]
+    search_fields: list[index.SearchField] = [*Page.search_fields, index.SearchField("intro")]
 
-    content_panels: list[FieldPanel] = Page.content_panels + [
-        FieldPanel("intro"),
-    ]
-    editor_panels: list[ObjectList] = [
+    content_panels: list[FieldPanel] = [*Page.content_panels, FieldPanel("intro")]
+    editor_panels: ClassVar[list[ObjectList]] = [
         ObjectList(content_panels, heading="Content"),
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ]
 
-    subpage_types: list[str] = ["ProjectPage"]
-    parent_page_types: list[type[Page]] = [HomePage]
+    subpage_types: ClassVar[list[str]] = ["ProjectPage"]
+    parent_page_types: ClassVar[list[type[Page]]] = [HomePage]
 
     def get_context(self, request: HttpRequest) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context(request)
@@ -103,10 +96,7 @@ class ProjectPage(Page, InertiaMixin):
         help_text="Last push date from GitHub",
     )
 
-    search_fields: list[index.SearchField] = Page.search_fields + [
-        index.SearchField("description"),
-        index.SearchField("gh_full_name"),
-    ]
+    search_fields: list[index.SearchField] = [*Page.search_fields, index.SearchField("description"), index.SearchField("gh_full_name")]
 
     image: models.ForeignKey = models.ForeignKey(
         "wagtailimages.Image",
@@ -117,26 +107,15 @@ class ProjectPage(Page, InertiaMixin):
         help_text="Project showcase image",
     )
 
-    content_panels: list[FieldPanel | MultiFieldPanel] = Page.content_panels + [
-        FieldPanel("description"),
-        MultiFieldPanel(
-            [
-                FieldPanel("github_url"),
-                FieldPanel("demo_url"),
-                FieldPanel("featured"),
-            ],
-            heading="Links",
-        ),
-        FieldPanel("image"),
-    ]
-    editor_panels: list[ObjectList] = [
+    content_panels: list[FieldPanel | MultiFieldPanel] = [*Page.content_panels, FieldPanel("description"), MultiFieldPanel([FieldPanel("github_url"), FieldPanel("demo_url"), FieldPanel("featured")], heading="Links"), FieldPanel("image")]
+    editor_panels: ClassVar[list[ObjectList]] = [
         ObjectList(content_panels, heading="Content"),
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ]
 
-    parent_page_types: list[type[Page]] = [ProjectIndexPage]
-    subpage_types: list[str] = []
+    parent_page_types: ClassVar[list[type[Page]]] = [ProjectIndexPage]
+    subpage_types: ClassVar[list[str]] = []
 
     def on_publish(self) -> None:
         super().on_publish()

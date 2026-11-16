@@ -6,3 +6,6 @@ declare module '*.svg' {
     >;
     export default content;
 }
+
+// Side-effect CSS imports (style-loader injects at runtime; no module shape).
+declare module '*.css';

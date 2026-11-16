@@ -1,10 +1,7 @@
 import path from 'node:path';
 import type { Configuration } from 'webpack';
-import CopyPlugin from 'copy-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import BundleTracker from 'webpack-bundle-tracker';
-import webpack from 'webpack';
 
 const isDev = process.env.WEBPACK_MODE === 'development';
 const src = path.resolve(__dirname, 'web/src');
@@ -22,60 +19,58 @@ const config: Configuration = {
         assetModuleFilename: 'assets/[name].[hash:8][ext]',
         publicPath: '/static/',
         clean: true,
-        hashFunction: 'xxhash64',
     },
     devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json', '.css', '.svg'],
-        alias: {
-            $lib: path.resolve(src, 'lib'),
-            $vendor: path.resolve(src, 'vendor'),
-        },
-        // main.ts imports 'vite/modulepreload-polyfill' — a Vite-only module.
-        // Stub it out so webpack resolves it to nothing.
-        fallback: {
-            'vite/modulepreload-polyfill': false,
-        },
+        extensions: [
+            '.tsx',
+            '.ts',
+            '.jsx',
+            '.js',
+            '.mjs',
+            '.json',
+            '.css',
+            '.svg',
+        ],
+        // Resolve tsconfig "paths" ($lib, $vendor) at bundle time natively
+        // (webpack 5.105+). Replaces resolve.alias + tsconfig-paths-webpack-plugin.
+        tsconfig: true,
+    },
+    // Break the Windows chokidar recompile loop: batch watcher events and
+    // ignore node_modules + the two paths the build itself writes (static out
+    // + webpack-stats.json), so their changes don't re-trigger a compile.
+    watchOptions: {
+        aggregateTimeout: 300,
+        poll: false,
+        ignored: /node_modules|static|webpack-stats\.json/,
     },
     module: {
         rules: [
             {
+                // TS/TSX/JS -> JS via esbuild (fast, no Babel config needed).
                 test: /\.(tsx|ts|jsx|js|mjs)$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader',
+                    loader: 'esbuild-loader',
                     options: {
-                        presets: [
-                            ['@babel/preset-env', { targets: 'defaults' }],
-                            ['@babel/preset-react', { runtime: 'automatic' }],
-                            ['@babel/preset-typescript', { ignoreExtensions: false }],
-                        ],
-                        // Inject the React Fast Refresh transform in dev only.
-                        plugins: isDev ? [require.resolve('react-refresh/babel')] : [],
-                        cacheDirectory: true,
-                        compact: !isDev,
+                        jsx: 'automatic',
                     },
                 },
             },
             {
-                // CSS entry (app.css): extracted in production, inlined in dev.
+                // CSS entry (app.css): `style-loader` injects a <style> tag at
+                // runtime (both dev and prod), so no separate CSS file is
+                // emitted. `@tailwindcss/webpack` runs the Tailwind 4 engine as
+                // a webpack loader (replaces postcss-loader + postcss.config.js).
+                // Loaders run right-to-left: Tailwind compiles @apply/nesting,
+                // then css-loader resolves, then style-loader injects.
                 test: /\.css$/,
-                use: [
-                    isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'postcss-loader',
-                ],
+                use: ['style-loader', 'css-loader', '@tailwindcss/webpack'],
             },
             {
-                // SVGs imported as React components via svgr-loader.
+                // SVGs imported as React components via @svgr/webpack.
                 test: /\.svg$/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: { presets: ['@babel/preset-react'] },
-                    },
-                    'svgr-loader',
-                ],
+                use: ['@svgr/webpack'],
             },
             {
                 // Other images: emit as static assets.
@@ -97,67 +92,36 @@ const config: Configuration = {
             filename: 'webpack-stats.json',
             integrity: false,
         }),
-        new webpack.DefinePlugin({
-            __VITE__: JSON.stringify(false),
-            'import.meta.env': JSON.stringify({
-                MODE: isDev ? 'development' : 'production',
-                DEV: isDev,
-                PROD: !isDev,
-                BASE_URL: '/static/',
-            }),
-        }),
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path.resolve(src, 'vendor/twemoji/svg'),
-                    to: 'twemoji/svg/[name][ext]',
-                },
-            ],
-        }),
-        ...(isDev
-            ? [new ReactRefreshWebpackPlugin()]
-            : [
-                  new MiniCssExtractPlugin({
-                      filename: 'assets/main.[contenthash:8].css',
-                      chunkFilename: 'assets/[name].[contenthash:8].css',
-                  }),
-              ]),
+        // HMR in dev. (No CSS extract plugin - style-loader injects styles.)
+        ...(isDev ? [new ReactRefreshWebpackPlugin()] : []),
     ],
-    optimization: isDev
-        ? {}
-        : {
-              splitChunks: {
-                  chunks: 'all',
-                  cacheGroups: {
-                      // Keep third-party deps in their own cacheable chunk.
-                      vendor: {
-                          test: /[\\/]node_modules[\\/]/,
-                          name: 'vendor',
-                          priority: -10,
-                          reuseExistingChunk: true,
-                      },
-                  },
-              },
-          },
     ...(isDev
         ? {
               devServer: {
                   host: 'localhost',
-                  port: 5173,
-                  // Serve the dev bundle under /static/ so it matches the production
-                  // publicPath and the webpack tag in base.html.
+                  port: 3000,
+                  allowedHosts: 'all',
+                  // Serve the dev bundle under /static/ so it matches the
+                  // production publicPath and the render_bundle tag in base.html.
                   static: {
                       directory: path.resolve(__dirname, 'static'),
                       publicPath: '/static/',
                   },
                   hot: true,
                   liveReload: true,
-                  headers: { 'Access-Control-Allow-Origin': 'http://localhost:8000' },
+                  // Allow Django on :8000 to load the dev bundle from :3000.
+                  headers: {
+                      'Access-Control-Allow-Origin': 'http://localhost:8000',
+                  },
                   client: { overlay: true },
               },
           }
         : {}),
-    performance: { hints: false, maxEntrypointSize: Infinity, maxAssetSize: Infinity },
+    performance: {
+        hints: false,
+        maxEntrypointSize: Infinity,
+        maxAssetSize: Infinity,
+    },
     stats: 'errors-warnings',
 };
 

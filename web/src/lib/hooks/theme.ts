@@ -1,32 +1,27 @@
 /**
- * Theme state (dark/light).
+ * Theme state (dark/light) using shadcn's `.dark` class on <html>.
  *
- * - `initTheme()` must run BEFORE the stylesheet loads to avoid a flash of
- *   the wrong theme. We call it from a small inline script in base.html.
- * - `toggleTheme()` is used by the navbar button.
+ * - Default is dark (matches base.html initial `<html class="dark">`).
+ * - `toggleTheme()` flips the `dark` class on <html>.
  * - Theme is stored in localStorage under "theme".
  */
 
 const STORAGE_KEY = "theme";
-const VALID = ["dark", "light"] as const;
-type Theme = (typeof VALID)[number];
 
-export function getStoredTheme(): Theme {
+export function getStoredTheme(): "dark" | "light" {
 	try {
 		const stored = localStorage.getItem(STORAGE_KEY);
-		if (stored === "dark" || stored === "light") return stored;
+		if (stored === "dark" || stored === "light") {
+			return stored;
+		}
 	} catch {
 		/* no-op */
 	}
 	return "dark";
 }
 
-export function setTheme(theme: Theme): void {
-	if (theme === "dark") {
-		document.documentElement.classList.add("dark");
-	} else {
-		document.documentElement.classList.remove("dark");
-	}
+export function setTheme(theme: "dark" | "light"): void {
+	document.documentElement.classList.toggle("dark", theme === "dark");
 	try {
 		localStorage.setItem(STORAGE_KEY, theme);
 	} catch {
@@ -35,10 +30,11 @@ export function setTheme(theme: Theme): void {
 }
 
 export function toggleTheme(): void {
-	const current = document.documentElement.classList.contains("dark")
-		? "dark"
-		: "light";
-	setTheme(current === "dark" ? "light" : "dark");
+	setTheme(isDark() ? "light" : "dark");
+}
+
+export function isDark(): boolean {
+	return document.documentElement.classList.contains("dark");
 }
 
 /** Runs before paint: applies the stored (or default) theme to <html>. */

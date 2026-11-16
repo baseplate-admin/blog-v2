@@ -1,18 +1,17 @@
 @import "tailwindcss";
+@import "shadcn/tailwind.css";
 @import "tw-animate-css";
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/plus-jakarta-sans";
 @import "@fontsource-variable/jetbrains-mono";
 @plugin "@tailwindcss/typography";
 
-/* ── Static theme tokens (font + radius) ── */
-@theme {
-  --font-sans: "Plus Jakarta Sans Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius: 0.75rem;
-}
-
-/* ── Dynamic color tokens (theme-switchable via .dark) ── */
+/* ── shadcn theme: bridge semantic tokens into the Tailwind resolver ─────────
+   The `--background`, `--primary`, etc. custom properties are defined in the
+   :root / .dark blocks below. `@theme inline` re-exports each one as a
+   --color-* utility (bg-background, text-foreground, border-border, …) so the
+   utilities resolve to var(--*) at the use-site. That keeps opacity modifiers
+   (text-primary/80) and .dark switching working without redefinition. ──────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -33,94 +32,262 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-info: var(--info);
 
-  --radius-sm: calc(var(--radius) * 0.25);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.4);
+  --radius-4xl: calc(var(--radius) * 3);
+
+  --font-sans: "Plus Jakarta Sans Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* Dark variant: `.dark` class on <html> (set by theme.ts before paint). */
+@custom-variant dark (&:is(.dark *));
+
+/* ── Light theme (default) ─────────────────────────────────────────────── */
 :root {
-  --background: oklch(98% 0.003 260);
+  color-scheme: light;
+  --radius: 0.625rem;
+
+  --background: oklch(99% 0.003 260);
   --foreground: oklch(18% 0.02 250);
-  --card: oklch(99% 0.003 260);
+
+  --card: oklch(100% 0 0);
   --card-foreground: oklch(18% 0.02 250);
-  --popover: oklch(99% 0.003 260);
+
+  --popover: oklch(100% 0 0);
   --popover-foreground: oklch(18% 0.02 250);
+
+  /* Purple Primary */
   --primary: oklch(55% 0.22 295);
   --primary-foreground: oklch(98% 0.01 290);
+
+  /* Deep Purple Secondary */
   --secondary: oklch(50% 0.18 310);
   --secondary-foreground: oklch(98% 0.01 310);
+
   --muted: oklch(95.5% 0.006 260);
-  --muted-foreground: oklch(45% 0.02 250);
+  --muted-foreground: oklch(45% 0.02 260);
+
+  /* Golden Yellow Accent */
   --accent: oklch(65% 0.18 90);
-  --accent-foreground: oklch(18% 0.03 90);
+  --accent-foreground: oklch(20% 0.03 90);
+
   --destructive: oklch(55% 0.22 25);
   --destructive-foreground: oklch(98% 0.01 25);
+
   --border: oklch(90% 0.012 260);
-  --input: oklch(90% 0.012 260);
+  --input: oklch(88% 0.012 260);
   --ring: oklch(55% 0.22 295);
-  --success: oklch(52% 0.19 155);
-  --warning: oklch(65% 0.18 80);
-  --info: oklch(52% 0.18 230);
-  --radius: 0.75rem;
 }
 
+/* ── Dark theme (default applied on <html class="dark">) ──────────────── */
 .dark {
-  --background: oklch(8% 0.01 280);
+  color-scheme: dark;
+  --radius: 0.625rem;
+
+  /* Deep Dark Base */
+  --background: rgb(8, 8, 9);
   --foreground: oklch(98% 0.01 280);
-  --card: oklch(11% 0.01 280);
+
+  --card: rgb(17, 17, 20);
   --card-foreground: oklch(98% 0.01 280);
-  --popover: oklch(11% 0.01 280);
+
+  --popover: rgb(17, 17, 20);
   --popover-foreground: oklch(98% 0.01 280);
+
+  /* Vibrant Purple Primary */
   --primary: oklch(62% 0.22 295);
   --primary-foreground: oklch(98% 0.01 290);
+
+  /* Deep Purple Secondary */
   --secondary: oklch(55% 0.18 310);
   --secondary-foreground: oklch(95% 0.01 310);
-  --muted: oklch(20% 0.01 280);
+
+  --muted: rgb(25, 25, 20);
   --muted-foreground: oklch(75% 0.01 280);
+
+  /* Golden Yellow Accent */
   --accent: oklch(78% 0.18 90);
   --accent-foreground: oklch(18% 0.03 90);
+
   --destructive: oklch(65% 0.22 25);
   --destructive-foreground: oklch(95% 0.01 25);
-  --border: oklch(25% 0.012 260);
-  --input: oklch(25% 0.012 260);
+
+  --border: oklch(98% 0.01 280 / 12%);
+  --input: oklch(98% 0.01 280 / 16%);
   --ring: oklch(62% 0.22 295);
-  --success: oklch(68% 0.19 155);
-  --warning: oklch(80% 0.18 80);
-  --info: oklch(68% 0.15 230);
 }
 
+/* ── Base element styles ──────────────────────────────────────────────── */
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  html {
+    @apply antialiased;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground font-sans;
   }
-  body, nav, article, dialog, footer, aside {
+  code,
+  pre,
+  kbd,
+  [class*="font-mono"],
+  pre.line-numbers code {
+    @apply font-mono;
+  }
+  /* Smooth theme transitions */
+  body,
+  nav,
+  article,
+  dialog,
+  footer {
     @apply transition-colors duration-300 ease-in-out;
   }
 }
 
+/* ── Dot-grid + glow utilities ── */
 @utility grid-bg {
   background-size: 40px 40px;
   background-image:
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  opacity: 0.2;
+    linear-gradient(to right, color-mix(in oklab, var(--border) 40%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 40%, transparent) 1px, transparent 1px);
 }
 
-@utility dot-grid-light {
-  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
-  background-size: 20px 20px;
-  opacity: 0.3;
+.dot-grid {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--border) 60%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
 }
 
-/* ── Pygments syntax highlighting (ported from old tailwind.css, lovelace style) ── */
+.dot-grid-light {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--border) 45%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.dot-grid-subtle {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--border) 30%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* ── Radial glow backdrops (positioned ::before/::after) ── */
+.bg-glow-top {
+  position: relative;
+}
+.bg-glow-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    color-mix(in oklab, var(--primary) 18%, transparent),
+    transparent 70%
+  );
+}
+
+.bg-glow-center {
+  position: relative;
+}
+.bg-glow-center::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 40%,
+    color-mix(in oklab, var(--primary) 12%, transparent),
+    transparent 70%
+  );
+}
+
+.bg-glow-bottom {
+  position: relative;
+}
+.bg-glow-bottom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 40% at 50% 110%,
+    color-mix(in oklab, var(--accent) 12%, transparent),
+    transparent 70%
+  );
+}
+
+.bg-glow-accent {
+  position: relative;
+}
+.bg-glow-accent::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 50% 40% at 80% 20%,
+    color-mix(in oklab, var(--accent) 10%, transparent),
+    transparent 70%
+  );
+}
+
+.bg-glow-dual {
+  position: relative;
+}
+.bg-glow-dual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 70%);
+}
+
+/* ── Edge fade mask (for dot-grid rails) ── */
+.bg-edge-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+/* ── Border glow bottom (hero underline) ── */
+.border-glow-bottom {
+  position: relative;
+}
+.border-glow-bottom::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, color-mix(in oklab, var(--primary) 60%, transparent), color-mix(in oklab, var(--accent) 60%, transparent), transparent);
+}
+
+.mask-tb {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
+}
+
+#nprogress-bar {
+  @apply bg-linear-to-r from-primary to-accent;
+}
+
+/* ── Pygments syntax highlighting (shadcn tokens) ── */
 .code-highlight {
   & pre {
     @apply leading-relaxed py-4 px-3 m-0 text-sm text-foreground/80;
@@ -136,15 +303,15 @@
     padding-left: 1rem;
     padding-right: 1rem;
     margin-left: 0.75rem;
-    border-right: 1px solid var(--border);
+    border-right: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
     margin-right: 0.75rem;
   }
 
   & .normal { @apply text-foreground/30; }
   & .hll { @apply bg-muted; }
   & .c, & .cm, & .cpf, & .c1, & .cs { @apply text-foreground/50 italic; }
-  & .ch { @apply text-success/80 italic; }
-  & .cp { @apply text-success; }
+  & .ch { @apply text-secondary/80 italic; }
+  & .cp { @apply text-secondary; }
   & .err { @apply bg-destructive/30 text-destructive; }
   & .k, & .kn, & .kp, & .kr { @apply text-primary font-semibold; }
   & .kd, & .kt { @apply text-primary italic font-semibold; }
@@ -153,33 +320,24 @@
   & .gd, & .gr { @apply text-destructive; }
   & .ge { @apply italic; }
   & .ges { @apply italic font-bold; }
-  & .gi { @apply text-success; }
+  & .gi { @apply text-secondary; }
   & .gs { @apply font-bold; }
   & .gt { @apply text-primary; }
   & .m, & .mb, & .mf, & .mh, & .mi, & .mo, & .il, & .sa { @apply text-foreground/60; }
-  & .s, & .sb, & .s2, & .sh, & .s1, & .ss { @apply text-destructive/80; }
+  & .s, & .sb, & .s2, & .sh, & .s1, & .ss { @apply text-accent/80; }
   & .sc { @apply text-primary/80; }
   & .dl, & .fm, & .vm, & .sd { @apply text-accent/80 italic; }
-  & .se { @apply text-success; }
-  & .si { @apply text-destructive/80 underline; }
+  & .se { @apply text-secondary; }
+  & .si { @apply text-accent/80 underline; }
   & .sx, & .sr { @apply text-primary/80; }
-  & .na, & .nb, & .nl, & .nn { @apply text-success; }
-  & .nc, & .nd { @apply text-info/80; }
+  & .na, & .nb, & .nl, & .nn { @apply text-secondary; }
+  & .nc, & .nd { @apply text-primary/80; }
   & .no, & .nf { @apply text-accent/80; }
-  & .ni { @apply text-success/80; }
-  & .ne { @apply text-warning/80; }
+  & .ni { @apply text-secondary/80; }
+  & .ne { @apply text-destructive/80; }
   & .nt { @apply text-primary font-semibold; }
-  & .nv, & .vc, & .vi { @apply text-destructive/70; }
-  & .vg { @apply text-warning/70; }
-  & .bp { @apply text-success italic; }
+  & .nv, & .vc, & .vi { @apply text-foreground/70; }
+  & .vg { @apply text-destructive/70; }
+  & .bp { @apply text-secondary italic; }
   & .w { @apply text-accent/40; }
-}
-
-.mask-tb {
-  -webkit-mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
-  mask-image: linear-gradient(to bottom, transparent, white 16px, white calc(100% - 16px), transparent);
-}
-
-#nprogress-bar {
-  @apply bg-linear-to-r from-primary to-accent;
 }

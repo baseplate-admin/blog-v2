@@ -11,7 +11,7 @@ from django.http import HttpRequest, HttpResponse
 from wagtail.models import Page, Site
 
 from apps.search.serializers import serialize_search
-from mixins.inertia.base import render_inertia
+from mixins.inertia.page import render_inertia
 
 
 def _root_page() -> Page | None:

@@ -1,6 +1,6 @@
 from wagtail import blocks
 
-from .base import AOSBlock
+from mixins.blocks.aos import AOSBlock
 
 
 class AOSHeadingBlock(AOSBlock):

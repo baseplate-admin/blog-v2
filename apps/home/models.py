@@ -1,46 +1,40 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from django.db import models
 from django.http import HttpRequest
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-
-from mixins.inertia.base import InertiaMixin
 from wagtail.admin.panels import FieldPanel, ObjectList
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
 
-from .blocks import CTABlock
-
 from apps.blog.blocks import (
+    AlertBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSQuoteBlock,
-    AlertBlock,
-    CardGridBlock,
     CalloutBlock,
+    CardGridBlock,
     ImageBlock,
     MermaidBlock,
     SeparatorBlock,
-    StepsBlock,
     StatsGridBlock,
+    StepsBlock,
     TabsBlock,
     TimelineBlock,
     TooltipBlock,
 )
+from mixins.inertia.page import InertiaMixin
+
+from .blocks import CTABlock
 
 
 class HomePage(Page, InertiaMixin):
     component = "Home"
 
     max_count: int = 1
-    parent_page_types: list[str] = ["wagtailcore.Page"]
+    parent_page_types: ClassVar[list[str]] = ["wagtailcore.Page"]
 
-    search_fields: list[index.SearchField] = Page.search_fields + [
-        index.SearchField("hero_title"),
-        index.SearchField("hero_subtitle"),
-    ]
+    search_fields: list[index.SearchField] = [*Page.search_fields, index.SearchField("hero_title"), index.SearchField("hero_subtitle")]
 
     # Editable hero fields
     hero_title: models.CharField = models.CharField(
@@ -91,14 +85,8 @@ class HomePage(Page, InertiaMixin):
         help_text="Content blocks for the homepage.",
     )
 
-    content_panels: list[FieldPanel] = Page.content_panels + [
-        FieldPanel("hero_title"),
-        FieldPanel("hero_subtitle"),
-        FieldPanel("hero_ctas"),
-        FieldPanel("latest_posts_count"),
-        FieldPanel("body"),
-    ]
-    editor_panels: list[ObjectList] = [
+    content_panels: list[FieldPanel] = [*Page.content_panels, FieldPanel("hero_title"), FieldPanel("hero_subtitle"), FieldPanel("hero_ctas"), FieldPanel("latest_posts_count"), FieldPanel("body")]
+    editor_panels: ClassVar[list[ObjectList]] = [
         ObjectList(content_panels, heading="Content"),
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),

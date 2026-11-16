@@ -1,6 +1,5 @@
 from django.contrib.syndication.views import Feed
 from django.utils.html import strip_tags
-
 from wagtail.models import Site
 
 from apps.blog.models import BlogPage

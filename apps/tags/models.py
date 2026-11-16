@@ -1,8 +1,6 @@
 from django.db import models
-
 from modern_colorthief import get_palette
-
-from wagtail.images.models import Image, AbstractImage, AbstractRendition
+from wagtail.images.models import AbstractImage, AbstractRendition, Image
 
 
 class BlogImage(AbstractImage):
@@ -20,10 +18,7 @@ class BlogImage(AbstractImage):
         help_text="Auto-generated dominant color in hex format.",
     )
 
-    admin_form_fields: list[str] = Image.admin_form_fields + (
-        "palette_json",
-        "dominant_color_hex",
-    )
+    admin_form_fields: list[str] = (*Image.admin_form_fields, "palette_json", "dominant_color_hex")
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)

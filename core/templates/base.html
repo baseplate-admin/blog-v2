@@ -1,4 +1,4 @@
-{% load render_bundle from webpack_loader %}<!DOCTYPE html>
+{% load render_bundle from webpack_loader %}{% load wagtailuserbar %}<!DOCTYPE html>
 <html lang="en" class="dark">
     <head>
         <meta charset="utf-8">
@@ -9,12 +9,13 @@
                 {{ tag|safe }}
             {% endfor %}
         {% endblock inertia_head %}
-        {# Webpack bundle CSS (React + Tailwind + Inertia client) #}
-        {% render_bundle 'main' 'css' %}
+        {# Styles are injected at runtime by style-loader via the JS bundle #}
     </head>
     <body>
         {% block inertia %}{% endblock %}
         {# Webpack bundle JS (loaded at end of body for React + Inertia client) #}
         {% render_bundle 'main' 'js' %}
+        {# Wagtail userbar (edit pill) - renders only for users with admin access #}
+        {% wagtailuserbar position="bottom-right" %}
     </body>
 </html>

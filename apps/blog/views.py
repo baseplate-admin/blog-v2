@@ -7,7 +7,6 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_page
 
 
-
 @cache_page(86400)  # Cache avatar for 24 hours
 def author_avatar(request: HttpRequest, id: int) -> HttpResponse:
     """Proxy Libravatar avatar through backend to prevent drive-by attacks.

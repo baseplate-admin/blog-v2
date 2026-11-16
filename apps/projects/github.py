@@ -1,9 +1,9 @@
+import contextlib
 import logging
 from dataclasses import dataclass
 from datetime import datetime
 
 import requests
-
 from django.utils import timezone
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -34,9 +34,10 @@ def _get_github_token() -> str | None:
     """Fetch the GitHub token from site settings."""
     try:
         from apps.site_settings.models import SiteConfigSettings
+
         settings = SiteConfigSettings.for_site(None)
         return settings.github_token or None
-    except (ImportError, AttributeError, LookupError):
+    except ImportError, AttributeError, LookupError:
         return None
 
 
@@ -104,12 +105,10 @@ def fetch_repo_data(repo_url: str) -> GitHubRepoData:
     last_push = data.get("pushed_at", "")
     parsed_date: datetime | None = None
     if last_push:
-        try:
+        with contextlib.suppress(ValueError, TypeError):
             parsed_date = timezone.make_aware(
-                datetime.fromisoformat(last_push.replace("Z", "+00:00"))
+                datetime.fromisoformat(last_push)
             )
-        except (ValueError, TypeError):
-            pass
 
     license_info = data.get("license", {}) or {}
     return GitHubRepoData(

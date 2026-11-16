@@ -211,6 +211,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INERTIA_LAYOUT = "base.html"
 INERTIA_VERSION = "1.0"
 INERTIA_SSR_ENABLED = False
+INERTIA_DEFAULT_SITE_NAME = "The Tinkerer"
 
 # Rich text editor features - global control
 # https://docs.wagtail.org/en/stable/topics/rich_text.html#feature-configuration

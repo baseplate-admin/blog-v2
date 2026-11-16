@@ -19,15 +19,19 @@
  * `currentColor` will not recolor them. Use `filter` or `clip-path` if
  * you need to adapt them to your theme.
  */
-import type { ComponentType, SVGProps } from 'react';
+import type { ComponentType, ReactElement, SVGProps } from 'react';
+import { isValidElement } from 'react';
 import twemoji from 'twemoji';
 import { cn } from '$lib/utils';
 
 // SVGR-emitted components accept standard SVG props (className, width, ...).
-type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>;
+// The value may be a component function OR a React element (when webpack's
+// ESM interop wraps the SVGR output in a `__webpack_require__.d` getter that
+// evaluates to an element on access).
+type SvgModule = ComponentType<SVGProps<SVGSVGElement>> | ReactElement;
 
 // Eager context of every Twemoji SVG, each transformed into a React component
-// by svgr-loader. Webpack's `require.context` replaces Vite's
+// by @svgr/webpack. Webpack's `require.context` replaces Vite's
 // `import.meta.glob(..., { query: '?react' })`. The key is the relative path
 // (e.g. "./1f600.svg"); we strip the "./" to match the codepoint lookup.
 const emojiContext = require.context(
@@ -35,10 +39,11 @@ const emojiContext = require.context(
     false,
     /\.svg$/,
 );
-const TWEMOJI: Record<string, SvgComponent> = {};
+const TWEMOJI: Record<string, SvgModule> = {};
 emojiContext.keys().forEach((key) => {
-    const codepoint = key.replace(/^\.\//, '');
-    TWEMOJI[codepoint] = (emojiContext(key) as { default: SvgComponent })
+    // Strip the "./" prefix and the ".svg" suffix to get the bare codepoint.
+    const codepoint = key.replace(/^\.\//, '').replace(/\.svg$/, '');
+    TWEMOJI[codepoint] = (emojiContext(key) as { default: SvgModule })
         .default;
 });
 
@@ -60,16 +65,25 @@ export default function Emoji({
         codepoint ??
         (value ? twemoji.convert.toCodePoint(value).toLowerCase() : '');
 
-    // Eager lookup: the component was imported at module load time.
+    // Eager lookup: the module was imported at module load time.
     const Comp = cp ? TWEMOJI[cp] : undefined;
 
     if (Comp) {
+        // webpack's ESM interop can wrap the SVGR output so that `default`
+        // resolves to a React element (object) rather than a component
+        // function. Detect and handle both shapes.
+        const content = isValidElement(Comp) ? (
+            Comp
+        ) : (
+            // @ts-expect-error -- Comp is a ComponentType here, not an element.
+            <Comp className="h-full w-full" />
+        );
         return (
             <span
                 aria-hidden="true"
                 className={cn(className, '[&>svg]:h-full [&>svg]:w-full')}
             >
-                <Comp className="h-full w-full" />
+                {content}
             </span>
         );
     }

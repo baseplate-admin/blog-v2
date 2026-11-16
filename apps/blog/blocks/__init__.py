@@ -1,50 +1,46 @@
 """Wagtail StreamField blocks for blog pages."""
 
-from .base import AOSBlock, AOS_EFFECTS
+from mixins.blocks.aos import AOS_EFFECTS, AOSBlock
+
 from .content import (
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSQuoteBlock,
     SeparatorBlock,
 )
-from .media import ImageBlock, MermaidBlock
 from .interactive import (
-    PygmentsCodeBlock,
+    CODE_LANGUAGES,
+    AlertBlock,
     CalloutBlock,
-    StatsGridBlock,
     CardGridBlock,
+    PygmentsCodeBlock,
+    StatsGridBlock,
+    StepsBlock,
     TabsBlock,
     TimelineBlock,
-    StepsBlock,
-    AlertBlock,
     TooltipBlock,
     highlight_code,
-    CODE_LANGUAGES,
 )
+from .media import ImageBlock, MermaidBlock
 
 __all__ = [
-    # Base
-    "AOSBlock",
     "AOS_EFFECTS",
-    # Content
+    "CODE_LANGUAGES",
+    "AOSBlock",
     "AOSHeadingBlock",
     "AOSHighlightBlock",
     "AOSQuoteBlock",
-    "SeparatorBlock",
-    # Media
+    "AlertBlock",
+    "CalloutBlock",
+    "CardGridBlock",
     "ImageBlock",
     "MermaidBlock",
-    # Interactive
     "PygmentsCodeBlock",
-    "CalloutBlock",
+    "SeparatorBlock",
     "StatsGridBlock",
-    "CardGridBlock",
+    "StepsBlock",
     "TabsBlock",
     "TimelineBlock",
-    "StepsBlock",
-    "AlertBlock",
     "TooltipBlock",
-    # Helpers
     "highlight_code",
-    "CODE_LANGUAGES",
 ]
