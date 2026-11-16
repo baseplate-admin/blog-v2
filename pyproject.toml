@@ -1,34 +1,57 @@
 [project]
 name = "blog"
 version = "0.1.0"
-description = "Add your description here"
+description = "Personal blog built with Django, Wagtail, Inertia, React, and webpack"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = [
     # Core Wagtail Dependencies
-    "django>=5.2,<6.0",
-    "djangorestframework>=3.17,<4.0",
-    "wagtail>=7.3",
-    "uvicorn>=0.40.0",
+    "django>=6.1,<7.0",
+    "djangorestframework>=3.18,<4.0",
+    "wagtail>=8.1",
+    "uvicorn>=0.54.0",
     # Database adapters
-    "dj-database-url>=2.3.0",
-    "psycopg[binary]>=3.3.2",
+    "dj-database-url>=3.0",
+    "psycopg[binary]>=3.3.9",
     "redis[hiredis]>=8.1.0",
     # storage
-    "django-storages[s3]>=1.14",
-    # Vite
-    "django-vite>=3.1.0",
+    "django-storages[s3]>=1.14.6",
+    # Webpack
+    "django-webpack-loader>=3.2.4",
     # Color/Readtime optimization
-    "modern-colorthief>=0.2.1",
+    "modern-colorthief>=0.3.0",
     "readtime>=3.0.0",
     # File serving
-    "whitenoise>=6.11.0",
+    "whitenoise>=6.12.0",
     # HTTP requests
-    "requests>=2.32.0",
+    "requests>=2.34.2",
     # Code highlighting
-    "pygments>=2.20.0",
-    "python-dotenv>=1.2.2",
+    "pygments>=2.21.0",
+    "python-dotenv>=1.2.4",
+    "inertia-django>=2.0.0",
+    "django-treebeard>=5.3.1,<6",
 ]
 
 [dependency-groups]
-dev = ["django-debug-toolbar>=6.2.0", "djhtml>=3.0.10"]
+dev = ["django-debug-toolbar>=8.0.0", "djhtml>=3.0.10"]
+
+[tool.ruff.lint]
+select = [
+    "F",    # pyflakes
+    "I",    # isort
+    "RUF",  # ruff-specific
+    "BLE",  # blind-except
+    "DTZ",  # datetime
+    "SIM",  # simplification
+    "FURB", # pyupgrade
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Migrations are auto-generated; ignore mutable-class-attr and ambiguous-unicode warnings.
+"*/migrations/*.py" = ["RUF012", "RUF001"]
+
+# Wagtail/Django model class attributes (search_fields, panels, etc.) are idiomatic.
+"apps/*/models.py" = ["RUF012"]
+
+# Django settings use star imports from base by design.
+"core/settings/*.py" = ["F403", "F405"]

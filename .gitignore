@@ -13,6 +13,8 @@ node_modules
 static
 staticfiles
 db.sqlite3
+webpack-stats.json
+webpack.config.js
 .playwright-mcp
 
 # Environment variables

@@ -6,6 +6,8 @@ from django.db import models
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 
+from mixins.inertia.site_settings import SiteSettingMixin, resolve_label
+
 
 class LicenseOptions(models.TextChoices):
     ALL_RIGHTS = "all_rights", "All Rights Reserved"
@@ -20,8 +22,13 @@ class LicenseOptions(models.TextChoices):
     PUBLIC_DOMAIN = "public_domain", "Public Domain"
 
 
+def license_label(license_key: str | None) -> str:
+    """Resolve a license key to its human label (falls back to a title-cased key)."""
+    return resolve_label(license_key, dict(LicenseOptions.choices))
+
+
 @register_setting
-class SiteConfigSettings(BaseSiteSetting):
+class SiteConfigSettings(BaseSiteSetting, SiteSettingMixin):
     site_name: models.CharField = models.CharField(
         max_length=32, help_text="Display name of the site."
     )
@@ -32,7 +39,7 @@ class SiteConfigSettings(BaseSiteSetting):
             blank=True,
             validators=[
                 MinValueValidator(1900),
-                MaxValueValidator(datetime.date.today().year),
+                MaxValueValidator(datetime.datetime.now(datetime.timezone.utc).year),
             ],
             help_text="Starting year for the copyright notice.",
         )
@@ -43,7 +50,7 @@ class SiteConfigSettings(BaseSiteSetting):
             blank=True,
             validators=[
                 MinValueValidator(1900),
-                MaxValueValidator(datetime.date.today().year),
+                MaxValueValidator(datetime.datetime.now(datetime.timezone.utc).year),
             ],
             help_text="Ending year for the copyright notice.",
         )
@@ -87,11 +94,30 @@ class SiteConfigSettings(BaseSiteSetting):
 
     def clean(self) -> None:
         super().clean()
-        if self.site_copyright_from and self.site_copyright_to:
-            if self.site_copyright_from > self.site_copyright_to:
-                raise ValidationError(
-                    {
-                        "site_copyright_from": "The start year cannot be after the end year.",
-                        "site_copyright_to": "The end year cannot be before the start year.",
-                    }
-                )
+        if (
+            self.site_copyright_from
+            and self.site_copyright_to
+            and self.site_copyright_from > self.site_copyright_to
+        ):
+            raise ValidationError(
+                {
+                    "site_copyright_from": "The start year cannot be after the end year.",
+                    "site_copyright_to": "The end year cannot be before the start year.",
+                }
+            )
+
+    def to_site_props(self) -> dict:
+        """Serialize this settings instance into the shared ``site`` prop.
+
+        Returns a dict with the exact keys the React ``Site`` type consumes:
+        ``site_name``, ``copyright_from``, ``copyright_to``,
+        ``license_type``, ``license_label``.
+        """
+        license_key = self.license_type or "all_rights"
+        return {
+            "site_name": self.site_name or "The Tinkerer",
+            "copyright_from": self.site_copyright_from,
+            "copyright_to": self.site_copyright_to,
+            "license_type": license_key,
+            "license_label": license_label(license_key),
+        }

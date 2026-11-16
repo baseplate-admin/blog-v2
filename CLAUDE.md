@@ -2,29 +2,26 @@
 
 ## Project Overview
 
-A hyper-modern personal blog powered by **Wagtail CMS** covering technology, personal life, and politics. Dark-first aesthetic inspired by Ghost blog, github.blog (mood badges), and MakerKit articles. SPA-like feel achieved through HTMX boost with zero web components.
+A personal blog powered by Wagtail CMS, covering technology, personal life, and politics. Dark-first design with editorial blog pages and a more ornamental home/projects page. SPA-like navigation through Inertia.js.
 
-**Tech Stack:** Django + Wagtail 7.3 | Vite 7 | Tailwind CSS 4 + DaisyUI | HTMX 4.0.0-beta4 (boost) | AOS (scroll animations) | Mermaid.js (diagrams) | django-vite 3.1
+**Tech stack:** Django 6.1+ and Wagtail 8.1+ | Inertia (inertia-django + @inertiajs/react) | React 19 | webpack 5 (`webpack.config.ts`) | Tailwind CSS 4 (`@tailwindcss/webpack`) + shadcn CSS variables + base-ui | lucide-react | Mermaid | django-webpack-loader | @svgr/webpack | style-loader | esbuild-loader | WhiteNoise (production static files)
 
 ## Hard Rules
 
-- **NO CDN requests** — never fetch anything from jsDelivr, CDN, or any external URL. All dependencies MUST be installed via npm and bundled through Vite. This includes fonts, scripts, styles, and assets.
-- **NO raw CSS in templates** — all styling via Tailwind utility classes. Use `@utility` in `tailwind.css` for reusable patterns.
-- **NO CSS-in-templates** — HTMX transition styles injected via JS from `assets/htmx/htmx.ts`.
-- **Backend-heavy** — use Python/Django to process everything. Reduce JS payload as much as possible. Server-side rendering for all logic.
-- **All deps through npm + Vite** — everything registered via `vite.config.ts` + `{% vite_asset %}`.
-- **Full type hints** — type annotations on all functions, methods, and variables. No `from __future__ import annotations` needed (Python 3.14+ has PEP 563 built-in).
-- **No em dashes** — use normal dash (-) instead. Never use — or &mdash; in text or templates.
-- **Prefer classes over IDs** — use CSS classes for styling and HTMX targeting. Only use IDs when strictly necessary.
-- **DRY principle** — reuse Wagtail/framework features instead of building custom endpoints. Use Wagtail API, not custom views.
-- **Zero web components** — no Svelte, no custom elements. Everything in Django templates + HTMX.
-- **StreamField wherever possible** — use Wagtail StreamField for editable content blocks instead of plain RichTextField.
-- **Update NEXT_PLANS.md after every step** — after completing any implementation step (code change, migration, template edit, etc.), update NEXT_PLANS.md to mark completed items, log what was done, and note any new findings.
-- **Update CLAUDE.md after each iteration** — after completing work, update CLAUDE.md with any new facts about the project (changed conventions, new files, new patterns, removed features) so the documentation stays current.
-- **NO jQuery** — never use the jQuery library. All DOM manipulation must use vanilla JS (`querySelector`, `addEventListener`, etc.). Using `$` as a shorthand variable for `querySelector` is fine.
-- **Always use `@apply` in Tailwind CSS** — when adding custom styles in `tailwind.css`, always use `@apply` with Tailwind utility classes instead of raw CSS properties.
-- **No inline `style` when Tailwind suffices** — avoid inline `style="..."` attributes when the same effect can be achieved with Tailwind utility classes. Inline styles are only acceptable for dynamically computed values (colors from images, widths from JS).
-
+- **No CDN requests.** Every dependency must be installed via npm and bundled through webpack, including fonts, scripts, styles, and assets.
+- **No raw CSS or `<style>` blocks in React.** Use Tailwind utilities. Reusable patterns go in `web/src/app.css` with `@utility` or `@apply`.
+- **No inline `style` when Tailwind suffices.** Inline styles are only for values computed at runtime (colors from images, widths from JS).
+- **Backend-heavy.** Process data in Python/Django wherever possible. Keep the client payload small.
+- **All frontend dependencies go through npm + webpack**, loaded with `{% render_bundle 'main' 'js' %}`.
+- **Full type hints** on Python functions, methods, and variables.
+- **No em dashes.** Use a normal dash (-) in text and templates.
+- **Prefer classes over IDs** for styling.
+- **DRY.** Reuse Wagtail and framework features before writing custom endpoints.
+- **React 19 functional components** with hooks and TypeScript.
+- **StreamField for editable content** instead of plain `RichTextField` where blocks are appropriate.
+- **No jQuery.** Use vanilla DOM APIs.
+- **All class names must be literal strings** in JSX so the Tailwind scanner sees them.
+- **Update CLAUDE.md after each iteration.** This file is the single source of truth for conventions and architecture. There are no separate plan files.
 
 ## Project Structure
 
@@ -32,158 +29,190 @@ A hyper-modern personal blog powered by **Wagtail CMS** covering technology, per
 blog/
 ├── core/
 │   ├── settings/
-│   │   ├── base.py          # All Django/Wagtail settings
-│   │   ├── dev.py           # DEBUG=True, SQLite, debug-toolbar, Vite dev_mode
-│   │   └── production.py    # Production overrides
+│   │   ├── base.py          # Django/Wagtail settings, Inertia, webpack loader
+│   │   ├── dev.py           # DEBUG, SQLite, debug toolbar, dev webpack stats
+│   │   └── production.py    # Postgres, Redis, S3/B2, WhiteNoise, required env
 │   ├── templates/
-│   │   ├── base.html        # Root: django-vite assets, navbar, footer, HTMX boost wrapper
-│   │   ├── components/
-│   │   │   └── footer.html  # DaisyUI footer (nav URLs passed from base.html)
-│   │   ├── 404.html / 500.html
-│   │   └── search/search.html
-│   └── urls.py              # Wagtail pages, admin, search, sitemap
+│   │   └── base.html        # Inertia layout: SEO block, render_bundle, inertia block
+│   └── urls.py              # Wagtail, admin, search, feed, avatar, sitemap, API
+├── mixins/
+│   ├── inertia/
+│   │   ├── page.py          # InertiaMixin: serve(), auto props, SEO tags
+│   │   └── site_settings.py # Generic site-settings helpers
+│   └── blocks/aos.py        # AOSBlock base + AOS_EFFECTS
 ├── apps/
+│   ├── __init__.py          # Required for Django test discovery
 │   ├── blog/
-│   │   ├── models.py        # BlogIndexPage (pagination, tag filter), BlogPage (mood, StreamField, readtime, TOC headings)
-│   │   ├── blocks.py        # AOS StreamField blocks (heading, quote, highlight, separator, image)
-│   │   ├── templates/blog/
-│   │   │   ├── blog_index_page.html   # Full blog listing with sidebar, inline posts
-│   │   │   └── blog_page.html         # Article card, mood badge, TOC sidebar, prose content
-│   │   └── templates/blog/blocks/     # AOS block templates (aos_heading, aos_quote, etc.)
+│   │   ├── models.py        # BlogIndexPage, BlogPage, reading time, TOC headings
+│   │   ├── blocks/          # content.py, interactive.py, media.py
+│   │   ├── views.py         # author_avatar (Libravatar proxy)
+│   │   └── feeds.py         # BlogRSSFeed
 │   ├── home/
-│   │   ├── models.py        # HomePage (max_count=1, hero, latest posts, featured projects, AOS body)
-│   │   ├── blocks.py        # CTABlock (StructBlock: text + url)
-│   │   └── templates/home/home_page.html
+│   │   ├── models.py        # HomePage: hero, latest posts, featured projects
+│   │   └── blocks.py        # CTABlock
 │   ├── projects/
-│   │   └── models.py        # ProjectIndexPage, ProjectPage
+│   │   ├── models.py        # ProjectIndexPage, ProjectPage
+│   │   └── github.py        # GitHub repo metadata fetch + cache
+│   ├── search/
+│   │   ├── models.py        # search_posts(): one lean DB query
+│   │   ├── serializers.py   # search props
+│   │   └── views.py         # search_view() -> Inertia SearchPage
 │   ├── tags/
-│   │   ├── models.py                  # BlogImage (custom Wagtail Image with auto palette), BlogImageRendition
-│   │   ├── templatetags/site_tags.py  # wagtail_url_from_model_slug tag, mood_badge tag + color mapping
-│   │   ├── templatetags/image_colors.py  # get_dominant_color, get_palette_colors, get_dominant_color_css, image_accent_color
-│   │   └── templates/tags/mood_badge.html  # Mood badge HTML (full class names for Tailwind scanning)
+│   │   ├── models.py        # BlogImage with palette extraction
+│   │   └── templatetags/
 │   ├── site_settings/
-│   │   └── models.py        # SiteConfigSettings (copyright, license, site name)
-│   └── users/
-│       ├── models.py        # Custom User (username, email)
-│       └── manager.py
-├── assets/
-│   ├── htmx/htmx.ts         # HTMX config + style injection (no raw CSS)
-│   ├── aos/aos.ts           # AOS init (fade-up), DOMContentLoaded + HTMX swap refresh
-│   ├── mermaid/mermaid.ts   # Mermaid.js init + lazy-render handler (window.__mermaidRender)
-│   ├── tailwind/
-│   │   ├── tailwind.css     # Tailwind 4 + DaisyUI themes, @utility grid-bg, imports fonts.css
-│   │   ├── fonts.css        # @font-face declarations for all fonts (Inter, Jakarta Sans, JetBrains Mono, Hind Siliguri)
-│   │   └── tailwind.ts
-│   └── app.ts               # Minimal inline scripts (theme toggle, keyboard shortcuts)
-├── search/                  # Wagtail search view
-├── static/                  # Vite build output
+│   │   ├── models.py        # SiteConfigSettings, LicenseOptions
+│   │   └── inertia.py       # shared_props provider
+│   └── users/               # Custom user model and manager
+├── web/src/
+│   ├── main.ts              # Inertia bootstrap, page resolver, layout callback
+│   ├── app.css              # Tailwind 4, tokens, fonts, code highlight
+│   ├── pages/               # Home, BlogIndex, BlogPage, Project*, Search, Generic, NotFound
+│   ├── layouts/DefaultLayout.tsx
+│   └── lib/
+│       ├── Icon.tsx         # lucide-react name -> component
+│       ├── Emoji.tsx        # Twemoji SVG component
+│       ├── types.ts, utils.ts, badges.ts
+│       ├── hooks/theme.ts
+│       ├── components/      # Navbar, Footer, PostCard, badges, Toc, TocMobile
+│       └── blocks/          # BlockRenderer, AOS, EmojiText, one file per block
+├── webpack.config.ts        # Single entry, dev server on :3000, stats for Django
+├── webpack-stats.json       # Generated by webpack-bundle-tracker (gitignored)
+├── static/                  # webpack output (gitignored)
 ├── public/                  # Public assets
-├── media/                   # User uploads
-└── pyproject.toml           # Python deps
+├── media/                   # Local uploads (dev)
+├── Dockerfile
+├── docker-compose.yml
+├── .env.sample
+└── pyproject.toml
 ```
 
-## Key Conventions
+## Django / Wagtail Conventions
 
-### Django/Wagtail (heavy backend)
-- **Custom user model:** `apps.users.User` (USERNAME_FIELD = "username")
-- **Page hierarchy:** Root → HomePage (max_count=1) → BlogIndexPage / ProjectIndexPage
-- **All Page models have `editor_panels`** with Content/Promote/Settings tabs (Wagtail 7.x best practice)
-- **All Page models have `search_fields`** for Wagtail search index coverage
-- **BlogPage:** `mood` field, StreamField body (paragraph/image/code + AOS blocks), tags, readtime (with `clock` icon), Libravatar avatar, reading progress bar, publish date (with `calendar` icon), last updated indicator (with `history` icon, shows when `last_published_at` differs from `date`)
-- **AOS blocks have `group`** metadata (Content, Media, Layout, Interactive) - auto-groups in admin
-- **Site settings:** `wagtail.contrib.settings` with `SiteConfigSettings`
-- **Templates:** `core/templates/` (base, components) + `apps/*/templates/*/` (pages)
-- **Template tags:** `wagtail_url_from_model_slug`, `mood_badge`
-- **Server-side logic:** search visibility, nav URLs, theme state all rendered server-side
-- **AOS blocks:** `AOSHeadingBlock`, `AOSQuoteBlock`, `AOSHighlightBlock`, `AOSSeparatorBlock`, `AOSImageBlock`, `AOSCalloutBlock`, `AOSStatsGridBlock`, `AOSCardGridBlock`, `AOSTabBlock`, `AOSTimelineBlock`, `AOSStepsBlock`, `AOSAlertBlock`, `AOSTooltipWrapperBlock`, `AOSMermaidBlock` in `apps/blog/blocks.py`. Mermaid block renders client-side via `window.__mermaidRender()` on HTMX intersect
-- **DaisyUI components:** Tab Panel (tabs-box), Timeline (timeline-vertical), Steps (steps-vertical), Alert (rounded-2xl), Tooltip (tooltip wrapper)
-- **Navbar:** uses DaisyUI `navbar` with `navbar-start`/`navbar-center`/`navbar-end`
-- **Blog filter:** uses DaisyUI `filter` component with radio inputs + form submission
-- **Author image:** uses DaisyUI `mask mask-circle`
-- **Homepage hero:** uses DaisyUI `hero` + `hero-content`
-- **RichTextField:** all have explicit `feature_names` restriction
-- **WAGTAILADMIN_RICH_TEXT_FEATURES:** global feature config set
-- **Font names:** `@fontsource-variable` packages declare `Inter Variable`, `Plus Jakarta Sans Variable`, `JetBrains Mono Variable` in `@font-face`. Body CSS references these exact variable names (not the non-variable names). Font declarations in `assets/tailwind/fonts.css` (imported by `tailwind.css`).
-- **Dot-grid utilities:** `dot-grid`, `dot-grid-light`, `dot-grid-subtle` in `tailwind.css` replace inline SVG data-URI background styles.
-- **NProgress bar:** `#nprogress-bar` styles in `tailwind.css`, NOT injected via JS. HTMX module only creates the bar element.
-- **Vite entry naming:** all entries are `index.ts` in their parent dir (e.g. `assets/copy/index.ts`, `assets/htmx/htmx.ts`).
-- **window.htmx typing:** `declare global { interface Window { htmx: typeof htmx } }` in `htmx.ts`, no `window as any` casts elsewhere.
-- **Custom image model:** `tags.BlogImage` via `WAGTAILIMAGES_IMAGE_MODEL = "tags.BlogImage"`. Extends `AbstractImage` with auto palette extraction (modern_colorthief) on save. Palette cached as `palette_json` (JSONField) and `dominant_color_hex` (CharField).
-- **Image security:** `WAGTAILIMAGES_MAX_IMAGE_PIXELS = 92_000_000` (~12MP)
-- **No `XFrameOptionsMiddleware`** — removed since Wagtail 4.0+ doesn't need it
+- **Custom user model:** `apps.users.User`, `USERNAME_FIELD = "username"`.
+- **Page hierarchy:** Root -> HomePage (max_count=1) -> BlogIndexPage / ProjectIndexPage.
+- **Editor panels:** every page model defines `editor_panels` with Content/Promote/Settings `ObjectList`s.
+- **Search fields:** every page model defines `search_fields`.
+- **Inertia pages:** declare `class ActualPage(Page, InertiaMixin)`. `InertiaMixin.__init_subclass__` inspects the class and injects `serve()`. `component` defaults to the class name minus a trailing `Page`; set it explicitly when the React filename differs.
+- **Auto-dumped props:** `InertiaMixin` dumps concrete model fields, m2m fields such as `tags`, and values from `get_context()` (querysets, paginator pages, tag counts). There are no per-page serializer files.
+- **StreamField serialization:** each block is dumped as `{ type, value }`. Rich text becomes an HTML string, images become `{url, alt, width, height, dominant_color_hex}`, and `StructBlock.get_context()` extras (for example Pygments HTML) are merged.
+- **Shared chrome:** `InertiaMixin` builds `nav`, `site`, `meta`, and `current_path`. Apps add props by exporting `shared_props(request, page)` from `<app>.inertia` (see `apps/site_settings/inertia.py`).
+- **SEO:** `_seo_tags(props)` builds title, description, RSS, Open Graph, and Twitter tags server-side. `base.html` renders them in `{% block inertia_head %}` so crawlers see a complete page without JS.
+- **Search:** `/search/` is a thin Inertia view, not a Wagtail page. `search_posts()` runs one query over live posts; `SearchPage.tsx` preloads and filters client-side. Ctrl/Cmd+K opens it.
+- **RSS:** `BlogRSSFeed.get_feed()` resolves the site from the request (Django does not expose `self.request` on feeds). `item_pubdate()` returns an aware datetime because `BlogPage.date` is a plain date.
+- **Site settings:** `SiteConfigSettings` owns serialization in `to_site_props()`. `apps/site_settings/inertia.py` is the thin provider.
+- **Custom image model:** `tags.BlogImage` extends `AbstractImage`, stores `palette_json` and `dominant_color_hex`, and extracts the palette on save. `save()` must skip extraction when `update_fields` is set, otherwise the palette save recurses forever.
+- **Migrations:** keep block choice lists ordered. Never build Wagtail choices from a `frozenset` or set; randomized iteration order produces a new `AlterField` on every `makemigrations` run.
+- **Tests:** `apps/__init__.py` must exist or Django test discovery imports the wrong `tests` module. Run `manage.py test` from the repo root.
 
-### Frontend (Vite + Tailwind — minimal JS)
-- **django-vite** registers all assets: `{% vite_asset 'assets/...' %}`, HMR via `{% vite_hmr_client %}`
-- **Tailwind CSS 4** + DaisyUI — themes: `tanstack-dark` (default) / `tanstack-light`
-- **HTMX boost** — SPA-like navigation, swaps only `<main>`, navbar/footer persist
-- **AOS** — scroll animations, init on `DOMContentLoaded`, refreshes on HTMX swap
-- **Minimal inline JS** — theme toggle, keyboard shortcuts, mobile menu only
+## Frontend Conventions
 
-### Design System
-- **Ghost blog:** centered article card, generous whitespace, clean typography
-- **Genshin Impact / anime aesthetic:** constellation rails (connected dots + stars), ornamental dividers (gem + prism + sparkles), crown ornaments, crystal frames, dotted borders (`border-dotted`), celestial markers (orbit, compass, infinity)
-- **github.blog:** colored mood badges (purple=tech, sky=personal, red=politics, etc.)
-- **Sidebar TOC:** Takumi docs style — right-column sticky sidebar. Scroll-spy: threshold-based (last heading whose top <= 100px is active), parent H2 propagation (H3 active also highlights preceding H2). `data-active` attribute (`"true"`/`"false"`) styled via `data-[active=true]:text-primary`. Slug animation: sliding dot + SVG track via stroke-dasharray/dashoffset (follows exact rail curve), track covers all visible headings. Rail path: quadratic curves (H2 straight vertical at x=8.5, H3 curves out to x=16.5 and back). Clean links, H2/H3 indentation, curved SVG rails for H3 items.
-- **Blog index:** MakerKit alternating rows, ornamental decorative separators, AOS fade-up on scroll, background dot grid, constellation rails (left/right) with stars/orbits/gems
-- **Blog page:** CSS Grid layout (`grid-cols-[auto_auto_1fr_auto]` for left rail + TOC + content + right rail), dotted borders on all frames, ornamental corner sparkles, crown end marker
-- **Feminine icon set:** `sparkles` (decorative dots), `infinity` (ornamental curves), `gem` (crystalline), `star` (celestial), `compass` (navigation), `cross` (ornamental), `prism` (crystalline), `orbit` (planetary), `crown` (regal)
-- **Color palette:** deep dark (#080809), purple primary, orange accent
-- **Typography:** Plus Jakarta Sans (headings/body), Inter (body), Hind Siliguri (Bengali), JetBrains Mono (code)
-- **Fonts:** @fontsource npm packages, font files copied to `public/fonts/`, `@font-face` rules in `assets/tailwind/fonts.css` (imported by `tailwind.css`) pointing to `/static/fonts/`, zero CDN, no fallback fonts
+- **Page resolver:** `require.context('./pages', true, /\.tsx$/, 'eager')` in `main.ts`. The context function returns a Promise, so `resolve` awaits it. Do not use `import.meta.webpackContext`; esbuild strips it and the app crashes at runtime.
+- **Layout:** `createInertiaApp` uses the `layout: () => DefaultLayout` callback. The resolver returns only the page component.
+- **Bundle tags:** `{% render_bundle 'main' 'js' %}` only. Do not add a `'css'` tag; `style-loader` injects styles at runtime and no CSS file is emitted, so the tag would block the response.
+- **Dev vs prod assets:** `output.publicPath` is `http://localhost:3000/static/` in development and `/static/` in production. Dev stats therefore point at the webpack dev server with HMR; prod stats point at WhiteNoise.
+- **Tailwind 4 + shadcn tokens:** dark mode is the `.dark` class on `<html>`. Use semantic tokens (`bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`, `border-border`, `text-primary`).
+- **Prose:** always `prose prose-invert` on dark backgrounds. Without `prose-invert`, the typography plugin's light-theme gray leaks into uncolored children such as Tabs content and tooltips.
+- **Contrast:** keep text at WCAG AA. `text-foreground/50` on `bg-card` is about 5:1; `/40` (3.66:1) is too low for body text. Code token colors are defined in `.code-highlight` in `app.css`.
+- **AOS:** `blocks/AOS.tsx` uses IntersectionObserver, no animation library.
+- **Twemoji:** `Emoji.tsx` eagerly loads all vendored SVGs through `require.context`. Keys strip both `./` and `.svg`. The wrapper must be `inline-block`, not `inline`, or `h-[1.2em]` is ignored and SVGs render at 768px. Note the bundle is intentionally large.
+- **Rich text:** `blocks/EmojiText.tsx` parses editor HTML and preserves real tags (`strong`, `em`, `code`, `a`, lists, headings) while replacing emoji. Do not flatten everything to `<span>`, and do not wrap it in `<p>` when the input can contain paragraphs.
+- **TOC:** `Toc.tsx` uses one stable active heading (last heading above a 140px reading line), a sliding indicator bar, and smooth anchor scrolling. `TocMobile.tsx` is the `<details>` version for small screens. The desktop grid must use `items-stretch` so the sticky aside has room to travel.
+- **Icons:** `Icon.tsx` maps server-sent names to lucide-react components. Class names come from the server, so unknown names fall back to `Circle`.
+- **Theme:** `hooks/theme.ts` toggles `.dark` and stores the choice in localStorage. `initTheme()` runs before `createInertiaApp`.
 
-### Base Template
-- **Nav URLs** resolved once via `{% wagtail_url_from_model_slug %}`, passed through `{% with %}` to navbar, mobile menu, footer
-- **Footer** sticks to bottom via flexbox (`page-shell` flex-col, `boost-root` flex-1)
-- **Search button** visibility controlled server-side with `{% if current_path == blog %}`
-- **HTMX boost** wraps `<main>` only, navbar/footer persist across swaps
-- **Tailwind loaded first** in head to prevent flash of unstyled content
-- **Mobile menu** uses vanilla JS dropdown (no popover API), click-outside to close, animate-in fade
-- **TOC** rendered server-side via `page.get_toc_headings()`, Takumi docs style: right-column sticky sidebar (`align-self: start` aside + inner `sticky top-8` div). Scroll-spy algorithm: threshold-based (last heading whose `getBoundingClientRect().top <= 100px` is active), first heading active on page load even when below viewport. Parent H2 propagation: when H3 active, preceding H2 also highlighted. `data-active` attribute set to `"true"`/`"false"` string values, styled via `data-[active=true]:text-primary` Tailwind selector. Slug animation: sliding dot + SVG track via stroke-dasharray/dashoffset on the path element (follows exact rail curve), track dynamically grows/shrinks to cover all visible headings via IntersectionObserver. Rail path uses quadratic curves: H2 straight vertical at x=8.5, H3 curves out to x=16.5 and back. Clean links with `padding-inline-start: 20px` (H2) / `32px` (H3), curved SVG rails for H3 items following H2. JS assigns IDs to content headings by text-matching TOC links. Smooth scroll on TOC click via `scrollIntoView({ behavior: 'smooth', block: 'start' })`. Re-initializes on HTMX `htmx:after:swap` via `document.addEventListener` with capture (`true`) — HTMX 4.x events don't bubble to body. Grid layout: `lg:grid-cols-[auto_1fr_auto_auto]` (left rail, content, right rail, TOC sidebar). Grid uses `items-start` (NO `items-stretch` — stretch breaks sticky positioning). Aside height set to `auto` via JS.
-- **Reading progress bar** fixed at top of blog pages, updates on scroll
-- **Theme transition** via `@apply transition-colors` on all key elements
-- **Error pages** (404, 500) styled with AOS animations, centered layout
-- **Icons** via `{% icon name size=N %}` template tag in `site_tags.py` with Lucide SVG path registry. No Lucide JS — all icons rendered server-side as inline SVGs. Icon names: `arrow-right`, `arrow-left`, `search`, `moon`, `sun`, `menu`, `x`, `github`, `external-link`, `chevron-up`, `calendar`, `list`, `lightning-bolt`, `shield`, `info`, `code`, `chart-bar`, `globe`, `puzzle-piece`, `circle`, `bookmark`, `history`, `message-circle`, `alert-circle`, `aperture`, `asterisk`, `at-sign`, `compass`, `crosshair`, `gem`, `diamond`, `hexagon`, `minus`, `plus`, `radar`, `sparkles`, `snowflake`, `target`, `wand`, `waves`, `wind`, `flower`, `heart`, `infinity`, `moon-star`, `star`, `crown`, `feather`, `droplet`, `flame`, `leaf`, `zap`, `orbit`, `prism`, `cross`, `sunrise`, `atlas`, `clock`, `book-open`
-- **Nav progress bar** nprogress-style bar at top shows during HTMX boost requests
-- **Infinite scroll** blog index uses HTMX `hx-trigger="intersect"` + `hx-swap="outerHTML"` partial view endpoint
-- **Lazy-load** tag cloud uses HTMX 4.x `hx-trigger="load"` pattern
-- **HTMX 4.0.0-beta4** all event names use `htmx:phase:action` format (e.g., `htmx:before:request`)
-- **Boost container** uses `:inherited` modifiers (`hx-boost:inherited`, `hx-target:inherited="main"`, etc.) + `hx-on::before:swap` safety net to force swaps into `<main>` instead of `<body>`
-- **HTMX config**: `noSwap: [204, 304, '4xx', '5xx']` prevents error responses from replacing UI
-- **HTMX 4.0 intersect pattern**: `hx-trigger="intersect once"` + `hx-on::trigger="callback(this)"` for lazy-rendering heavy blocks (mermaid diagrams). Fires once when element scrolls into viewport
-- **Image colors** via `modern_colorthief` template tags: `get_dominant_color`, `get_palette_colors`
-- **Wagtail userbar** guarded with `{% if not request.headers.HX_Request %}` to prevent re-render errors during HTMX boost swaps
-- **Mermaid.js**: bundled via npm + Vite, lazy-rendered on scroll intersect. Exposes `window.__mermaidRender(el)` which reads `data-mermaid-code` + `data-mermaid-theme` from the container element
-- **Code copy button**: handler in `assets/copy/copy.ts` (`initCopyButtons()`). Reads code by cloning `.code-highlight pre` DOM and stripping `.linenos` spans. Feedback via `.code-copy-text` span. Re-initializes on HTMX `htmx:after:swap`. Never use inline `onclick` for copy - DOM cloning is the reliable pattern. Module scripts use `document.readyState !== 'complete'` check to ensure DOMContentLoaded fires when script loads during `'interactive'` phase.
+## Design Notes
+
+- **Blog index and article:** clean editorial style (Vercel/MakerKit direction): 3-column cards, filter pills, large titles, generous whitespace, a right sticky TOC, and `prose-invert` body text.
+- **Home and projects:** ornamental dark aesthetic with dot grids, glow backgrounds, constellation dots, mockup frames, and alternating rows.
+- **Palette:** near-black background (`rgb(8, 8, 9)`), purple primary (`oklch(62% 0.22 295)`), violet secondary, gold accent.
+- **Typography:** Plus Jakarta Sans, Inter, JetBrains Mono via `@fontsource-variable`.
+
+## Configuration and Deployment
+
+Required environment variables are documented in `.env.sample`. `core/settings/base.py` reads `DJANGO_BASE_URL` and `WAGTAIL_SITE_NAME`; production requires `DJANGO_SECRET_KEY` and `DJANGO_ALLOWED_HOSTS` and fails fast when they are missing. `docker-compose.yml` reads the Postgres password from the environment.
+
+Production flow:
+
+1. `npm run build` emits `static/assets/*` and `webpack-stats.json`.
+2. `collectstatic` copies `static/` and `public/` into `staticfiles/`.
+3. WhiteNoise serves `staticfiles/` through `CompressedStaticFilesStorage`.
+4. `webpack-stats.json` must be present in the runtime image; the Dockerfile copies it from the frontend builder.
+
+Known Docker work still required:
+
+- `pyproject.toml` requires Python `>=3.15`, but the image uses `python3.14-alpine`.
+- The final image uses `COPY --chown=app:app` without creating an `app` user.
+- `collectstatic` runs under `core.settings.production`, so the AWS/B2 variables must be available at build time.
+
+## Running the Project
+
+```bash
+# Backend
+uv sync
+uv run python manage.py runserver
+
+# Frontend dev server (second terminal)
+npm install --include=dev
+npm run dev
+
+# Frontend production build
+npm run build
+```
+
+Dev loads the bundle from `http://localhost:3000/static/`. Production loads `/static/` from WhiteNoise. SQLite is used in development and PostgreSQL in production.
+
+## Verification
+
+Run these before considering work complete:
+
+```bash
+npx tsc --noEmit
+ruff check .
+uv run python manage.py check
+uv run python manage.py makemigrations --check --dry-run
+uv run python manage.py test
+npm run build
+```
+
+For UI changes, smoke-test `/`, `/blog/`, `/blog/kitchen-sink/`, `/projects/`, `/projects/<project>/`, `/search/`, and a 404 at desktop and mobile widths. Check the console for errors and verify text contrast.
 
 ## What to Do When...
 
-### Adding a new page type
-1. Model in `apps/*/models.py` inheriting `wagtail.models.Page`, type-hint everything
-2. Define `parent_page_types` (class refs preferred), `subpage_types`, `search_fields`
-3. Define `content_panels` + `editor_panels` with Content/Promote/Settings ObjectLists
-4. Template in `apps/*/templates/*/` extending `base.html`
-5. All logic server-side via Django template tags
+### Adding a page type
 
-### Adding a new StreamField block
-1. Create in `apps/*/blocks.py` with `AOSBlock` base for animations
-2. Set `group` in Meta (Content, Media, Layout, or Interactive)
-3. Template in `apps/*/templates/*/blocks/` with `data-aos` attributes
-4. Register in model's StreamField choices
+1. Add `class NewPage(Page, InertiaMixin)` in `apps/*/models.py`.
+2. Set `component`, `parent_page_types`, `subpage_types`, and `search_fields`.
+3. Add `content_panels` and `editor_panels`.
+4. Create `web/src/pages/NewPage.tsx`.
+5. Add the prop interface to `web/src/lib/types.ts`.
 
-### Adding a new Vite entry (library, animation, etc.)
-1. Create entry `.ts` file in `assets/`
-2. Register in `vite.config.ts` rollupOptions input
-3. Load in `base.html` `{% block head %}` with `{% vite_asset %}`
+No serializer file is needed.
 
-### Styling
-- **Tailwind classes only** — no `<style>` blocks in templates
-- Reusable patterns → `@utility` in `assets/tailwind/tailwind.css`
-- Dynamic styles → injected via JS (`document.createElement('style')`)
-- DaisyUI tokens: `bg-base-100`, `text-primary`, `border-base-300`
-- Article prose: `prose prose-invert prose-lg` with inline Tailwind overrides
-- **All class names must be literal strings** in templates (no dynamic construction) so Tailwind scanner picks them up
+### Adding a StreamField block
 
-### Running the project
-- Backend: `uv run python manage.py runserver`
-- Frontend: `npm run dev` (Vite HMR) or `npm run build`
-- DB: SQLite (dev), PostgreSQL (prod)
+1. Define the block in the relevant `apps/blog/blocks/*.py` file and set its `group`.
+2. Create `web/src/lib/blocks/NewBlock.tsx`.
+3. Add a case in `BlockRenderer.tsx`.
+4. Add the value interface and union member in `web/src/lib/types.ts`.
+5. Register it in the model's `StreamField` choices.
+6. Run `makemigrations` and `manage.py check`.
+
+### Adding a UI component
+
+1. Create it in `web/src/lib/components/`.
+2. Use destructured props, `useState`/`useMemo`/`useEffect`, `cn()`, and shadcn tokens.
+3. Use `<Icon name="..." />` for icons.
+4. Ensure text meets contrast and lists have stable `key`s.
+
+## Gotchas
+
+- `webpack-stats.json` is generated, not committed. The Docker image must copy it.
+- The main bundle is intentionally large because all 3,689 Twemoji SVGs are eager. The bundle-size tradeoff is accepted for this project.
+- `style-loader` means there is no emitted CSS file in either mode.
+- `@svgr/webpack` must not have an `issuer` filter, or `require.context` cannot load Twemoji.
+- Twemoji v14 ESM is default-export only. Use `import twemoji from 'twemoji'`.
+- SVGR output may be a component or a React element depending on webpack interop; `Emoji.tsx` handles both with `isValidElement`.
+- Lowercase JSX variable names are treated as HTML tags by esbuild. Component variables must start with a capital letter.
+- `Toc` ids must match the heading ids rendered by `Heading` (`heading-<index>`). If the server-side TOC helper is revived, keep the schemes aligned.
+- Redis is required in production for reading time, avatars, and the cache backend. A Redis outage currently becomes a 500 on those paths.

@@ -1,10 +1,7 @@
-from functools import lru_cache
 
 from django import template
 from django.utils.safestring import mark_safe
-
 from modern_colorthief import get_palette
-from wagtail.images import get_image_model
 
 register: template.Library = template.Library()
 

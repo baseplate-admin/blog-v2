@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -50,7 +52,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
-    "django_vite",
+    "webpack_loader",
     "django_filters",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -60,6 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "inertia",
 ]
 
 MIDDLEWARE = [
@@ -70,8 +73,8 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "core.middleware.HtmxDetectMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "inertia.middleware.InertiaMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -165,7 +168,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "core"
+WAGTAIL_SITE_NAME = os.getenv("WAGTAIL_SITE_NAME", "The Tinkerer")
 
 # Search backend - database backend sufficient for personal blog
 # https://docs.wagtail.org/en/stable/topics/search/backends.html
@@ -177,7 +180,7 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "http://example.com"
+WAGTAILADMIN_BASE_URL = os.getenv("DJANGO_BASE_URL", "http://localhost:8000")
 
 # Allowed file extensions for documents in the document library.
 # This can be omitted to allow all files, but note that this may present a security risk
@@ -205,6 +208,12 @@ WAGTAILIMAGES_IMAGE_MODEL = "tags.BlogImage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Inertia (https://inertiajs.github.io/inertia-django/)
+INERTIA_LAYOUT = "base.html"
+INERTIA_VERSION = "1.0"
+INERTIA_SSR_ENABLED = False
+INERTIA_DEFAULT_SITE_NAME = "The Tinkerer"
+
 # Rich text editor features - global control
 # https://docs.wagtail.org/en/stable/topics/rich_text.html#feature-configuration
 WAGTAILADMIN_RICH_TEXT_FEATURES = [
@@ -219,8 +228,7 @@ WAGTAILADMIN_RICH_TEXT_FEATURES = [
 import re
 
 
-# WhiteNoise: treat Vite-hashed assets as immutable for max-age caching
-# https://github.com/MrBin99/django-vite#whitenoise
+# WhiteNoise: treat webpack-hashed assets as immutable for max-age caching
 def _immutable_file_test(path: str, url: str) -> bool:
     return bool(re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url))
 

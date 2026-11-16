@@ -1,13 +1,20 @@
 import os
+from contextlib import suppress
+
 from django.core.exceptions import ImproperlyConfigured
+
 from .base import *
 
 DEBUG = False
 
-# django-vite: disable dev mode in production, use manifest
-DJANGO_VITE = {
-    "default": {
-        "dev_mode": False,
+# django-webpack-loader: production uses the pre-built bundle from static/
+# and reads asset URLs from webpack-stats.json.
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "assets/",
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "CACHE": not DEBUG,
+        "POLL_INTERVAL": 0,
     }
 }
 
@@ -18,7 +25,9 @@ DJANGO_VITE = {
 STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesStorage"
 
 
-SECRET_KEY = "django-insecure-fvpfm@gr_1l8_=%cgx#hk=@*ftymg112p(a5e5m(zx!7)+rs)8"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    raise ImproperlyConfigured("DJANGO_SECRET_KEY is required in production.")
 
 # Redis cache backend
 CACHES = {
@@ -63,8 +72,14 @@ MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+
+_allowed_hosts = os.getenv("DJANGO_ALLOWED_HOSTS")
+if not _allowed_hosts:
+    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS is required in production.")
+ALLOWED_HOSTS = _allowed_hosts.split(",")
+CSRF_TRUSTED_ORIGINS = [
+    origin for origin in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if origin
+]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -95,7 +110,5 @@ DATABASES = {
 }
 
 
-try:
-    from .local import *
-except ImportError:
-    pass
+with suppress(ImportError):
+    from .local import *  # pyrefly: ignore[missing-import]

@@ -1,43 +1,40 @@
+import readtime
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from django.http import HttpRequest, HttpResponse
-from django.utils.decorators import method_decorator
+from django.http import HttpRequest
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
-from django.views.decorators.cache import cache_page
-
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from taggit.models import TaggedItemBase
-
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList
 from wagtail.blocks import RichTextBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
 from wagtail.search import index
-import readtime
 
 from apps.blog.blocks import (
+    AlertBlock,
     AOSHeadingBlock,
     AOSHighlightBlock,
     AOSQuoteBlock,
-    AlertBlock,
-    CardGridBlock,
     CalloutBlock,
+    CardGridBlock,
     ImageBlock,
     MermaidBlock,
     PygmentsCodeBlock,
     SeparatorBlock,
-    StepsBlock,
     StatsGridBlock,
+    StepsBlock,
     TabsBlock,
     TimelineBlock,
     TooltipBlock,
 )
 from apps.home.models import HomePage
 from apps.site_settings.models import LicenseOptions
+from mixins.inertia.page import InertiaMixin
 
 
 class BlogPageTag(TaggedItemBase):
@@ -46,7 +43,9 @@ class BlogPageTag(TaggedItemBase):
     )
 
 
-class BlogIndexPage(Page):
+class BlogIndexPage(Page, InertiaMixin):
+    component = "BlogIndex"
+
     intro = RichTextField(
         blank=True,
         features=["bold", "italic", "link"],
@@ -58,28 +57,18 @@ class BlogIndexPage(Page):
         help_text="Shown in the sidebar about section.",
     )
 
-    search_fields: list[index.SearchField] = Page.search_fields + [
-        index.SearchField("intro"),
-        index.SearchField("about"),
-    ]
+    search_fields: list[index.SearchField] = [*Page.search_fields, index.SearchField("intro"), index.SearchField("about")]
 
     subpage_types: list[str] = ["BlogPage"]
     parent_page_types: list[type[Page]] = [HomePage]
     max_count: int = 1
 
-    content_panels: list[FieldPanel] = Page.content_panels + [
-        FieldPanel("intro"),
-        FieldPanel("about"),
-    ]
+    content_panels: list[FieldPanel] = [*Page.content_panels, FieldPanel("intro"), FieldPanel("about")]
     editor_panels: list[ObjectList] = [
         ObjectList(content_panels, heading="Content"),
         ObjectList(Page.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ]
-
-    @method_decorator(cache_page(300))  # Cache for 5 minutes
-    def serve(self, request: HttpRequest) -> HttpResponse:
-        return super().serve(request)
 
     def get_context(self, request: HttpRequest) -> dict[str, object]:
         # Update context to include only published posts, ordered by reverse-chron
@@ -107,7 +96,6 @@ class BlogIndexPage(Page):
         context["blogpages"] = blogpages
         context["request_tag"] = tag
         context["request_mood"] = mood
-        context["is_htmx"] = request.headers.get("HX-Request") == "true"
 
         # Sidebar data: all tags with post counts
         all_pages: object = self.get_children().live().specific()
@@ -128,7 +116,9 @@ class BlogIndexPage(Page):
         return context
 
 
-class BlogPage(Page):
+class BlogPage(Page, InertiaMixin):
+    component = "BlogPage"
+
     parent_page_types: list[type[Page]] = [BlogIndexPage]
 
     MOOD_CHOICES: list[tuple[str, str]] = [
@@ -195,25 +185,9 @@ class BlogPage(Page):
         help_text="Image used in social media previews, RSS feeds, and article cover.",
     )
 
-    search_fields: list[index.SearchField] = Page.search_fields + [
-        index.SearchField("intro"),
-        index.SearchField("body"),
-    ]
+    search_fields: list[index.SearchField] = [*Page.search_fields, index.SearchField("intro"), index.SearchField("body")]
 
-    content_panels: list[FieldPanel | MultiFieldPanel] = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel("date"),
-                FieldPanel("mood"),
-                FieldPanel("tags"),
-                FieldPanel("license_type"),
-            ],
-            heading="Blog information",
-        ),
-        FieldPanel("intro"),
-        FieldPanel("body"),
-        FieldPanel("feed_image"),
-    ]
+    content_panels: list[FieldPanel | MultiFieldPanel] = [*Page.content_panels, MultiFieldPanel([FieldPanel("date"), FieldPanel("mood"), FieldPanel("tags"), FieldPanel("license_type")], heading="Blog information"), FieldPanel("intro"), FieldPanel("body"), FieldPanel("feed_image")]
     editor_panels: list[ObjectList] = [
         ObjectList(content_panels, heading="Content"),
         ObjectList(Page.promote_panels, heading="Promote"),
@@ -221,10 +195,6 @@ class BlogPage(Page):
     ]
 
     subpage_types: list[str] = []
-
-    @method_decorator(cache_page(300))  # Cache for 5 minutes
-    def serve(self, request: HttpRequest) -> HttpResponse:
-        return super().serve(request)
 
     @cached_property
     def author_avatar_url(self) -> str:
