@@ -1,4 +1,4 @@
-"""Serialize the search modal props for Svelte.
+"""Serialize the search modal props for the Inertia client.
 
 The post list is preloaded once and filtered client-side, so the backend does
 one lean query (no search index, no cache).

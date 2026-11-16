@@ -1,4 +1,4 @@
-/** Shared prop types for the Inertia + Svelte frontend. */
+/** Shared prop types for the Inertia + React frontend. */
 
 export interface Nav {
     blog: string | null;

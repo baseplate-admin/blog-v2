@@ -1,7 +1,7 @@
 [project]
 name = "blog"
 version = "0.1.0"
-description = "Add your description here"
+description = "Personal blog built with Django, Wagtail, Inertia, React, and webpack"
 readme = "README.md"
 requires-python = ">=3.15"
 dependencies = [

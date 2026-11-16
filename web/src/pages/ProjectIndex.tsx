@@ -59,7 +59,9 @@ export default function ProjectIndex({ intro = '', projects = [], nav }: Props) 
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-foreground/40 font-black text-6xl select-none bg-muted/50">PROJECT</div>
+                                                        <div className="w-full h-full flex items-center justify-center bg-muted/50">
+                                                            <Icon name="folder" size={48} className="text-foreground/20" />
+                                                        </div>
                                                     )}
                                                 </div>
                                                 <div className="absolute inset-0 bg-background/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>

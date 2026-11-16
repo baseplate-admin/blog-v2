@@ -323,7 +323,11 @@ export default function Home({
                                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                                         />
                                                     ) : (
-                                                        <span>PROJECT</span>
+                                                        <Icon
+                                                            name="folder"
+                                                            size={48}
+                                                            className="text-foreground/20"
+                                                        />
                                                     )}
                                                     <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                                 </div>
