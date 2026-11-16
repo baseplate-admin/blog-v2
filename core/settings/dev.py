@@ -25,7 +25,9 @@ INTERNAL_IPS = [
 ]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # django-webpack-loader: dev mode polls webpack-stats.json (written by the
-# webpack dev server on :5173) so the bundle tags point at the live dev URL.
+# webpack dev server on :3000). The dev build uses an absolute publicPath
+# (http://localhost:3000/static/) so render_bundle points at the live bundle
+# in the dev server's memory, not the stale files in static/.
 WEBPACK_LOADER = {
     "DEFAULT": {
         "BUNDLE_DIR_NAME": "assets/",

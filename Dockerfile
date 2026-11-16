@@ -36,6 +36,8 @@ FROM python:3.14-alpine
 # Copy the application from the builder
 COPY --from=builder --chown=app:app /app /app
 COPY --from=frontend-builder /app/static /app/static
+# render_bundle reads the hash map at runtime, so it must ship with the image.
+COPY --from=frontend-builder /app/webpack-stats.json /app/webpack-stats.json
 
 WORKDIR /app
 

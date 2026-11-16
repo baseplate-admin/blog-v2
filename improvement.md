@@ -150,6 +150,21 @@ Changed it to an ordered list. `makemigrations --check` now reports `No changes 
 - `mixins/inertia/page.py`: parenthesized the `and`/`or` chain (RUF021).
 - `scripts/make_showcase.py`: timezone-aware date (DTZ011).
 
+### 11. Dev/prod asset wiring (fixed)
+
+The two modes were not actually separated:
+
+- **Dev** used `publicPath: '/static/'`, so `render_bundle` pointed at Django's staticfiles and served the last built bundle. The webpack dev server on `:3000` was running but unused (no HMR).
+- **Prod** looked correct, but the Docker image never copied `webpack-stats.json` from the frontend builder, so `render_bundle` would have no hash map at runtime.
+
+Fix:
+
+- `webpack.config.ts`: dev uses `http://localhost:3000/static/`, prod uses `/static/`. Dev also sets `client.webSocketURL = 'ws://localhost:3000/ws'` and `Access-Control-Allow-Origin: *`.
+- `core/settings/dev.py`: comment corrected (the old one referenced `:5173`).
+- `Dockerfile`: copy `/app/webpack-stats.json` from the frontend builder into the final image.
+
+Verified: dev renders `<script src="http://localhost:3000/static/assets/main.*.js">` and the page hydrates from the dev server; after `npm run build`, the stats file is back to `/static/assets/...` for WhiteNoise.
+
 ---
 
 ## Remaining issues (prioritized)

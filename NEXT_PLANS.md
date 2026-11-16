@@ -312,6 +312,7 @@ See `improvement.md` for the complete report. Summary:
 - [x] **Image palette recursion** - `BlogImage.save()` -> `_extract_palette()` -> `save(update_fields=...)` recursed forever. Guarded on `update_fields`; verified with a real upload.
 - [x] **Migration instability** - `CODE_LANGUAGES` was a `frozenset` (randomized string order), so every `makemigrations` produced a new `AlterField`. Now an ordered list; `makemigrations --check` is clean.
 - [x] **Test discovery** - added the missing `apps/__init__.py`; fixed the stale `home.models` import and removed-template assertion. `manage.py test` now runs 3/3 tests.
+- [x] **Dev/prod assets** - dev now points `render_bundle` at the webpack dev server (`http://localhost:3000/static/`, absolute stats publicPath, explicit HMR websocket); prod keeps `/static/` for WhiteNoise. Docker now copies `webpack-stats.json` from the frontend builder into the final image.
 - [x] `tsc`, `ruff`, `manage.py check`, migrations check, and `npm run build` all pass.
 
 Remaining priorities (details in `improvement.md`): Docker Python 3.14 vs `requires-python >=3.15`; `COPY --chown=app:app` with no `app` user; production `collectstatic` needing AWS env at build; hardcoded `SECRET_KEY` / ignored `DJANGO_SECRET_KEY`; `ALLOWED_HOSTS="*"`; 10.48 MB main bundle from eager Twemoji + wildcard Lucide imports.

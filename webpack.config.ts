@@ -7,6 +7,11 @@ const isDev = process.env.WEBPACK_MODE === 'development';
 const src = path.resolve(__dirname, 'web/src');
 const out = path.resolve(__dirname, 'static');
 
+// In development the bundle lives in the dev server's memory on :3000, so the
+// stats file must hand Django absolute URLs. In production the same bundle is
+// collected into staticfiles/ and served by WhiteNoise from /static/.
+const publicPath = isDev ? 'http://localhost:3000/static/' : '/static/';
+
 const config: Configuration = {
     mode: isDev ? 'development' : 'production',
     entry: {
@@ -17,7 +22,7 @@ const config: Configuration = {
         filename: 'assets/[name].[contenthash:8].js',
         chunkFilename: 'assets/[name].[contenthash:8].js',
         assetModuleFilename: 'assets/[name].[hash:8][ext]',
-        publicPath: '/static/',
+        publicPath,
         clean: true,
     },
     devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
@@ -110,10 +115,16 @@ const config: Configuration = {
                   hot: true,
                   liveReload: true,
                   // Allow Django on :8000 to load the dev bundle from :3000.
+                  // (* is safe here: this server only runs locally.)
                   headers: {
-                      'Access-Control-Allow-Origin': 'http://localhost:8000',
+                      'Access-Control-Allow-Origin': '*',
                   },
-                  client: { overlay: true },
+                  client: {
+                      overlay: true,
+                      // The page is served by Django (:8000), not this server,
+                      // so point the HMR socket at :3000 explicitly.
+                      webSocketURL: 'ws://localhost:3000/ws',
+                  },
               },
           }
         : {}),
